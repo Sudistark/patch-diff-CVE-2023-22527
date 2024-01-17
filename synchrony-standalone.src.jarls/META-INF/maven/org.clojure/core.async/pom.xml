@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.clojure</groupId>
+  <artifactId>core.async</artifactId>
+  <!-- Don't set this manually! Call script/build/update_version -->
+  <version>0.4.500</version>
+  <packaging>jar</packaging>
+  <name>core.async</name>
+  <description>Facilities for async programming and communication in Clojure</description>
+  <url>https://github.com/clojure/core.async</url>
+
+  <developers>
+    <developer>
+      <id>richhickey</id>
+      <name>Rich Hickey</name>
+      <url>http://clojure.org</url>
+    </developer>
+  </developers>
+
+  <parent>
+    <groupId>org.clojure</groupId>
+    <artifactId>pom.contrib</artifactId>
+    <version>0.2.2</version>
+  </parent>
+
+  <scm>
+    <connection>scm:git:git://github.com/clojure/core.async.git</connection>
+    <developerConnection>scm:git:git@github.com:clojure/core.async.git</developerConnection>
+    <url>https://github.com/clojure/core.async</url>
+    <tag>core.async-0.4.500</tag>
+  </scm>
+
+  <properties>
+    <clojure.version>1.7.0</clojure.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojurescript</artifactId>
+      <version>0.0-2311</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>tools.analyzer.jvm</artifactId>
+      <version>0.7.2</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/main/clojure</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.3</version>
+      </plugin>
+      <plugin>
+        <groupId>com.theoryinpractise</groupId>
+        <artifactId>clojure-maven-plugin</artifactId>
+        <version>1.7.1</version>
+        <configuration>
+            <temporaryOutputDirectory>true</temporaryOutputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>clojure-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <compileDeclaredNamespaceOnly>true</compileDeclaredNamespaceOnly>
+              <namespaces>
+                <namespace>!clojure.core.*</namespace>
+              </namespaces>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
