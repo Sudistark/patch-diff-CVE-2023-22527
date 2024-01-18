@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>$action.getText("ratelimiter.contactsiteadmin.error.title")</title>
+</head>
+
+<body>
+    <content tag="bodyClass">Contact Site Administrator - Request denied</content>
+    <div id="content" class="">
+        <h2>$action.getText("ratelimiter.contactsiteadmin.error.title")</h2>
+        <p>
+            $action.getText("ratelimiter.contactsiteadmin.error.message")
+        </p>
+        <p class="last">
+            <a href="${req.contextPath}/homepage.action" class="aui-button aui-style aui-button-primary">$action.getText("administrators.contact.submitted.return")</a>
+        </p>
+    </div>
+</body>
+</html>
