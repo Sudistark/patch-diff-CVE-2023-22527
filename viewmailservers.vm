@@ -1,0 +1,90 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.admin.actions.mail.ViewMailServersAction" *#
+<html>
+	<head>
+		<title>$i18n.getText("admin.viewmailservers")</title>
+        <content tag="selectedWebItem">mailservers</content>
+        <content tag="subtitleDescriptionContent">
+            $i18n.getText("mailservers.desc")
+            #doc("help.configure.server.outgoing.mail" "$action.getText('more.about.configuring.mail')")
+        </content>
+	</head>
+
+	<body>
+		#parse ( "/template/includes/actionerrors.vm" )
+
+        <h2 class="aui-style">$i18n.getText("configured.mail.servers")</h2>
+            <table id="mailservers" class="aui">
+                <tr>
+                    <th>
+                        <strong>$i18n.getText("column.name")</strong>
+                    </th>
+                    <th>
+                        <strong>$i18n.getText("mailserver.protocol")</strong>
+                    </th>
+                    <th class="colHeaderLink">
+                        <strong>$i18n.getText("mailserver.column.email.address")</strong>
+                    </th>
+                    <th class="colHeaderLink">
+                        <strong>$i18n.getText("column.prefix")</strong>
+                    </th>
+                    <th class="colHeaderLink">
+                        <strong>$i18n.getText("column.from.name")</strong>
+                    </th>
+                    <th class="colHeaderLink">
+                        <strong>$i18n.getText("column.operations")</strong>
+                    </th>
+                </tr>
+                #if ($action.mailServers.size() == 0)
+                    <tr><td colspan="5">$i18n.getText("no.mail.servers")</td></tr>
+                #else
+                    #foreach ($server in $action.mailServers)
+                        #set ($protocol = $server.mailProtocol.protocol)
+                        <tr>
+                            <td>
+                                <strong>$server.name</strong>
+                                #if ($server.jndiLocation)
+                                    ($server.jndiLocation)
+                                #else
+                                    ($server.hostname:$server.port)
+                                #end
+                            </td>
+                            <td align="center">
+                                $protocol
+                            </td>
+                            <td align="center">
+                                #if ($protocol == 'smtp' || $protocol == 'smtps')
+                                    $!server.defaultFrom
+                                #else
+                                    $server.toAddress
+                                #end
+                            </td>
+                            <td align="center">
+                                #if ($protocol == 'smtp' || $protocol == 'smtps')
+                                    $!server.prefix
+                                #end
+                            </td>
+                            <td align="center">
+                                #if ($protocol == 'smtp' || $protocol == 'smtps')
+                                    $!server.fromName
+                                #end
+                            </td>
+                            <td class="colHeaderLink" nowrap width="1%">
+                                <a href="editmailserver.action?id=$server.id">$i18n.getText("operations.edit")</a> &middot;
+                                <a href="removemailserver.action?id=$server.id&#url_xsrfToken()" onClick="javascript:if (confirm('$i18n.getText("remove.mailserver.confirm")')) return true; else return false;">$i18n.getText("operations.del")</a>
+                                #if ($protocol == 'smtp' || $protocol == 'smtps')
+                                    &middot;
+                                    <a href="sendtestemail.action?id=$server.id&#url_xsrfToken()">$i18n.getText("operations.sendtestemail")</a>
+                                #end
+                            </td>
+                        </tr>
+                    #end
+                #end
+            </table>
+        <p>
+            <a href="createmailserver.action?protocol=smtp">$i18n.getText("operations.addnewsmtpserver")</a><br/>
+            <a href="createmailserver.action?protocol=pop3">$i18n.getText("operations.addnewpopserver")</a><br/>
+            <a href="createmailserver.action?protocol=imap">$i18n.getText("operations.addnewimapserver")</a>
+        </p>
+        #set ($viewingservers = true)
+	</body>
+</html>

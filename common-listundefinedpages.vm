@@ -1,0 +1,60 @@
+
+            #parse ( "/template/includes/actionerrors.vm" )
+            <table border=0 width="100%">
+            <tr>
+                <td width="100%">
+                <p>
+                <p>
+                $action.getText("text.undefined.pages.description")
+                <p>
+                #if( $key )
+                    #set( $contextPath = "listundefinedpages.action?key=${key}&" )
+                #else
+                    #set( $contextPath = "listundefinedpages.action?" )
+                #end
+                #pagination($action.paginationSupport $contextPath)
+                <table width="100%" cellspacing="1" class="aui tableview">
+                    <thead>
+                    <tr>
+                        <th>$action.getText("heading.title.undef")</th>
+                        <th>$action.getText("heading.referrer.title")</th>
+                    </tr>
+                    </thead>
+                    #if( !$action.undefinedPages || $action.undefinedPages.size()==0 )
+                        <td colspan="3">
+                            $action.getText("there.are.no.pages")
+                        </td>
+                    #else
+                        #set ($startIndex = $action.paginationSupport.startIndex)
+                        #set( $currentItems = $action.paginationSupport.page )
+                        #set ($maxReferencesPerPage = $action.maxReferencesPerUndefinedPage)
+
+                        #foreach( $link in $currentItems )
+                        <tr href="createpage.action?spaceKey=${link.destinationSpaceKey}&title=${htmlUtil.urlEncode($link.destinationPageTitle)}&linkCreation=true">
+                            <td valign="top">
+                                #if ($generalUtil.isAllAscii($link.destinationPageTitle))
+                                    <a href="createpage.action?spaceKey=${link.destinationSpaceKey}&title=${htmlUtil.urlEncode($link.destinationPageTitle)}&linkCreation=true">$htmlUtil.htmlEncode($link.destinationPageTitle)</a><sup><img class="rendericon" src="$staticResourceUrlPrefix/images/icons/plus.gif" height="7" width="7" align="absmiddle" alt="" border="0"/></sup>
+                                #else
+                                    <a href="createpage.action?spaceKey=${link.destinationSpaceKey}&encodedTitle=${generalUtil.base64Encode($link.destinationPageTitle)}&linkCreation=true">$htmlUtil.htmlEncode($link.destinationPageTitle)</a><sup><img class="rendericon" src="$staticResourceUrlPrefix/images/icons/plus.gif" height="7" width="7" align="absmiddle" alt="" border="0"/></sup>
+                                #end
+                            </td>
+                            <td valign="top">#foreach($from in $link.referencedFrom)
+                                #if ($velocityCount == 1)
+                                    #contentLink($from)
+                                #else
+                                    <br>#contentLink($from)
+                                #end
+                                #end
+                                #if ($link.numReferences > $maxReferencesPerPage)
+                                    #set ($more = $link.numReferences - $maxReferencesPerPage)
+                                    <br><span class="smalltext">$i18n.getText('undefined.pages.list.more', $more)</span>
+                                #end
+                            </td>
+                        </tr>
+                        #end
+                    #end
+                </table>
+                #pagination($action.paginationSupport $contextPath)
+
+            </td></tr>
+            </table>

@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>$action.getText("task.complete", ["$action.taskName"])</title>
+        #putMetadata("taskId" $!action.taskId)
+    </head>
+
+    <body>
+        <strong>$action.getText("status.name"): </strong> $action.currentStatus<br>
+        <strong>$action.getText("time.elapsed"): </strong> $action.prettyElapsedTime<br>
+        <strong>$action.getText("completion.name"): </strong> ${task.percentageComplete}% complete<br>
+
+        <table width=100% class="grid">
+            <tr>
+                <td width="${task.percentageComplete}%" class="greenbar">&nbsp;</td>
+
+                #if ($task.percentageComplete < 100)
+                    <td class="redbar">&nbsp;</td>
+                #end
+            </tr>
+        </table>
+
+        #parse ( "/breadcrumbs.vm" )
+    </body>
+</html>

@@ -1,0 +1,42 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.RestoreExistingTrashItemAction" *#
+<html>
+    <head>
+        #set ($contentType = $type)
+        <title>$action.getActionName($action.getClass().getName())</title>
+        <meta name="help-path" content="/pages/help/restoreexistingtrashitem.vm"/>
+    </head>
+
+    <body>
+
+    #applyDecorator ("root")
+        #decoratorParam ("context" "spaceadminpanel")
+        #decoratorParam ("selection" "trash")
+        #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+        #decoratorParam ("selectedTab" "admin")
+
+        <p>$action.getText("restore.choice", [$contentType, "#contentHref($action.getContentEntityObject())"])</p>
+
+        #parse ( "/template/includes/actionerrors.vm" )
+
+        <form name="restoreform" action="dorestoreexistingtrashitem.action" method="post">
+            #form_xsrfToken()
+            <input type="hidden" name="contentId" value="$contentId">
+            <input type="hidden" name="existingContentId" value="$existingContentId">
+            <input type="hidden" name="key" value="$htmlUtil.urlEncode($key)">
+            
+            <input type="radio" name="restoreAction" value="overwrite" id="overwrite" #if ($action.restoreAction == 'overwrite') checked #end>
+            <label for="overwrite">$action.getText("restore.choice.option1", [$contentType])</label><br>
+            #if ($action.isRenamable())
+            <input type="radio" name="restoreAction" value="rename" id="rename" #if ($action.restoreAction == 'rename') checked #end>
+            <label for="rename">$action.getText("restore.choice.option2", [$contentType])</label>
+            <input type="text" name="newTitle" value="$!newTitle">
+            #end
+            <p>
+            #ssubmit("name='confirm'" "value='restore.name'" "theme='notable'" )
+            #ssubmit("name='cancel'" "value='cancel.name'" "theme='notable'" )
+            </p>
+        </form>
+    #end
+    #parse ( "/breadcrumbs.vm" )
+    </body>
+</html>

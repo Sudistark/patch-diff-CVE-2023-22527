@@ -1,0 +1,76 @@
+<html>
+<head>
+    <title>$action.getText("content.indexing")</title>
+    #requireResource("confluence.sections.admin.indexing:resources")
+</head>
+<body>
+<content tag="bodyClass">indexing</content>
+<content tag="selectedWebItem">indexing</content>
+    #set($searchIndex = ${action.searchIndex})
+    #if($searchIndex == "CHANGE")
+        #set($selectedTab = "changeQueue")
+        #set($flushAction = "flushchangeindexqueue.action")
+    #elseif($searchIndex == "CONTENT")
+        #set($selectedTab = "contentQueue")
+        #set($flushAction = "flushcontentindexqueue.action")
+    #end
+    #parse("/admin/indexing/indexing-tabs.vm")
+    #parse ("/template/includes/actionerrors.vm")
+<div id="indexqueue-panel">
+    <p>$action.getText("viewindex.description")</p>
+    <div class="status-container">
+           <span class="functionbox aui-lozenge">
+               &nbsp;<strong>#if ($action.flushing)$action.getText("viewindex.status.flushing")#else$action.getText(
+               "viewindex.status.idle")#end</strong>&nbsp;
+           </span>
+    </div>
+
+    #if ($action.lastNonEmptyFlushStats)
+            <table class="aui grid" border="0" style="width:50%">
+                <thead>
+                    <tr><th colspan="2">$action.getText("viewindex.lastnonemptyflush.title")</th></tr>
+                </thead>
+                <tr><th>$action.getText("viewindex.lastflush.started")</th><td>$dateFormatter.formatDateTime($action.lastNonEmptyFlushStats.started)</td></tr>
+                <tr><th>$action.getText("viewindex.lastflush.duration")</th><td>${action.lastNonEmptyFlushStats.elapsedMilliseconds}ms</td></tr>
+                <tr><th>$action.getText("viewindex.lastflush.tasks")</th><td>$action.lastNonEmptyFlushStats.queueSize</td></tr>
+                <tr><th>$action.getText("viewindex.lastflush.recreated")</th><td>#yesno ($action.lastNonEmptyFlushStats.wasRecreated())</td></tr>
+            </table>
+       #end
+
+    #if ($action.flushing)
+        <h2>$action.getText("viewindex.flush.title")</h2>
+        #if($action.lastNonEmptyFlushStats)
+            $action.getText("viewindex.flush.starttime")
+            : $dateFormatter.formatDateTime($action.lastNonEmptyFlushStats.started)
+        #end
+    #end
+
+       <h2>$action.getText("viewindex.queue.title")</h2>
+       #if ($queue.empty)
+           $action.getText("viewindex.queue.empty")
+       #else
+           $action.getText("viewindex.flush.size"): $queue.size()
+           <table class="aui grid" border="0" style="width:100%">
+               <thead>
+                   <tr><th>$action.getText("viewindex.queued.title")</th></tr>
+               </thead>
+
+               <tbody>
+                   #foreach ($task in $queueFirstHundred)
+                   <tr>
+                       <td>$action.getText($task.description, [$!task.handle])</td>
+                   </tr>
+                   #end
+               </tbody>
+           </table>
+
+           <div id="queue-action">
+               <a href="$req.contextPath/admin/${flushAction}?#url_xsrfToken()">$action.getText(
+                   "viewindex.flush.queue")</a>
+           </div>
+       #end
+
+       #parse("/breadcrumbs.vm")
+    </div>
+</body>
+</html>

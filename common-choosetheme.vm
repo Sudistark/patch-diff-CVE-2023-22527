@@ -1,0 +1,169 @@
+#* @vtlvariable name="currentThemeDescriptor" type="com.atlassian.confluence.plugin.descriptor.ThemeModuleDescriptor" *#
+#if ($action.getClass().getName() == "com.atlassian.confluence.admin.actions.lookandfeel.ChooseThemeAction")
+    #set ($isGlobalAdmin = true)
+#else
+    #set ($isGlobalAdmin = false)
+#end
+
+#macro(themeIcon $themeDescriptor)
+    #if ($action.hasIcon($themeDescriptor))
+        ## we must have at least 1 themeicon.gif resource since hasIcon returned true:
+        #set($resource = $themeDescriptor.getResourceDescriptor("download", "themeicon.gif"))
+        #if($resource.location.startsWith("http://"))
+            #set($iconSrc = $resource.location)
+        #else
+            #set($iconSrc =
+                "$req.contextPath/download/resources/$themeDescriptor.completeKey/themeicon.gif")
+        #end
+    #else
+        #set($iconSrc = "$staticResourceUrlPrefix/images/themes/no-icon.gif")
+    #end
+    <img src="$iconSrc" width="110" height="70"  alt="" class="greybox">
+#end
+
+<script>
+    function checkRadioButton(radioId)
+      {
+          document.getElementById(radioId).checked = true;
+          return false;
+      }
+</script>
+
+<div>
+    <h2>$action.getText('current.theme.title')</h2>
+
+    <p class="stepdesc">$action.getText('current.theme.desc')</p>
+    #if ($currentThemeDescriptor)
+        <table border="0" cellpadding="5" cellspacing="0" width="100%" class="aui">
+            <tr bgcolor="ffffff">
+                <td width="90" rowspan="2" align="center">
+                    #themeIcon($currentThemeDescriptor)
+                </td>
+                <td valign="top">
+                    <label id="currentThemeName" class="formtitle">
+                        #if ($currentThemeDescriptor.i18nNameKey)
+                            $action.getText($currentThemeDescriptor.i18nNameKey, $currentThemeDescriptor.name)
+                        #else
+                            $currentThemeDescriptor.name
+                        #end
+                    </label>
+                    <br>
+                    #if ($currentThemeDescriptor.descriptionKey)
+                        $action.getText($currentThemeDescriptor.descriptionKey, $!currentThemeDescriptor.description)
+                    #else
+                        $!currentThemeDescriptor.description
+                    #end
+                </td>
+            </tr>
+        </table>
+
+        #if ($action.getConfigPath($currentThemeDescriptor))
+            <div class="form-header">
+                <p><strong>
+                    <a href="$bootstrap.webAppContextPath$action.getConfigPath($currentThemeDescriptor)#if($space.key)?key=$space.key#end">$action.getText('theme.configure')</a>
+                </strong>
+                    $action.getText('theme.configure.desc')
+                </p>
+            </div>
+        #end
+    #else
+        <table border="0" cellpadding="5" cellspacing="0" width="100%" class="aui">
+            <tr bgcolor="ffffff">
+                <td width="90" rowspan="2" align="center">
+                    <img src="$staticResourceUrlPrefix/images/themes/main-theme.gif" alt="" class="greybox">
+                </td>
+                <td valign="top">
+                    <label id="currentThemeName">
+                        #if ($isGlobalAdmin)
+                            $action.getText("global.theme.notheme.title")
+                        #else
+                            $action.getText("theme.notheme.title")
+                        #end
+                    </label>
+                    <p>
+                    #if ($isGlobalAdmin)
+                        $action.getText("global.theme.default.desc")
+                    #else
+                        $action.getText("theme.default.desc")
+                    #end
+                    </p>
+                </td>
+            </tr>
+        </table>
+    #end
+
+    <h2>$action.getText('theme.choose.new')</h2>
+
+    <p class="stepdesc">$action.getText('theme.select.desc')</p>
+    #if ($currentThemeDescriptor)
+        <table border="0" cellpadding="5" cellspacing="0" width="100%" class="aui">
+            <tr onclick="javascript:checkRadioButton('themeKey.default');">
+                <td width="90" align="center">
+                    <img src="$staticResourceUrlPrefix/images/themes/main-theme.gif" alt="" class="greybox">
+                </td>
+                <td valign="top">
+                    <input type="radio" id="themeKey.default" name="themeKey" value="" #if ( (! $currentThemeDescriptor) || ($availableThemeDescriptors.size() == 0)) checked="true" #end >
+                    <label>
+                        #if ($isGlobalAdmin)
+                            $action.getText("global.theme.notheme.title")
+                        #else
+                            $action.getText("theme.notheme.title")
+                        #end
+                    </label>
+                    <br>
+                    #if ($isGlobalAdmin)
+                        $action.getText("global.theme.default.desc")
+                    #else
+                        $action.getText("theme.default.desc")
+                    #end
+                </td>
+            </tr>
+        </table>
+    #end
+
+    #if ($availableThemeDescriptors.size() == 0)
+        $action.getText("theme.choose.nothemes")
+    #else
+        #foreach ($theme in $availableThemeDescriptors)
+            #if (!$currentThemeDescriptor || $theme != $currentThemeDescriptor)
+                <table border="0" cellpadding="5" cellspacing="0" width="100%" class="aui">
+                    <tr onclick="javascript:checkRadioButton('themeKey.$theme.completeKey');">
+                        <td width="90" align="center">
+                            #themeIcon($theme)
+                        </td>
+                        <td valign="top">
+                            <input type="radio" id="themeKey.$theme.completeKey" name="themeKey" value="$theme.completeKey"
+                                #if (($currentThemeDescriptor && $theme == $currentThemeDescriptor) || $theme.completeKey == $themeKey) checked="true" #end>
+                            <label>
+                                #if ($theme.i18nNameKey)
+                                    $action.getText($theme.i18nNameKey, $theme.name)
+                                #else
+                                    $theme.name
+                                #end
+                            </label>
+                            <p>
+                                #if ($theme.descriptionKey)
+                                    $action.getText($theme.descriptionKey, $!theme.description)
+                                #else
+                                    $!theme.description
+                                #end
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            #end
+        #end
+    #end
+    <div class="description">
+        #if ($isGlobalAdmin)
+            <a href="${req.contextPath}/plugins/servlet/upm/marketplace/featured?category=Themes+%26+styles&source=theme_global"
+               id="marketplace-themes-link"><span class="icon icon-marketplace">
+               </span>$action.getText("com.atlassian.confluence.themes.marketplace.tip")</a>
+        #else
+            <a href="${req.contextPath}/plugins/servlet/upm/marketplace/featured?category=Themes+%26+styles&source=theme_space"
+               id="marketplace-themes-link"><span class="icon icon-marketplace">
+               </span>$action.getText("com.atlassian.confluence.themes.marketplace.tip")</a>
+        #end
+    </div>
+</div>
+#if ($space.key) <input type="hidden" name="key" value="$space.key" /> #end

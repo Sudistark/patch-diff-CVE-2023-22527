@@ -1,0 +1,11 @@
+			<content tag="operations">
+                #if( $permissionHelper.canCreateSpace($action.authenticatedUser))
+                <a href="$req.contextPath/spaces/createspace-start.action"><img src="$staticResourceUrlPrefix/images/icons/add_space_16.png" height="16" width="16" border="0" align="absmiddle" title="$action.getText("action.space.add")"></a>
+				<a href="$req.contextPath/spaces/createspace-start.action">$action.getText("action.space.add")</a><br/>
+                #end
+
+                <div align="center">
+                    <br/>
+                    <a href="$req.contextPath/globalrss.action"><img src="$staticResourceUrlPrefix/images/icons/rss.gif" border="0" height="15" width="27" align="absmiddle" title="$action.getText("action.space.rss")"></a>
+                </div>
+			</content>

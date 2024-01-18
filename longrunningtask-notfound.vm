@@ -1,0 +1,10 @@
+<html>
+    <head>
+        <title>$action.getText("no.long.running.task")</title>
+    </head>
+
+    <body>
+		#parse ( "/template/includes/actionerrors.vm" )
+        #parse ( "/breadcrumbs.vm" )
+    </body>
+</html>

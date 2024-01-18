@@ -1,0 +1,105 @@
+#**
+ * Renders a tree of checkboxes for each visible page. This is done asynchronously via javascript.
+ *
+ * Required context variables:
+ * $action                - the Struts export action that is performing the export
+ * $contentTreeSource     - a relative uri from which a GET request can be made to load the content tree with.
+ *                          The query parameter will be called 'key' and value is the spacekey. Should start with a slash, and not include the context.
+ * $exportType            - the type of export this vm is rendering. Should be one of TYPE_XML, TYPE_HTML, or TYPE_PDF
+ * $visibilityOption      - specifies whether the "Full export" option is available.
+ * $includeCommentsOption - specifies whether the include comments option should be available.
+ * $includeComments       - specifies whether the include comments option should be ticked by default.
+ * $preloadContentTree    - specifies whether the content tree is preloaded in the page, or loaded via ajax
+ *#
+
+#requireResource("confluence.web.resources:ajs")
+#requireResource("confluence.sections.space.export.view:spaceexport")
+
+#if ($visibilityOption == true)
+    #set($option = "all")
+#else
+    #set($option = "visibleOnly")
+#end
+#if ($exportType == "TYPE_HTML")
+    #set($exportTypeVerbiage=$action.getText('export.space.content.option.export.type.html'))
+#elseif ($exportType == "TYPE_XML")
+    #set($exportTypeVerbiage=$action.getText('export.space.content.option.export.type.xml'))
+#elseif ($exportType == "TYPE_PDF")
+    #set($exportTypeVerbiage=$action.getText('export.space.content.option.export.type.pdf'))
+#end
+<div class="export-container">
+    <fieldset class="group">
+        <div class="radio">
+            <input class="radio" type="radio" id="contentOptionAll" name="contentOption" value="$option" checked="checked">
+            <label for="contentOptionAll">
+                #if ($visibilityOption == true)
+                    $action.getText('export.space.content.option.all')
+                    <div class="description">$action.getText('export.space.content.option.all.description', [$exportTypeVerbiage])</div>
+                #else
+                    $action.getText('export.space.content.option.all.not.admin')
+                    <div class="description">$action.getText('export.space.content.option.all.not.admin.description', [$exportTypeVerbiage])</div>
+                #end
+            </label>
+        </div>
+        #if($action.isCustomExportAllowed())
+            <div class="radio">
+                <input class="radio" type="radio" id="contentOptionVisible" name="contentOption" value="visible">
+                <label for="contentOptionVisible">$action.getText('export.space.content.option.visible')</label>
+                <div class="description">$action.getText('export.space.content.option.visible.description', [$exportTypeVerbiage])</div>
+            </div>
+        #end
+    </fieldset>
+    <div class="export-custom-options-container">
+        #if ($includeCommentsOption == true)
+            <fieldset id="export-comments-attachments-options-container">
+                <h3>$action.getText('export.space.content.option.visible.includes')</h3>
+                <div class="matrix">
+                    <input type="checkbox" class="checkbox" name="includeComments" id="includeComments" value="true"
+                           #if( ${includeComments.toString()} == "true" )checked="checked"#end/>
+                    <label for="includeComments">$action.getText("include-comments")</label>
+                </div>
+            </fieldset>
+        #end
+        <fieldset id="export-content-tree-container">
+            <h3>$action.getText('export.space.choose.content.to.export.heading')</h3>
+            <ul class="options">
+                <li>
+                    <a class="checkAllLink" href="#">$action.getText("select-all")</a>
+                </li>
+                <li>
+                    <a class="clearAllLink" href="#">$action.getText("deselect-all")</a>
+                </li>
+            </ul>
+            <div class="tree-container">
+                <ul id="exportContentTree" data-space-key="${key}" data-content-tree-src="${contentTreeSource}" data-content-tree-loaded="${preloadContentTree}">
+                    #if ($preloadContentTree)
+                        #parse("/importexport/includes/exportspace-common-tree.vm")
+                    #end
+                </ul>
+            </div>
+            <ul class="options">
+                <li>
+                    <a class="checkAllLink" href="#">$action.getText("select-all")</a>
+                </li>
+                <li>
+                    <a class="clearAllLink" href="#">$action.getText("deselect-all")</a>
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+</div>
+
+<script type="text/x-template" title="content-tree-error-template">
+    <div class="aui-message aui-message-error error closeable shadowed">
+        <p class="title">
+            <strong>$action.getText('export.space.content.tree.load.error.title')</strong>
+        </p>
+
+        <p>
+            $action.getText('export.space.content.tree.load.error.body', [${key}])
+        </p>
+        <p>
+            {errorText}
+        </p>
+    </div>
+</script>

@@ -1,0 +1,47 @@
+#*
+-- Required Parameters:
+--   * name   - determines the name of the checkboxes
+--   * list   - determines the list elements for the checkboxes
+--   * checkall - will check all elements of this list by default if value is true
+
+-- Notes:
+   If you pass in a map of ContentEntityObjects with $item.key == content.type,
+   the icon of the ContentEntityObject will be displayed in the label.
+*#
+
+
+#if ($parameters.id)
+    #set( $listId = $!htmlUtil.htmlEncode($parameters.id) )
+#else
+    #set( $listId = $!htmlUtil.htmlEncode($parameters.name) )
+#end
+
+#if ($parameters.checkall)
+    #set( $checkall = $parameters.checkall)
+#end
+
+#set( $items = $parameters.list )
+#if( $items )
+    #set( $itemCount = 0 )
+    #foreach( $item in $items )
+        #set( $itemCount = $itemCount + 1)
+        $stack.push($item)
+        #if( $item.key )
+            #set( $itemKey = $item.key )
+        #else
+            #set( $itemKey = $item )
+        #end
+        #if( $item.value )
+            #set( $itemValue = $item.value )
+        #else
+            #set( $itemValue = $item )
+        #end
+
+        <input type="checkbox" name="$!htmlUtil.htmlEncode($parameters.name)" value="$!htmlUtil.htmlEncode($itemKey)"
+        id="${listId}-${itemCount}" #if( $tag.contains($parameters.nameValue, $itemKey) || $checkall ) checked="checked" #end>
+        <label for="${listId}-${itemCount}"><span class="label">#typeIcon($item.key) $item.value</span></label><br />
+        #set ($trash = $stack.pop())
+    #end
+#else
+  &nbsp;
+#end

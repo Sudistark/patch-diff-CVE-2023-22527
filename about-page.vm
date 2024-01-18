@@ -1,0 +1,12 @@
+<html>
+	<head>
+        <title>$htmlUtil.htmlEncode($i18n.getText("aboutpage.title"))</title>
+        <content tag="show-main-header">true</content>
+        <content tag="title-text-span">$i18n.getText("aboutpage.section.title")</content>
+    </head>
+
+    <body>
+        <content tag="bodyClass">about-page</content>
+        #parse ("about/about-page-content.vm")
+    </body>
+</html>

@@ -1,0 +1,26 @@
+$action.getText('formatting.page.description')
+
+<p>
+    <strong>$action.getText('encoding.word'):</strong><br/>
+    $action.getText('encoding.description')
+</p>
+<p>
+    <strong>$action.getText('time.format'):</strong><br/>
+    $action.getText('time.format.description')
+</p>
+<p>
+    <strong>$action.getText('date.time.format'):</strong><br/>
+    $action.getText('date.time.format.description')
+</p>
+<p>
+    <strong>$action.getText('date.format'):</strong><br/>
+    $action.getText('date.format.description')
+</p>
+<p>
+    <strong>$action.getText('long.number.format'):</strong><br/>
+    $action.getText('long.number.format.description')
+</p>
+<p>
+    <strong>$action.getText('decimal.number.format'):</strong><br/>
+    $action.getText('decimal.number.format.description')
+</p>

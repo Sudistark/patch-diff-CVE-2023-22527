@@ -1,0 +1,25 @@
+################################################################################################
+## A combined CSS stylesheet for the default styling:                                         ##
+##    - Dependencies need to be manually included                                             ##
+##    - Please ensure that no JavaScript is accidentally included in any of the web resources ##
+################################################################################################
+
+#disableAntiXss()
+
+## AUI Styles
+$!webResourceManager.getResourceContent("com.atlassian.auiplugin:aui-reset")
+$!webResourceManager.getResourceContent("com.atlassian.auiplugin:aui-page-typography")
+$!webResourceManager.getResourceContent("com.atlassian.auiplugin:aui-link")
+$!webResourceManager.getResourceContent("com.atlassian.auiplugin:aui-page-layout")
+$!webResourceManager.getResourceContent("com.atlassian.auiplugin:aui-avatars")
+$!webResourceManager.getResourceContent("com.atlassian.auiplugin:aui-page-header")
+
+## Confluence Styles
+$!webResourceManager.getResourceContent("confluence.web.resources:panel-styles")
+$!webResourceManager.getResourceContent("confluence.web.resources:content-styles")
+$!webResourceManager.getResourceContent("confluence.web.resources:master-styles")
+#parse("/styles/colors-css.vm")
+
+## Plugin Styles
+$!webResourceManager.getResourceContent("com.atlassian.confluence.themes.default:styles")
+$!webResourceManager.getResourceContent("confluence.macros.advanced:export-styles")

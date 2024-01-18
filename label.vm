@@ -1,0 +1,10 @@
+#set( $labelValue = $i18n.getText($parameters.label) )
+#if( !$labelValue )
+#set( $labelValue = $parameters.label )
+#end
+<span class="formtitle">$labelValue:</span>
+<label#*
+*##if ($parameters.id) id="$!htmlUtil.htmlEncode($parameters.id)" #end#*
+*##if ($parameters.cssClass) class="$!htmlUtil.htmlEncode($parameters.cssClass)" #end#*
+*##if ($parameters.cssStyle) style="$!htmlUtil.htmlEncode($parameters.cssStyle)" #end>#*
+*##if ($parameters.nameValue)$!htmlUtil.htmlEncode($parameters.nameValue)#end</label>

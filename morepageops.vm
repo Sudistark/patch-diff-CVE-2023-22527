@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>More Page Operations</title>
+        <meta name="infopanel-width" content="25%">
+        <content tag="allowindex">true</content>
+        <content tag="selectedTab">info</content>
+        <content tag="no-page-header">true</content>        
+    </head>
+
+    <body>
+
+		#parse ("/pages/page-breadcrumbs.vm")
+
+    </body>
+</html>

@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>$action.getText('space.details')</title>
+
+
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+        #if ($action.space.personal == true)
+            #set ($selectionValue = "spacedetails-personal")
+        #else
+            #set ($selectionValue = "spacedetails")
+        #end
+
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spacecontentpanel")
+                #decoratorParam ("title" $action.getText('space-operations'))
+                #decoratorParam("helper" $action.helper)
+                #decoratorParam("selection" $selectionValue)
+                #decoratorParam ("selectedSpaceToolsWebItem" "spacedetails")
+
+                <body>
+                    <table width="100%" border="0" cellpadding="5" cellspacing="0">
+                        <tr>
+                            <td width="52%" valign="top">
+                                #parse("spaces/general-viewspacedetails.vm")
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+            #end
+        #end
+</html>

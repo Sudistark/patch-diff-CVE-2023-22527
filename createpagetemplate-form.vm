@@ -1,0 +1,16 @@
+<table width="100" border="0" cellspacing="0" cellpadding="5">
+	<tr><td>
+    <form name="createpagetemplate" method="POST" action="docreatepagetemplate.action?key=$!key">
+        #form_xsrfToken()
+
+        #parse("/pages/includes/pagetemplate-common-form.vm")
+
+        <div class="buttons-container">
+            #ssubmit("name='confirm'" "value='add.name'" "theme='notable'" )
+            #ssubmit("name='preview'" "value='preview.name'" "theme='notable'" )
+            #ssubmit("name='cancel'" "value='cancel.name'" "theme='notable'" )
+        </div>
+
+    </form>
+    </td></tr>
+</table>

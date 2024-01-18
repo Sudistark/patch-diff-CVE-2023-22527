@@ -1,0 +1,2 @@
+#macro ( langAttr )
+lang="$action.getLanguageJs()" #end

@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>$action.getText("title.setup.paths")</title>
+	</head>
+
+	<body>
+        #parse ("/setup/analytics-data.vm")
+		#parse ( "/template/includes/actionerrors.vm" )
+
+        <form method="POST" action="setuppaths.action" class="aui">
+            <div class="buttons-container">
+                <div class="buttons">
+                    <input class="aui-button" type="submit" name="setupTypeCustom" value="$action.getText('next.name')"/>
+                </div>
+            </div>
+        </form>
+
+		#parse ( "/breadcrumbs.vm" )
+	</body>
+</html>

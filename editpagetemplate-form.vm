@@ -1,0 +1,20 @@
+<table width="95%" border=0 cellspacing=0 cellpadding=5>
+	<tr><td>
+    <form name="edittemplateform" method="POST" action="doeditpagetemplate.action?pageTemplateId=${pageTemplate.id}&key=$!key">
+        #form_xsrfToken()
+
+        #parse("/pages/includes/pagetemplate-common-form.vm")
+
+        <div class="buttons-container">
+            #if ($versionMismatch)
+                #ssubmit("name='overwrite'" "value='overwrite.name'" "theme='notable'" )
+            #else
+                #ssubmit("name='confirm'" "value='update.name'" "theme='notable'" )
+                #ssubmit("name='preview'" "value='preview.name'" "theme='notable'" )
+            #end
+            #ssubmit("name='cancel'" "value='cancel.name'" "theme='notable'" )
+        </div>
+
+    </form>
+    </td></tr>
+</table>

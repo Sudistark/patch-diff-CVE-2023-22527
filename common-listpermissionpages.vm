@@ -1,0 +1,73 @@
+#parse ( "/template/includes/actionerrors.vm" )
+<table border=0 width="100%">
+<tr>
+    <td width="100%">
+    <p>
+    <div class="stepdesc">
+    $action.getText("text.permission.pages.description")
+    </div>
+
+        #if( $key )
+            #set( $contextPath = "listpermissionpages.action?key=${key}&" )
+        #else
+            #set( $contextPath = "listpermissionpages.action?" )
+        #end
+
+        #pagination($action.paginationSupport $contextPath)
+        <table width="100%" cellspacing="1" class="tableview aui">
+            <thead>
+                <tr>
+                    <th width="20%">$action.getText("heading.title.perms") <span class="smalltext">($action.getText("heading.page.space"))</span></th>
+                    <th width="12%">$action.getText("heading.permission")</th>
+                    <th width="15%">$action.getText("heading.permitted.to")</th>
+                    <th width="12%">$action.getText("heading.creator")</th>
+                    <th width="15%">$action.getText("heading.creation.date")</th>
+                    <th width="6%">$action.getText("heading.operations")</th>
+                </tr>
+            </thead>
+            #if( !$action.permissionPages || $action.permissionPages.size()==0 )
+                <td colspan="6">
+                    $action.getText("there.are.no.pages")
+                </td>
+            #else
+                #set ($startIndex = $action.paginationSupport.startIndex)
+                #set( $currentItems = $action.paginationSupport.page )
+
+                #foreach( $page in $currentItems )
+                    #foreach ( $permission in $action.getPermissions($page) )
+                    <tr>
+                        #if ($velocityCount == 1)
+                        <td rowspan="$action.getPermissions($page).size()">
+                            #contentLink($page)
+                        </td>
+                        #end
+                         <td>
+                            <strong>$permission.type</strong>
+                        </td>
+                        <td>
+                            #if($permission.isGroupPermission())
+                                $permission.groupName
+                            #else
+                                #if ($permission.userSubject)
+                                    $permission.userSubject.name
+                                #end
+                            #end
+                        </td>
+                        <td>
+                            #userLink( $permission.creator)
+                        </td>
+                        <td>
+                            $dateFormatter.format( $permission.creationDate )
+                        </td>
+                        <td>
+                            <center><a href="$req.contextPath/pages/removepagepermission.action?pageId=$page.id&permissionId=$permission.id&#url_xsrfToken()"><img src="$staticResourceUrlPrefix/images/icons/ulock_16.gif" height="16" width="16" border="0" align="absmiddle" title="$i18n.getText("removerestrictions.name")"></a><center>
+                        </td>
+                    </tr>
+                    #end
+                #end
+            #end
+        </table>
+        #pagination($action.paginationSupport $contextPath)
+    </td>
+</tr>
+</table>

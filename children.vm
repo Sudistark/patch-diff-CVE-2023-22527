@@ -1,0 +1,6 @@
+##This template appears to not be used 
+<ul style="list-style-type: none">
+#foreach ($child in $action.getPermittedChildren($page))
+    <li>#node($child [] -1)</li>
+#end
+</ul>

@@ -1,0 +1,33 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.ReorderPageDialogAction" *#
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head></head>
+<body>
+
+#set ($children = $action.children)
+#if ( $children.size() > 1 ) 
+<div id="reorderInformation" class="row information">
+#if ($action.title)
+    $i18n.getText("move.page.dialog.ordering.beneath.description", ["$action.title"])
+#else
+    $i18n.getText("move.page.dialog.ordering.top.description")
+#end    
+</div>
+<div class="siblings">
+    <ol class="dropper">
+    #foreach( $childPage in $children )
+        #if( $childPage.id == $action.movedPageId )
+            <li class="target" id="reorder-target-$childPage.id"><span>$action.pageTitle</span><i>$childPage.id</i></li>
+        #else
+            <li class="sibling" id="reorder-target-$childPage.id"><span>$childPage.title</span><i>$childPage.id</i></li>
+        #end
+    #end        
+    </ol>
+</div>
+#else
+<div id="reorderInformation" class="row information">
+$i18n.getText("move.page.dialog.ordering.onechild")
+</div>
+#end
+</body>
+</html>

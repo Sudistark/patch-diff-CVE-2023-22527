@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<title>$action.getText("create.support.zip.title")</title>
+	</head>
+	<body>
+    <content tag="selectedWebItem">supportutility</content>
+        #parse ( "/template/includes/actionerrors.vm" )
+        #if ($actionErrors.size() == 0)
+            <div class="steptitle">$action.getText('create.support.zip.success.heading')</div>
+                <div class="bottomMargin">
+                    <div class="smalltext">$action.getText('create.support.zip.success', [$supportZipLocation])</div>
+                    <div class="smalltext">$action.getText("create.support.zip.download", [$downloadPath])</div>
+                </div>
+        #end
+        #parse("/breadcrumbs.vm")
+	</body>
+</html>

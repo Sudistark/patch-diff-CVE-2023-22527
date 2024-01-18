@@ -1,0 +1,15 @@
+<html>
+	<head>
+        <title>Instance Warmer</title>
+        <content tag="show-main-header">true</content>
+        <content tag="title-text-span">Instance Warmer</content>
+    </head>
+
+    <body>
+        <content tag="bodyClass">warm-page</content>
+        <div style="hidden">
+            #parse ("/decorators/includes/content-navigation.vm")
+        </div>
+        <p>$warm</p>
+    </body>
+</html>

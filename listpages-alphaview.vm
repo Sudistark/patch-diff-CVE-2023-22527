@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title>$action.getText("title.list.pages.alphaview")</title>
+
+
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-pages")
+        #decoratorParam("collector-key" "spacebar-pages")
+        #decoratorParam("mode" "list-alphabetically")
+
+        <body>
+
+                <div class="pagecontent">
+                #set ($alphaLinkUrl = 'listpages-alphaview.action')
+                #parse ("/pages/includes/alphabet-tabs.vm")
+
+                #pagination($action.paginationSupport "listpages-alphaview.action?key=$htmlUtil.urlEncode($key)&startsWith=$!action.startsWith&")
+                #set ($currentItems = $action.results)
+                <table width="100%" class="aui tableview" cellspacing="1">
+                    <thead>
+                        <tr>
+                            <th width="70%">$action.getText("heading.title")</th>
+                            <th width="29%">$action.getText("heading.modifier")</th>
+                            <th width="1%">$action.getText("heading.mod.date")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #if ($currentItems.isEmpty())
+                            <tr>
+                                <td colspan="6">
+                                    $action.getText("no.pages.starting.with", [$!action.startsWith])
+                                </td>
+                            </tr>
+                        #else
+                            #foreach( $page in $currentItems )
+                                <tr #alternateRowColors()>
+                                    <td>
+                                        #if ($previousLoginDate && $page.lastModificationDate.after($previousLoginDate))
+                                            #if( $page.isNew() )
+                                                #set ($colorHtml = 'style="color: #008800"')
+                                            #elseif( $page.lastModificationDate )
+                                                #set ($colorHtml = 'style="color: #008800"')
+                                            #end
+                                        #else
+                                            #set ($colorHtml = "")
+                                        #end
+
+                                        #contentIcon($page)
+                                        <a $colorHtml href="$req.contextPath$page.urlPath">$htmlUtil.htmlEncode($page.title)</a>
+                                    </td>
+                                    <td>
+                                        #userLink ($page.lastModifier)
+                                    </td>
+                                    <td align="center" nowrap>
+                                        $dateFormatter.format( $page.lastModificationDate )
+                                    </td>
+                                </tr>
+                            #end
+                        #end
+                    </tbody>
+                </table>
+
+                #pagination($action.paginationSupport "listpages-alphaview.action?key=$htmlUtil.urlEncode($key)&startsWith=$!action.startsWith&")
+                </div>
+
+    </body>
+    #end
+
+</html>

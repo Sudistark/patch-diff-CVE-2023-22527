@@ -1,0 +1,64 @@
+## required
+
+#set ($onPopupSubmit = $parameters.onPopupSubmit)
+#set ($url = "$generalUtil.appendAmpersandOrQuestionMark($parameters.url)onPopupSubmit=$onPopupSubmit")
+
+## optional
+
+#set ($windowName = $parameters.windowName)
+#set ($windowProperties = $parameters.windowProperties)
+#set ($imgSrc = $parameters.imgSrc)
+#set ($imgTitle = $parameters.imgTitle)
+#set ($linkId = $parameters.linkId)
+#set ($tagNameHtml = $parameters.tagName) ## the outer tag name to be used, a by default
+#set ($tagAttributesHtml = $parameters.tagAttributes) ## attributes for the outer tag
+#set ($cssClass = $parameters.cssClass) ## CSS class(es) for the outer tag
+#set ($spanCssClass = $parameters.spanCssClass) ## if set, generates an inner span with the given CSS class(es)
+
+#if ($parameters.linkText)
+    #set ($linkText = $i18n.getText($parameters.linkText))
+    #if (!$linkText)
+        #set ($linkText = $parameters.linkText)
+    #end
+#end
+
+#if (!$windowName)
+    #set ($windowName = "Popup")
+#end
+
+#if (!$windowProperties)
+    #set ($windowProperties = "status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes") ## not sure if these are sensible defaults?
+#end
+
+#if (!$linkId)
+    #set ($linkId = 'popup-link')
+#end
+
+#if (!$tagNameHtml)
+    #set ($tagNameHtml = "a")
+#end
+
+#if(!$tagAttributesHtml && $tagNameHtml == "a")
+    #set ($tagAttributesHtml = "href='#'")
+#end
+
+#if($tagAttributesHtml)
+    #set ($tagAttributesHtml = " $tagAttributesHtml")
+#end
+
+<$tagNameHtml id='${linkId}' $!tagAttributesHtml onClick="var picker = window.open('$url', '$windowName', '$windowProperties'); picker.focus(); return false;"#if($cssClass) class="$cssClass"#end>
+    #if ($spanCssClass)
+        <span class="$spanCssClass">
+    #end
+		#if ($imgSrc)
+		    <img src="$imgSrc" height=16 width=16 border=0 align="absmiddle" #if ($imgTitle) title="$imgTitle" #end/>
+		#end
+		#if ($linkText)    
+		    $linkText
+	    #end
+    #if ($spanCssClass)
+        </span>
+    #end
+</$tagNameHtml>
+
+

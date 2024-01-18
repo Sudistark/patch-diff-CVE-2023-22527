@@ -1,0 +1,52 @@
+<html>
+
+<head>
+<title>$action.getText('attachment.migration.title')</title>
+<content tag="selectedWebItem">attachmentstoragesetup</content>
+</head>
+
+<body>
+#parse ( "/template/includes/actionerrors.vm" )
+
+<div class="warningMacro informationMacroPadding" style="width: 80%;">
+	<strong>WARNING:</strong>
+	<p>
+	$action.getText('attachment.migration.warning')
+	</p>
+	<p>
+	$action.getText('attachment.migration.warning.lockout')
+	</p>
+</div>
+<p></p>
+
+<div class="warningMacro informationMacroPadding" style="width: 80%;">
+    <strong>$action.getText("webdav.page.migration.confirm.note"):</strong>
+    <p></p>
+    #if ($action.isDatabaseConfigured())
+       $action.getText("webdav.page.migration.confirm.database")
+    #elseif ($action.isFileSystemConfigured())
+       $action.getText("webdav.page.migration.confirm.filesystem")
+    #end
+</div>
+
+<form name="doattachmentmigration" action="doattachmentmigration.action" method="POST">
+    #form_xsrfToken()
+	<div>
+		$action.getText('attachment.migration.confirm')
+	</div>
+
+	<div style="margin-top: 1em">
+				#ssubmit("name='confirm'" "value='migrate.name'" "theme='notable'")
+                #ssubmit("name='cancel'" "value='cancel.name'" "theme='notable'")
+	</div>
+
+
+	<input type="hidden" name="attachmentStorageType" value="$action.attachmentStorageType"/>
+    <input type="hidden" name="nonBackgroundTask" value="false"/>
+</form>
+
+#parse("/breadcrumbs.vm")
+
+
+</body>
+</html>

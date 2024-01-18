@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>$action.getText("rss.feed.created")</title>
+
+    ## Only include the autodiscovery links if a feed has been configured
+    ## We use the manual links here instead of the rssautodiscovery macro because the rssType is already defined
+    #if ($action.rssLink)
+        <content tag="rssautodiscovery">
+        #if ('rss1' == $action.rssType || 'rss2' == $action.rssType)
+            <link rel="alternate" type="application/rss+xml"
+            title="$!htmlUtil.htmlEncode($action.title)"
+            href="$!htmlUtil.htmlEncode($action.rssLink)" />
+        #elseif ('atom' == $action.rssType)
+            <link rel="alternate" type="application/atom+xml"
+                title="$!htmlUtil.htmlEncode($action.title)"
+                href="$!htmlUtil.htmlEncode($action.rssLink)" />
+        #end
+        </content>
+    #end
+</head>
+
+#applyDecorator("root")
+#decoratorParam("context" "global")
+#decoratorParam("mode" "rss")
+#decoratorParam("helper" $helper)
+
+<div class="functionbox" style="width: 60%; margin-top: 10px; margin-left: auto; margin-right: auto;">
+    <div style="padding: 20px 0px 20px 0px;  text-align:center; border-bottom:1px solid #d3d3d3">
+         <a href="$!htmlUtil.htmlEncode($rssLink)" id="rssLink" style="text-decoration:none">
+            #if ('atom' == $action.rssType)
+                <img src="$staticResourceUrlPrefix/images/icons/atom.gif" height=15 width=80 border=0 align=absmiddle><br>
+            #elseif ('rss1' == $action.rssType)
+                <img src="$staticResourceUrlPrefix/images/icons/rss10.gif" height=15 width=80 border=0 align=absmiddle><br>
+            #elseif ('rss2' == $action.rssType)
+                <img src="$staticResourceUrlPrefix/images/icons/rss20.gif" height=15 width=80 border=0 align=absmiddle><br>
+            #end
+            <span class="smalltext"><strong>$action.getText("description.drag")</strong></span>
+         </a>
+    </div>
+    <div style="margin:5 5 10 5;">
+        <table width="100%">
+            <tr>
+                <td class="substeptitle" style="margin:0; padding:0;" align="right">
+                    $action.getText("rss.feed.details")
+                </td>
+                <td class="substeptitle">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" width="1%" NOWRAP><strong>$action.getText("description.feed.content")</strong></td>
+                <td>
+                    $htmlUtil.htmlEncode($action.contentListAsString)
+                </td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" NOWRAP><strong>$action.getText("description.feed.sort")</strong></td>
+                <td>
+                    $htmlUtil.htmlEncode($sort)
+                </td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" NOWRAP><strong>$action.getText("description.feed.spaces")</strong></td>
+                <td>
+                    $htmlUtil.htmlEncode($action.getSpacesAsNiceList($spaces))
+                </td>
+            </tr>
+            #if("$!labelString" != "")
+            <tr>
+                <td align="right" valign="top" NOWRAP><strong>$action.getText("description.feed.labelString")</strong></td>
+                <td>
+                    $htmlUtil.htmlEncode($labelString)
+                </td>
+            </tr>
+            #end
+            <tr>
+                <td align="right" valign="top" NOWRAP><strong>$action.getText("description.feed.access")</strong></td>
+                <td>
+                    #if($publicFeed)
+                    $action.getText("description.feed.public")
+                    #else
+                    $action.getText("description.feed.private") <span class="smalltext">$action.getText("description.feed.authentication")</span>
+                    #end
+                </td>
+            </tr>
+            <tr>
+                <td align="right" valign="top" NOWRAP><strong>$action.getText("description.feed.maxresults")</strong></td>
+                <td>
+                    $action.getText("last.items.from.time", ["$maxResults","$timeSpan"])
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div align="center"><a href="$req.contextPath/dashboard/configurerssfeed.action" class="substeptitle" style="margin-right:10px">#icon('back_16.gif' 16 '') $action.getText("build.another.feed")</a>
+    <a href="$req.contextPath/homepage.action" class="substeptitle" style="margin-left:10px">$action.getText("go.to.dashboard") #icon('forwd_16.gif' 16 '')</a>
+</div>
+
+
+#end
+</html>

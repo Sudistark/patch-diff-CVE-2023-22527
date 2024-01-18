@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>$action.getText("activity.name")</title>
+		#requireResource("confluence.web.resources:aui-forms")
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("context" "profile")
+        #decoratorParam("mode"  "activity")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("infopanel-width" "200px")
+
+        <body>
+
+            <br>
+
+            ${user.fullName}'s Activity
+
+        </body>
+    #end
+</html>

@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>$action.getText("title.not.permitted")</title>
+</head>
+<body>
+    #parse ( "/breadcrumbs.vm" )
+
+    <div class='PageContent'>
+        $action.getText("not.permitted.space", [$htmlUtil.htmlEncode($space.name)])<br>
+        #if ($username)
+            <p>
+                $action.getText("user.not.granted.permissions", ["$username"])<br>
+            </p>
+        #end
+        <p style="margin-top:30px;">
+            <span class="aui-icon aui-icon-small aui-iconfont-group"></span> <strong><a href="$req.contextPath/peopledirectory.action"> $action.getText("people.directory.title")</a></strong><span class="smalltext"> - $action.getText("people.directory.description")</span><br>
+        </p>
+    </div>
+
+</body>
+</html>

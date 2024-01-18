@@ -1,0 +1,133 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.UserPickerAction" *#
+<html>
+<head>
+	<title>$action.getText("title.search.entities")</title>
+</head>
+<body>
+
+#requireResource('confluence.admin.user:entitypicker')
+
+#parse ( "/template/includes/actionerrors.vm" )
+
+#parse ("/spaces/permissions/userpicker-form.vm")
+
+#if (!$action.hasErrors())
+
+<div id="search-results">
+
+#if($stringUtils.isNotEmpty($memberGroups))
+<p>$action.getText("userpicker.group.listing")
+<strong>$action.memberGroups</strong>
+</p>
+#end
+
+<form name="selectorform" action="" class="aui"> <!-- 'action' varies depending on input and is specified in javascript -->
+	<div class="lightGreyBox" style="padding: 8px;">
+		#set( $users = $action.pageResponse.results )
+		#set( $usersExist = $users && !$users.isEmpty() )
+		#if( $usersExist)
+			<table id="entitySearchResults" class="aui">
+				<col class="firstColumn">
+				<col class="secondColumn">
+				<thead>
+					<tr>
+						<th align="right">
+							$action.getText("check.all")
+						</th>
+						<th>
+							<input type="checkbox" class="checkbox" name="all" value="0" #if (!$usersExist) disabled="disabled" #end>
+						</th>
+						<th>$action.getText("user.name")</th>
+						<th>$action.getText("user.fullname")</th>
+						<th>$action.getText("email")</th>
+					</tr>
+				</thead>
+				<tbody>
+					#if ($usersExist)
+						#foreach ($user in $users)
+						<tr>
+							<td></td>
+							<td>
+								<input type="checkbox" class="checkbox" value="$!htmlUtil.htmlEncode($user.name)" name="userSelect" />
+							</td>
+							<td>
+								$!htmlUtil.htmlEncode($user.name)
+							</td>
+							<td>
+								$!htmlUtil.htmlEncode($user.fullName)
+							</td>
+							<td>
+								$!htmlUtil.htmlEncode($generalUtil.maskEmail($user.email))
+							</td>
+						</tr>
+						#end
+					#end
+				</tbody>
+			</table>
+		#else
+		  $soyTemplateRendererHelper.getRenderedTemplateHtml("com.atlassian.auiplugin:aui-experimental-soy-templates", "aui.message.info.soy", {"content" : $action.getText('no.users.found').toString()})
+		#end
+		#if ($usersExist)
+            #set ($paginationUrlHtml = "userpicker.action?searchTerm=$!htmlUtil.urlEncode($!{searchTerm})&userSearch=$userSearch&groupTerm=$!htmlUtil.urlEncode($!{groupTerm})&onPopupSubmit=$!htmlUtil.urlEncode($!{onPopupSubmit})&")
+            #set ($currentIndex = $action.pageResponse.pageRequest.start)
+
+            #if ($action.showUnlicensedUsers)
+                #set ($paginationUrlHtml = "${paginationUrlHtml}showUnlicensedUsers=$action.showUnlicensedUsers&")
+            #end
+
+            #requireResource("confluence.web.resources:pagination-styles")
+            #requireResource("com.atlassian.auiplugin:aui-navigation")
+            #set ($limit = $action.pageResponse.pageRequest.limit)
+            #set ($nextStartIndex = $currentIndex + $limit)
+            ## round up
+            #set ($currentPageNum = ($currentIndex + $limit - 1)/$limit + 1)
+            #set ($prevPageIndex = $currentPageNum - 2)
+            #set ($previousStartIndex = $prevPageIndex * $limit)
+            #if( $action.pageResponse.size() > 0 || $currentIndex > 0)
+                <ol class="aui-nav aui-nav-pagination">
+##                    #if($previousStartIndex >= 0)
+##                        <li class="aui-nav-first"><a href="${paginationUrl}startIndex=0">$action.getText('aui.first.name')</a></li>
+##                    #else
+##                        <li class="aui-nav-first aui-nav-selected">$action.getText('aui.first.name')</li>
+##                    #end
+                    <li class="aui-nav-previous">#if($currentIndex > 0)
+                        <a href="${paginationUrlHtml}startIndex=$previousStartIndex">$action.getText('aui.prev.name')</a>
+                    #else
+                        <a aria-disabled="true">$action.getText('aui.prev.name')</a>
+                    #end</li>
+                    ## add pagination links for pages 1 through the current page
+                    #if ($currentIndex > 0)
+                        #foreach($i in [0..$prevPageIndex])
+                            #set ($pageNum = $i + 1)
+                            #set ($startIndex = $i * $limit)
+                            <li><a href="${paginationUrlHtml}startIndex=$startIndex">$pageNum</a></li>
+                        #end
+                    #end
+                    <li class="aui-nav-selected">$currentPageNum</li>
+                    ## add pagination links for pages current to the end, although we don't have the full list...
+                    #if($action.pageResponse.hasMore())
+                        #foreach($i in [$currentPageNum..$currentPageNum])
+                            #set ($pageNum = $i + 1)
+                            #set ($pageIndex = $i * $limit)
+                            <li><a href="${paginationUrlHtml}startIndex=$pageIndex">$pageNum</a></li>
+                        #end
+                    #end
+                    ## add the next page
+                    <li class="aui-nav-next">#if($action.pageResponse.hasMore())
+                        <a href="${paginationUrlHtml}startIndex=$nextStartIndex">$action.getText('aui.next.name')</a>
+                    #else
+                        <a aria-disabled="true">$action.getText('aui.next.name')</a>
+                    #end</li>
+                </ol>
+            #end
+			<div align="right" class="buttons-container">
+				<input type="button" class="button" value="$action.getText('users.select')" id="select-entities" data-callback="$htmlUtil.htmlEncode(${onPopupSubmit})">
+			</div>
+		#end
+	</div>
+</form>
+</div>
+#end
+
+</body>
+</html>

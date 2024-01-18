@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    <body>
+
+    #applyDecorator ("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+
+        #applyDecorator ("root")
+            #decoratorParam ("context" "spaceadminpanel")
+            #decoratorParam ("selection" "trash")
+            #decoratorParam ("title" $action.getText("action.name", [$contentType]))
+            #decoratorParam ("selectedTab" "admin")
+            #decoratorParam ("selectedSpaceToolsWebItem" "trash")
+            #decoratorParam("helper" $action.helper)
+
+            #applyDecorator ("confirm")
+                #decoratorParam ("formName" "emptytrashform")
+                #decoratorParam ("formAction" "doemptytrash.action")
+                $action.getText("empty.trash.confirm", [$action.getTrash().size()])<br>
+
+                <input type="hidden" name="key" value="$htmlUtil.urlEncode($key)">
+            #end
+
+        #end
+
+    #end
+    </body>
+</html>

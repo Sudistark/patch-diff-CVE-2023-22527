@@ -1,0 +1,9 @@
+## Dashboard navigation
+##
+<content tag="content-navigation">
+    <div id="navigation" class="content-navigation">
+        <ul class="ajs-menu-bar" aria-label="$i18n.getText('pagemenu.name')">
+            #menuMacros_renderButton("system.dashboard.button")
+        </ul>
+    </div>
+</content>

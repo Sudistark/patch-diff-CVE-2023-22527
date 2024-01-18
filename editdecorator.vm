@@ -1,0 +1,27 @@
+<html>
+    <head>
+		<title>$action.getActionName($action.getClass().getName()) &raquo; $action.getText($defaultDecorator.NameKey)</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+        #decoratorParam("help-path" "/spaces/help/lookandfeel.vm")
+
+       <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "layouts")
+                #decoratorParam ("title" $action.getText("action.name"))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "layouts")
+                #decoratorParam("helper" $action.helper)
+
+                #parse ("/includes/common-editdecorator.vm")
+
+            #end
+	    </body>
+
+    #end
+</html>

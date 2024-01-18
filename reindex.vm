@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<title>$action.getText("title.reindex")</title>
+		<meta name="help-path" content="/admin/indexing/help/reindex.vm"/>
+	</head>
+
+	<body>
+		<p>$action.getText("reindex.description")</p>
+
+		#parse ( "/template/includes/actionerrors.vm" )
+
+        <table>
+            <form method="POST" name="reindexform" action="reindex.action">
+	            #if( $successful )
+                    #ssubmit("value=getText('reindex-successful')" "align='center'" )
+	            #else
+                    #ssubmit("value=getText('reindex')" "align='center'" )
+	            #end
+            </form>
+        </table>
+
+		#parse ( "/breadcrumbs.vm" )
+		#parse ( "/general-operations.vm" )
+	</body>
+</html>

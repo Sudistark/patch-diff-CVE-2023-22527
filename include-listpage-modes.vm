@@ -1,0 +1,21 @@
+<div class="greyLinks">
+#set ($urlForThisPage = $req.getServletPath())
+
+#if ($urlForThisPage.indexOf("recentlyupdated.action") != -1)
+    <span style="padding: 5px; background-color:f0f0f0;"><strong>Recently Updated</strong></span> &middot;
+#else
+    <a href="$req.contextPath/pages/recentlyupdated.action?key=$htmlUtil.urlEncode($key)">Recently Updated</a> &middot;
+#end
+
+#if ($urlForThisPage.indexOf("listpages-alphaview.action") != -1)
+    <span style="padding: 5px; background-color:f0f0f0;"><strong>Alphabetical View</strong></span> &middot;
+#else
+    <a href="$req.contextPath/pages/listpages-alphaview.action?key=$htmlUtil.urlEncode($key)">Alphabetical View</a> &middot;
+#end
+
+#if ($urlForThisPage.indexOf("listpages-dirview.action") != -1)
+    <span style="padding: 5px; background-color:f0f0f0;"><strong>Tree View</strong></span>
+#else
+    <a href="$req.contextPath/pages/listpages-dirview.action?key=$htmlUtil.urlEncode($key)">Tree View</a>
+#end
+</div>

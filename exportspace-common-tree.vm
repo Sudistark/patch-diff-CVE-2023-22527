@@ -1,0 +1,33 @@
+#**
+ * Renders the contentTree as a hierarchy. Used as an ajax action on the space export pages.
+ *
+ * Required context variables:
+ * $contentTree - the content tree data structure. See com.atlassian.confluence.pages.ContentTree
+ *#
+
+#macro (displayPageHierarchyWithCheckboxes $contentTree $includePageCheckboxName $excludePageCheckboxName)
+    #* @vtlvariable name="contentTree" type="com.atlassian.confluence.pages.ContentTree" *#
+    #foreach ($rootNode in $contentTree.getRootNodes())
+        #displayPageHierarchyWithCheckboxesHelper($rootNode $includePageCheckboxName)
+    #end
+#end
+
+#macro (displayPageHierarchyWithCheckboxesHelper $node $includePageCheckboxName $excludePageCheckboxName)
+    #* @vtlvariable name="node" type="com.atlassian.confluence.pages.ContentNode" *#
+    <li class="content-tree-node">
+        <input type="hidden" name="$excludePageCheckboxName" value="">
+        <input type="checkbox" name="$includePageCheckboxName" class="exportContentTreeCheckbox" value="$node.getPage().getId()" checked="checked" />
+        <label class="label" for="$includePageCheckboxName">#contentLink2($node.getPage() false false)</label>
+        #if (!$node.children.isEmpty())
+            <a class="togglemeonlytreenode" href="#">&nbsp;</a>
+        #end
+
+        #foreach ($childNode in $node.children)
+            <ul class="content-tree-node-children">
+                #displayPageHierarchyWithCheckboxesHelper($childNode $includePageCheckboxName $excludePageCheckboxName)
+            </ul>
+        #end
+    </li>
+#end
+
+#displayPageHierarchyWithCheckboxes($contentTree 'contentToBeExported' 'contentToBeExcluded')

@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<title>$action.getText("title.user.macros")</title>
+		<meta name="help-path" content="/admin/macros/help/viewusermacros.vm"/>
+        <content tag="selectedWebItem">usermacros</content>
+        <content tag="subtitleDescription">user.macros.subtitle</content>
+	</head>
+	<body>
+		#parse ( "/template/includes/actionerrors.vm" )
+
+        <h2 class="aui-style">$i18n.getText('user.macros.installed')</h2>
+
+        #set($userMacrosWithWikiTemplates = $action.countUserMacrosWithWikiTemplates() > 0)
+        #set($userMacrosWithoutMetadata = $action.countUserMacrosWithoutMetadata() > 0)
+
+        #if ($userMacrosWithWikiTemplates)
+            #applyDecorator ("message")
+                #decoratorParam("type" "error")
+                $action.getText("desc.user.macros.wiki.template") $action.getText("desc.user.macros.wiki.template.fix")
+            #end
+        #end
+
+        #if ($userMacrosWithoutMetadata)
+            #applyDecorator ("message")
+                #decoratorParam("type" "warning")
+                #set ($templateLink = $docBean.getLink('help.user.macro.templates'))
+                $action.getText("desc.user.macros.wiki.metadata") $action.getText("desc.user.macros.wiki.metadata.fix", [$templateLink])
+            #end
+        #end
+
+        <div>
+            <table id="user-macros-admin" class="aui">
+                <tr>
+                    #if ($userMacrosWithWikiTemplates)
+                    <th class="row-annotation"></th>
+                    #end
+                    #if ($userMacrosWithoutMetadata)
+                    <th class="row-annotation"></th>
+                    #end
+                    <th class="user-macro-key">
+                        $i18n.getText('user.macros.list.name')
+                    </th>
+                    <th class="user-macro-title">
+                        $i18n.getText('user.macros.list.title')
+                    </th>
+                    <th class="user-macro-desc">
+                        $i18n.getText('user.macros.list.desc')
+                    </th>
+                    <th class="user-macro-actions">
+                        $i18n.getText('user.macros.list.operations')
+                    </th>
+                </tr>
+
+                #if ($userMacros.isEmpty())
+                    <td colspan="4">$i18n.getText('no.user.macros')</td>
+                #else
+                    #foreach ($macro in $userMacros)
+                        #set ($key = $htmlUtil.urlEncode($macro.name))
+                        #set ($title = "$!macro.title")    ## Velocity can't assign to null on RHS
+                        #if ($title == "")
+                            #set ($title = $key)
+                        #end
+                        <tr data-macro-key="$key">
+                            #if ($userMacrosWithWikiTemplates)
+                                <td>#if ($action.isWikiTemplate($key))<span class="aui-icon aui-icon-small aui-iconfont-error">#end</span></td>
+                            #end
+                            #if ($userMacrosWithoutMetadata)
+                                <td>#if ($action.isMissingMetadata($key))<span class="aui-icon aui-icon-small aui-iconfont-warning">#end</td>
+                            #end
+                            <td>
+                                <strong>$key</strong>
+                            </td>
+                            <td>
+                                ${title}
+                            </td>
+                            <td>
+                                $!macro.description
+                            </td>
+                            <td nowrap>
+                                <a href="updateusermacro-start.action?macro=$key">$i18n.getText('edit.name')</a>
+                                &middot; <a href="removeusermacro.action?macro=$key&#url_xsrfToken()" class="remove">$i18n.getText('remove.name')</a>
+                            </td>
+                        </tr>
+                    #end
+                #end
+            </table>
+
+        <a href="addusermacro-start.action">$action.getText("add.user.macro")</a>
+
+        </div>
+		#parse("/breadcrumbs.vm")
+	</body>
+</html>

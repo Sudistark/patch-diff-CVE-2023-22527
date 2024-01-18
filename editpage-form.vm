@@ -1,0 +1,11 @@
+#if ($contentType == "page")
+    #set ($useLocationEditor = true)
+#end
+
+#scomponent("template='content-editor.vm'" "theme='custom'"
+            "formName=editpageform"
+            "formAction=doedit${contentType}.action"
+            "contentType=$contentType"
+            "mode=edit"
+            "useContentPermissions=$action.hasSetPagePermissionsPermission()")
+#end

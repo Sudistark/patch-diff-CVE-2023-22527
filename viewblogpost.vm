@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>$!page.title</title>
+        #if ($action.editingUser)
+            <meta name="ajs-editing-user" content="$action.editingUser" />
+        #end
+
+    </head>
+    <content tag="bodyClass">view-blog-post</content>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("mode" "view")
+        #decoratorParam("context" "blogpost")
+        #decoratorParam("calendar-width" "150px")
+
+        <div class="wiki-content">
+            $action.pageXHtmlContent
+        </div>
+
+        #webPanelForLocation('atl.confluence.grant.access' $action.context)
+
+    #end
+</html>

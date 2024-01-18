@@ -1,0 +1,149 @@
+#* @vtlvariable name="attachmentHelper" type="com.atlassian.confluence.pages.actions.ViewPageAttachmentsAction" *#
+
+## Common template for building the attachments table
+## When changing this file, check the attachment macro as well.
+## Required Parameters:
+## * $attachmentHelper - object used to obtain context and previous versions
+## * $sortPathPrefixHtml - the url to goto when sorting
+## * $showActions - 'true' if actions column is to be displayed
+## * $old - 'true' if older versions are to be displayed
+<table class="aui tableview attachments">
+    <tr>
+        #if ($old == "true")
+            <th class="expand-column attachment-history">&nbsp;</th>
+        #end
+        <th class="filename-column">#sortLink("name", "${sortPathPrefixHtml}name" $action.getText('name.word'))</th>
+        <th class="filesize-column">#sortLink("size", "${sortPathPrefixHtml}size" $action.getText('file.size'))</th>
+        <th class="filecreator-column">$action.getText('creator.name')</th>
+        <th class="filedate-column">#sortLink("createddate" "${sortPathPrefixHtml}createddate" $action.getText('columnheading.creation.date'))</th>
+        <th class="labels">$action.getText('labels.name')</th>
+        <th class="comment">$action.getText('comment.name')</th>
+        #if ($showActions == "true")
+            <th class="actions-column">&nbsp;</th>
+        #end
+    </tr>
+
+    ## Create a dummy Attachment ID, for when there aren't attachment IDs set (e.g. WebDAV)
+    #set ($dummyAttachmentId = 1)
+
+    #foreach( $attachment in $latestVersionsOfAttachments )
+        #set ($currentAttachmentId = $attachment.id)
+        #set ($labels = $attachment.labels)
+        #set ($labelable = $attachment)
+        ## When the attachment ID isn't set (e.g. when we're using WebDAV), assign it an arbitrary number and increment
+        #if ($currentAttachmentId.intValue() == 0)
+            #set ($currentAttachmentId = $dummyAttachmentId)
+            #set ($dummyAttachmentId = $dummyAttachmentId + 1)
+        #end
+
+        #set ($allVersions = $attachmentHelper.getAllVersions($attachment))
+
+        <tr id="attachment-$currentAttachmentId" data-attachment-filename="$htmlUtil.htmlEncode($attachment.fileName)" #if ($action.highlight.contains($attachment.fileName)) class="attachment-highlight"#end>
+            #if ($old == "true")
+                <td class="attachment-history">
+                    #if ($allVersions.size() > 0)
+                        <a href="#" class="icon icon-section-closed" title="$action.getText('show.attachment.history')" aria-expanded="false"></a>
+                    #end
+                </td>
+            #end
+            <td class="filename-column">
+                #parse ("/pages/includes/attachment_icon.vm")
+                <a class="filename" title="$htmlUtil.htmlEncodeAndReplaceSpaces($attachment.fileName)"
+                   href="$htmlUtil.htmlEncode("${req.contextPath}${attachment.downloadPathWithoutVersion}")"
+                    #generatePreviewAttributes($attachment)>
+                    $htmlUtil.htmlEncode($attachment.fileName)
+                </a>
+            </td>
+            <td>$attachment.niceFileSize</td>
+            <td class="creator">#userLink($attachment.creator)</td>
+            <td class="created-date">$!action.dateFormatter.formatDateTime($attachment.creationDate)</td>
+            <td class="labels">#parse("/com/atlassian/confluence/plugins/labels/components/labels-content.vm")</td>
+            <td class="comment">
+                #if ($attachment.versionComment && $attachment.versionComment.trim().length() > 0)
+                    $htmlUtil.htmlEncode($attachment.versionComment)
+                #else
+                    &nbsp;
+                #end
+            </td>
+            #if ($showActions == "true")
+                <td class="attachment-actions">
+                    #set ($webInterfaceContext = $attachmentHelper.getWebInterfaceContext($action.webInterfaceContext, $attachment))
+                    #set($webItems = $action.webInterfaceManager.getDisplayableItems("system.attachment", $webInterfaceContext))
+                    #if ($webItems.size() > 0)
+                        <ul>
+                            #foreach ($item in $webItems)
+                                #set ($isCurrent = ($context == $item.key))
+                                <li class="#if($velocityCount == 1)first#end">#renderItemLink($item $isCurrent $webInterfaceContext)</li>
+                            #end
+                        </ul>
+                    #else
+                        &nbsp;
+                    #end
+                </td>
+            #end
+        </tr>
+
+        #if ($old == "true" && $allVersions.size() > 0)
+            #foreach( $attachmentVersion in $allVersions )
+                <tr class="history-$currentAttachmentId historicalAttachmentRow hidden" data-attachment-filename="$htmlUtil.htmlEncode($attachmentVersion.fileName)" data-attachment-version="$attachmentVersion.getVersion()">
+                    <td class="attachment-history">&nbsp;</td>
+                    <td class="filename-column">
+                        <a class="filename" href="$htmlUtil.htmlEncode("$req.contextPath$attachmentVersion.downloadPath")"
+                            #generatePreviewAttributes($attachmentVersion)>
+                            #if ($velocityCount == 1)$action.getText("attach.file.version.current", $attachmentVersion.getVersion())#else$action.getText("attach.file.version.dated", $attachmentVersion.getVersion())#end
+                        </a>
+                    </td>
+                    <td>#if(!$attachmentHelper.attachmentsInWebDavFolder)$attachmentVersion.niceFileSize#else &nbsp; #end</td>
+                    <td class="creator">
+                        #if (!$attachmentHelper.attachmentsInWebDavFolder)
+                            #userLink($attachmentVersion.creator)
+                        #else
+                            &nbsp;
+                        #end
+                    </td>
+                    <td class="created-date">#if(!$attachmentHelper.attachmentsInWebDavFolder)$action.dateFormatter.formatDateTime($attachmentVersion.creationDate)#else &nbsp; #end</td>
+                    <td>&nbsp;</td>
+                    <td class="comment">
+                        #if (!$attachmentHelper.attachmentsInWebDavFolder && $attachmentVersion.versionComment && $attachmentVersion.versionComment.trim().length() > 0)
+                            $htmlUtil.htmlEncode($attachmentVersion.versionComment)
+                        #else
+                            &nbsp;
+                        #end
+                    </td>
+                    #if ($showActions == "true")
+                        <td class="attachment-actions">
+                            #set ($webInterfaceContext = $attachmentHelper.getWebInterfaceContext($action.webInterfaceContext, $attachmentVersion))
+                            #set($webItems = $action.webInterfaceManager.getDisplayableItems("system.attachment.history", $webInterfaceContext))
+                            #if ($webItems.size() > 0)
+                                <ul>
+                                    #foreach ($item in $webItems)
+                                        #set ($isCurrent = ($context == $item.key))
+                                        <li class="#if($velocityCount == 1)first#end">#renderItemLink($item $isCurrent $webInterfaceContext)</li>
+                                    #end
+                                </ul>
+                            #else
+                                &nbsp;
+                            #end
+                        </td>
+                    #end
+                </tr>
+            #end
+        #end
+    #end
+</table>
+
+#*
+ Render HTML attributes required for attachment preview
+   Method Parameters:
+   * attachment             - Attachment object
+*#
+#macro (generatePreviewAttributes $attachment)
+    #if ($attachment)
+        data-linked-resource-type="attachment"
+        data-preview-view-mode="full"
+        data-linked-resource-container-id="$page.id"
+        data-file-src="/download/attachments/$page.id/$htmlUtil.urlEncode($attachment.fileName)?version=$attachment.version"
+        data-linked-resource-id="$attachment.id"
+        data-linked-resource-default-alias="$htmlUtil.urlEncode($attachment.fileName)"
+    #end
+#end

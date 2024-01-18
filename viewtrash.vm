@@ -1,0 +1,100 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.ViewTrashAction" *#
+
+#if (!$pageTitle) #set ($pageTitle = $action.getActionName($action.getClass().getName())) #end
+#if (!$trashDesc)
+    #if($darkFeatures.isDarkFeatureEnabled('confluence.retention.rules'))
+        #set ($trashDesc = $action.getText('text.trash.purge.desc'))
+    #else
+        #set ($trashDesc = $action.getText('text.trash.desc'))
+    #end
+#end
+#if (!$trashList)
+    #set ($trashList = $action.getTrash().getResults())
+    #set ($start = $action.getTrash().getPageRequest().getStart())
+    #set ($last_limit = $action.getTrash().getPageRequest().getLimit())
+    #set ($hasMore = $action.getTrash().hasMore())
+    #set ($resultSize = $action.getTrash().size())
+    #set ($currentCursor = $action.getTrash().getPageRequest().getCursor())
+    #set ($nextCursor = $action.getTrash().getNextCursor())
+    #set ($prevCursor = $action.getTrash().getPrevCursor())
+    #set ($viewingAllTrash = true)
+#end
+#set ($linkPrefix = "${req.getContextPath()}/pages/")
+
+<html>
+    <head>
+        <title>$pageTitle</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+
+        <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "trash")
+                #decoratorParam ("title" $pageTitle)
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "trash")
+                #decoratorParam("helper" $action.helper)
+
+                <p class="stepdesc">
+                    $trashDesc
+                </p>
+
+                #if ($resultSize > 0 && $viewingAllTrash)
+                    <ul class="static-menu">
+                        <li><strong><a href="${linkPrefix}emptytrash.action?key=$htmlUtil.urlEncode($key)">$action.getText('purge.all')</a></strong> &ndash; $action.getText('text.purge.all.desc')</li>
+                    </ul>
+                    #elseif (!$viewingAllTrash)
+                    <ul class="static-menu">
+                        <li><strong><a href="${linkPrefix}viewtrash.action?key=$htmlUtil.urlEncode($key)&limit=$htmlUtil.urlEncode($limit)">$action.getText('view.trash')</a></strong> &ndash; $action.getText('view.trash.desc')</li>
+                    </ul>
+                #end
+
+                <div class="pagecontent">
+
+                    #set ($results = $action.paginationSupport.page)
+
+                    #if ($resultSize > 0)
+                        <table cellspacing="1" class="tableview trash-table aui" width="100%">
+                            <thead>
+                                <tr>
+                                    <th width="60%">
+                                        $action.getText("title.name")
+                                        <span class="smalltext">($action.getText("heading.page.space"))</span>
+                                    </th>
+                                    <th width="20%">$action.getText("heading.space.trash.deleted.date")</th>
+                                    <th>$action.getText("heading.operations")</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            #foreach ($trash in $trashList)
+                                <tr data-content-id="$trash.getId().asLong()" class="trash-row" #alternateRowColors()>
+                                    <td width="60%" valign="top" class="trash-title">
+                                        #apiContentIcon($trash) $!trash.title #if ($trash.optionalParent.present && !$trash.optionalParent.empty) ($action.getText('text.trash.from',["$!trash.optionalParent.get()"])) #end
+                                    </td>
+                                    <td width="20%" valign="top" class="trashed-date">
+                                        #set($trashDate = $trashManager.findTrashDate($trash))
+                                        #if ($trashDate.isPresent()) $dateFormatter.formatDateTime($trashDate.get()) #end
+                                    </td>
+                                    <td align="center" nowrap>
+                                        <a href="${linkPrefix}restoretrashitem.action?key=$htmlUtil.urlEncode($key)&contentId=$trash.getId().asLong()">$action.getText('restore.name')</a> &middot; <a href="${linkPrefix}purgetrashitem.action?key=$htmlUtil.urlEncode($key)&contentId=$trash.getId().asLong()">$action.getText('purge.name')</a>
+                                    </td>
+                                </tr>
+                            #end
+                            </tbody>
+                        </table>
+                        #paginationCursor($start $resultSize $hasMore $currentCursor $prevCursor $nextCursor "viewtrash.action?key=$htmlUtil.urlEncode($key)&limit=$last_limit&")
+                    #else
+                        $action.getText("no.trashed.items")
+                    #end
+                </div>
+            #end
+        </body>
+    #end
+</html>

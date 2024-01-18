@@ -1,0 +1,384 @@
+#disableAntiXss()
+
+#set($successText = "#008004")
+#set($alertText = "#cc0000")
+#set($n300 = "#5E6C84")
+
+## The following are deprecated colors from ColourScheme.java
+## They are rarely used and so hardcoded to a sensible default here
+#set($spaceNameColor = "#999999")
+#set($navBgColor = "#DFE1E6")
+#set($navTextColor = "#505F79")
+#set($navSelectedBgColor = "#172B4D")
+#set($navSelectedTextColor = "#ffffff")
+
+##Colors for Confluence (included for all themes by default).
+
+h1, h2, h3, h4,
+.wiki-content h1,
+.wiki-content h2,
+.wiki-content h3,
+.wiki-content h4,
+.pagetitle,
+.steptitle,
+.substeptitle,
+.formtitle,
+table.confluenceTable td.confluenceTd.highlight,
+table.confluenceTable td.confluenceTd.highlight > p,
+table.confluenceTable th.confluenceTh,
+table.confluenceTable th.confluenceTh > p,
+.wiki-content .tablesorter-header-inner,
+table.admin th,
+.form-element-large,
+.form-element-small,
+#toolbar #format-dropdown .format-h1 a,
+#toolbar #format-dropdown .format-h2 a,
+#toolbar #format-dropdown .format-h3 a,
+#toolbar #format-dropdown .format-h4 a {
+    color: $colorScheme.headingTextColor;
+}
+
+h5, h6,
+.wiki-content h5,
+.wiki-content h6,
+#toolbar #format-dropdown .format-h5 a,
+#toolbar #format-dropdown .format-h6 a {
+    color: $n300;
+}
+
+#format-dropdown .mce_formatPreview.mce_blockquote a {
+    border-left-color: $colorScheme.borderColor;
+}
+
+.wiki-content h1,
+.wiki-content h2 {
+ 	border-bottom-color: $colorScheme.borderColor;
+}
+
+.wiki-content-preview {
+    border-left-color: $colorScheme.borderColor;
+    border-right-color: $colorScheme.borderColor;
+}
+
+.pageSectionHeader {
+    border-bottom-color: $navBgColor;
+}
+
+.panel {
+    border-color: $colorScheme.borderColor;
+}
+
+.panelHeader,
+.menuheading,
+.pageheader,
+.sectionbottom {
+    border-bottom-color: $colorScheme.borderColor;
+}
+
+.topRow {
+    border-top-color: $colorScheme.borderColor;
+}
+
+.tabletitle, .pageSectionHeader {
+	border-bottom-color: $colorScheme.borderColor;
+}
+
+blockquote {
+    border-left-color: $colorScheme.borderColor;
+}
+
+a,
+a:visited,
+a:focus,
+a:hover,
+a:active,
+a.blogHeading {
+    color: $colorScheme.linkColor;
+}
+
+## Update sidebar link with customised link color
+## due to CONFSERVER-40272
+.acs-side-bar-space-info a,
+.acs-side-bar .tip a,
+.ia-secondary-container a {
+    color: $colorScheme.linkColor;
+}
+
+.aui-nav-vertical li a:link,
+.aui-nav-vertical li a:focus,
+.aui-nav-vertical li a:visited,
+.aui-nav-vertical li a:active {
+    color: $colorScheme.linkColor;
+}
+
+.wiki-content a,
+.wiki-content a:link,
+.wiki-content a:visited,
+.wiki-content a:focus,
+.wiki-content a:hover,
+.wiki-content a:active {
+    color: $colorScheme.linkColor;
+}
+
+## Applied to blog sidebar navigation due to CONFDEV-13039
+##    Consider proper theming if reused
+## Applied color scheme to blog side bar link due to CONFSERVER-40272
+.ia-secondary-content .acs-tree-item .navigation-pseudo-link {
+    color: $colorScheme.linkColor;
+}
+
+a.visitable:visited {
+    color: $colorScheme.visitedLinkColor;
+}
+
+.createlink,
+a.createlink,
+a.createlink:link,
+a.createlink:visited,
+a.createlink:active,
+a.createlink:hover {
+    text-decoration: underline;
+    color: #6D1806;
+}
+
+.unresolved,
+a.unresolved,
+a.unresolved:link,
+a.unresolved:visited,
+a.unresolved:active,
+a.unresolved:hover {
+    text-decoration: underline;
+    color: #828282;
+}
+
+.not-permitted,
+a.not-permitted,
+a.not-permitted:link,
+a.not-permitted:visited,
+a.not-permitted:hover,
+a.not-permitted:active {
+    color: $alertText;
+}
+
+.grey,
+a.grey,
+a.grey:link,
+a.grey:visited,
+a.grey:hover,
+a.grey:active {
+    color: #666;
+}
+
+#tinymce.wiki-content a,
+#tinymce.wiki-content a:link,
+#tinymce.wiki-content a:visited,
+#tinymce.wiki-content a:focus,
+#tinymce.wiki-content a:hover,
+#tinymce.wiki-content a:active {
+	color: $colorScheme.linkColor !important;
+}
+
+#tinymce.wiki-content>p {
+    word-wrap: break-word;
+}
+
+#tinymce.wiki-content a.createlink {
+    color: #6D1806  !important; ## !important used to negate styles used in designMode in FF
+}
+
+#tinymce.wiki-content a.unresolved {
+    color: #828282 !important; ## !important used to negate styles used in designMode in FF
+}
+
+#tinymce.wiki-content a.not-permitted {
+    color: $alertText !important; ## !important used to negate styles used in designMode in FF
+}
+
+h1 a:link,
+h1 a:visited,
+h1 a:focus,
+h1 a:hover,
+h1 a:active {
+    color: $colorScheme.linkColor;
+    border-bottom-color: $colorScheme.headingTextColor;
+}
+
+.spacenametitle-printable,
+.spacenametitle-printable a,
+.spacenametitle-printable a:visited {
+    color: $spaceNameColor;
+}
+
+.tableview th {
+    color: $colorScheme.headingTextColor;
+    border-bottom-color: $colorScheme.borderColor;
+}
+
+.navBackgroundBox {
+    background: $navBgColor;
+    color: $navTextColor;
+}
+
+.previewBoxTop,
+.previewContent,
+.previewBoxBottom,
+.functionbox {
+    border-color: $colorScheme.borderColor;
+}
+
+.smalltext-blue {
+    color: $colorScheme.borderColor;
+}
+
+.tabnav,
+.comment .tabnav,
+ul.tabnav {
+    border-bottom-color: $navBgColor;
+}
+
+.tabnav .tabs a {
+    border-color: $navBgColor;
+    background: $navBgColor;
+}
+
+.tabnav .tabs a:link,
+.tabnav .tabs a:visited {
+    color: $navTextColor;
+}
+.tabnav .tabs a:hover {
+    color: $navSelectedTextColor;
+    background: $navSelectedBgColor;
+    border-color: $navSelectedBgColor;
+}
+
+#squaretab a {
+    border-color: $navBgColor;
+}
+
+#squaretab a:link,
+#squaretab a:visited {
+    background-color: $navBgColor;
+    color: $navTextColor;
+}
+
+#squaretab a:hover {
+    color: $navSelectedTextColor;
+    background-color: $navSelectedBgColor;
+    border-color: $navSelectedBgColor;
+}
+
+table.blogcalendar {
+    border-color: $colorScheme.borderColor;
+}
+
+.blogcalendar th.calendarhead,
+a.calendarhead,
+a.calendarhead:link,
+a.calendarhead:visited,
+a.calendarhead:hover {
+    background-color: $navBgColor;
+    color: $navTextColor;
+}
+
+.searchGroupHeading {
+    background-color: $navBgColor;
+    color: $navTextColor;
+}
+
+## styles for links in the top bar
+.topBar {
+    background-color: $colorScheme.topBarColor;
+}
+
+.basicPanelContainer {
+    border-color: $navBgColor;
+}
+
+.greynavbar {
+    border-top-color: $navBgColor
+}
+
+div.license-personal {
+   background-color: $colorScheme.topBarColor;
+   color: $navTextColor;
+}
+
+div.license-personal a {
+   color: $navTextColor;
+}
+
+#header {
+    background-color: $colorScheme.topBarColor;
+}
+
+## the slash prior to #breadcrumbs below is required to escape the # from interpretation by velocity
+#header a,
+\#breadcrumbs {
+    color: $colorScheme.breadcrumbsTextColor;
+}
+
+.breadcrumbs {
+ 	border-color: $colorScheme.borderColor;
+}
+
+a.aui-skip-link {
+    color: $colorScheme.linkColor !important;
+}
+
+a.aui-skip-link:active, a.aui-skip-link:focus {
+    z-index: 100 !important;
+}
+
+.tab-navigation .tab a {
+    background-color: $navBgColor;
+    border: 1px solid $navBgColor;
+    color: $navTextColor;
+}
+.tab-navigation .tab a:hover {
+    color: $navSelectedTextColor;
+    background-color: $navSelectedBgColor;
+    border-bottom-color: $navSelectedBgColor;
+}
+
+.tabletitle, .heading-text-color {
+    color: $colorScheme.headingTextColor;
+}
+
+ol.autocompleter li.focused {
+	background: $colorScheme.menuSelectedBackgroundColor;
+	color: $colorScheme.menuItemSelectedTextColor;
+}
+
+## End colour styles for Confluence
+
+.diff-navigation a.version-navigation {
+    background-color: #ddd;
+}
+
+.diff-navigation a.version-navigation:hover {
+    background-color: #bbb;
+}
+
+.diff-navigation a.version-navigation.all:hover {
+    background-color: transparent;
+}
+
+## @group Admin tasklist colours
+
+.tasklist .task.complete .signoff { color: $successText; }
+.tasklist .task.incomplete .signoff { color: $alertText; }
+
+## @end Admin tasklist colours
+
+## @group Page move dialog colours
+
+#move-page-dialog .ui-tree li a.highlighted {
+    background-color: $navBgColor;
+    color: $navTextColor;
+}
+
+## @end Page move dialog colours
+
+#parse('/styles/aui-overrides-css.vm')
+#parse('/styles/labels-css.vm')
+#parse('/styles/diffs-css.vm')

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="$generalUtil.characterEncoding" ?>
+<rss version="0.92">
+
+<channel>
+	<title>Blog: $generalUtil.escapeXml($space.name) ($generalUtil.escapeXml($space.key))</title>
+	<description>$generalUtil.escapeXml($generalUtil.summarise($space.description.bodyContent.body))</description>
+    <link>$domainName/display/$space.key</link>
+
+    #foreach ($post in $posts)
+        <item>
+            <title>$!post.title</title>
+            <link>$domainName$generalUtil.escapeXml($post.urlPath)</link>
+            <description><![CDATA[
+                $action.pageXHtmlContent
+            ]]></description>
+        </item>
+    #end
+</channel>
+</rss>

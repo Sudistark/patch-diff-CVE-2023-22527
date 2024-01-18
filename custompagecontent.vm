@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+       <body>
+            #applyDecorator ("root")
+                    #decoratorParam ("context" "spaceadminpanel")
+                    #decoratorParam ("selection" "custompagecontent")
+                    #decoratorParam ("title" $action.getText("action.name"))
+                    #decoratorParam ("selectedTab" "admin")
+                    #decoratorParam ("selectedSpaceToolsWebItem" "custompagecontent")
+                    #decoratorParam ("helper" $action.helper)
+
+                    #parse ("/includes/common-custompagecontent.vm")
+            #end
+	    </body>
+    #end
+</html>

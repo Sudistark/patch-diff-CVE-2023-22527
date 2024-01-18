@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>$action.title</title>
+        <meta name="infopanel-width" content="25%">
+    </head>
+    #applyDecorator ("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "page")
+        #decoratorParam("mode" "view-information")
+        <body>
+            #if ($actionErrors.size() == 0 && $possibleAlternativesInTrash.size() > 0)
+                #set($trashLink = $req.getContextPath() + "/pages/viewtrash.action?key=" + $htmlUtil.urlEncode($space.key))
+                #set($spaceSummaryLink = $req.getContextPath() + "/spaces/viewspacesummary.action?key=" + $htmlUtil.urlEncode($space.key))
+                #set($titleText = $htmlUtil.htmlEncode($action.title))
+                #requireResource("confluence.web.resources:page-intrash-resources")
+
+                #if ($possibleAlternativesInTrash.get(0).getType() == 'blogpost')
+                ## If content in trash is a blog post
+                    #set($messageTitle = $action.getText("alternatives.blogpost.intrash.title", [$titleText]))
+                    #if ($action.isSpaceAdminUser())
+                        #set($messageDescription = $action.getText("blogpost.in.trash.admin", [$trashLink]))
+                    #else
+                        #set($messageDescription = $action.getText("blogpost.in.trash.user", [$spaceSummaryLink]))
+                    #end
+                #else
+                ## If content in trash is a page
+                    #set($messageTitle = $action.getText("alternatives.page.intrash.title", [$titleText]))
+                    #if ($action.isSpaceAdminUser())
+                        #set($messageDescription = $action.getText("page.in.trash.admin", [$trashLink]))
+                    #else
+                        #set($messageDescription = $action.getText("page.in.trash.user", [$spaceSummaryLink]))
+                    #end
+                #end
+
+                <div id="page-intrash-container" class="page-intrash">
+                    <div class="page-intrash-icon"></div>
+                    <div class="page-intrash-message">$messageTitle</div>
+                    <div class="page-intrash-action">$messageDescription</div>
+                </div>
+            #else
+                #parse("/pages/alternativepages-results.vm")
+            #end
+        </body>
+    #end
+</html>

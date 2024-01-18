@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<title>$action.getText("title.admin.console")</title>
+        <content tag="subtitleDescription">console.description</content>
+	</head>
+	<body>
+		#parse ( "/breadcrumbs.vm" )
+		#parse ( "/template/includes/actionerrors.vm" )
+
+        #set($supportEndedPlaceholder = "confluence.support.has.ended.server")
+        #set($buyRenewalPlaceholder = "buy.renewal.server")
+        #set($supportAboutToEndPlaceholder = "confluence.support.is.about.to.end.server")
+
+        #set ($confluenceLicense = $licenseService.retrieve() )
+        #if($confluenceLicense && $confluenceLicense.subscription)
+            #set($supportEndedPlaceholder = "confluence.support.has.ended.datacenter")
+            #set($buyRenewalPlaceholder = "buy.renewal.datacenter")
+            #set($supportAboutToEndPlaceholder = "confluence.support.is.about.to.end.datacenter")
+        #end
+
+        #if ($displaySupportPeriodEndMessage && $displaySupportPeriodEndMessage == "on")
+            #applyDecorator ("alert" "")
+                $action.getText($supportEndedPlaceholder,["$supportPeriodEndDateString"])
+                <p>$action.getText($buyRenewalPlaceholder, ["<a href='$action.getText('url.atlassian.license.renew')'> ", "</a>", "<a href='$action.getText('url.atlassian.license.help')'> ", "</a>"])
+                <p>$action.getText("license.editing.help", ["<a href='$docBean.getLink('help.managing.confluence.license')'> ", "</a>"])
+            #end
+        #end
+
+		#if ($displayAlmostSupportPeriodEndMessage && $displayAlmostSupportPeriodEndMessage == "on")
+            #applyDecorator ("message")
+                #decoratorParam("type" "warning")
+                $action.getText($supportAboutToEndPlaceholder,["$supportPeriodEndDateString"])
+                <p>$action.getText($buyRenewalPlaceholder, ["<a href='$action.getText('url.atlassian.license.renew')'> ", "</a>", "<a href='$action.getText('url.atlassian.license.help')'> ", "</a>"])
+                <p>$action.getText("license.editing.help", ["<a href='$docBean.getLink('help.managing.confluence.license')'> ", "</a>"])
+                $action.getText('dont.remind.me', ["$req.contextPath/admin/editconsolemessages.action?displayAlmostSupportPeriodEndMessage=off&#url_xsrfToken()"])
+            #end
+        #end
+
+        #parse ( "/admin/tasklist.vm" )
+    </body>
+</html>

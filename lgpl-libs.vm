@@ -1,0 +1,28 @@
+
+##Auto-generated. Do not change.
+<ul>
+<li>atlassian-image-consumer (<a href="http://www.gnu.org/licenses/lgpl-2.1.txt" target="_blank">com.atlassian.image:atlassian-image-consumer:1.0.1:jar</a>)</li>
+<li>Confluence TDM (<a href="https://www.atlassian.com/closedsource-pom/TDM/" target="_blank">com.atlassian.confluence.diff:TDM:1.0.2:jar</a>)</li>
+<li>fastutil (<a href="http://fastutil.dsi.unimi.it/" target="_blank">it.unimi.dsi:fastutil:8.5.11:jar</a>)</li>
+<li>Flying Saucer Core Renderer (<a href="http://code.google.com/p/flying-saucer/flying-saucer-core/" target="_blank">org.xhtmlrenderer:flying-saucer-core:9.1.22:jar</a>)</li>
+<li>Flying Saucer PDF Rendering (OpenPDF) (<a href="http://code.google.com/p/flying-saucer/flying-saucer-pdf-openpdf/" target="_blank">org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.1.22:jar</a>)</li>
+<li>Hibernate Commons Annotations (<a href="https://github.com/hibernate/hibernate-commons-annotations/" target="_blank">org.hibernate.common:hibernate-commons-annotations:5.1.2.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-c3p0 (<a href="https://hibernate.org/orm/" target="_blank">org.hibernate:hibernate-c3p0:5.6.10.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-core (<a href="http://hibernate.org/hibernate-core" target="_blank">org.hibernate:hibernate-core:5.5.3.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-core (<a href="https://hibernate.org/orm/" target="_blank">org.hibernate:hibernate-core:5.6.10.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-ehcache (<a href="https://hibernate.org/orm/" target="_blank">org.hibernate:hibernate-ehcache:5.6.10.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-entitymanager (<a href="http://hibernate.org/hibernate-core" target="_blank">org.hibernate:hibernate-entitymanager:5.5.3.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-entitymanager (<a href="https://hibernate.org/orm/" target="_blank">org.hibernate:hibernate-entitymanager:5.6.10.Final:jar</a>)</li>
+<li>Hibernate ORM - hibernate-hikaricp (<a href="https://hibernate.org/orm/" target="_blank">org.hibernate:hibernate-hikaricp:5.6.10.Final:jar</a>)</li>
+<li>image4j (<a href="http://www.gnu.org/licenses/lgpl.txt" target="_blank">org.jclarion:image4j:0.7:jar</a>)</li>
+<li>JCaptcha (<a href="http://www.gnu.org/licenses/lgpl.txt" target="_blank">io.leopard.thirdparty:jcaptcha-core:2.0.0:jar</a>)</li>
+<li>jcaptcha-api (<a href="http://www.gnu.org/licenses/lgpl.txt" target="_blank">io.leopard.thirdparty:jcaptcha-api:2.0.0:jar</a>)</li>
+<li>jfreechart (jfree:jfreechart:1.0.13:jar)</li>
+<li>jStyleParser (<a href="http://www.gnu.org/licenses/lgpl-3.0.txt" target="_blank">net.sf.cssbox:jstyleparser:1.16-atlassian-1:jar</a>)</li>
+<li>jTDS (<a href="https://www.gnu.org/licenses/lgpl-2.1.txt" target="_blank">net.sourceforge.jtds:jtds:1.3.1:jar</a>)</li>
+<li>openpdf (<a href="https://github.com/LibrePDF/OpenPDF" target="_blank">com.github.librepdf:openpdf:1.3.11:jar</a>)</li>
+<li>PDF renderer -  Atlassian patched (pdf-renderer:pdf-renderer:1.13-atlassian-8:jar)</li>
+<li>SpotBugs Annotations (<a href="https://spotbugs.github.io" target="_blank">com.github.spotbugs:spotbugs-annotations:4.7.2:jar</a>)</li>
+<li>syntaxhighligher (<a href="https://code.google.com/p/syntaxhighlighter/" target="_blank">1.5</a>)</li>
+<li>TinyMCE-TinyMCE (<a href="http://sourceforge.net/projects/tinymce/" target="_blank">3.4.3.2-atlassian-3</a>)</li>
+</ul>

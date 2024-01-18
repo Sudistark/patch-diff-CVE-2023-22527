@@ -1,0 +1,53 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.ViewFollowAction" *#
+<html>
+    <head>
+        <title>$htmlUtil.htmlEncode($pageTitle)</title>
+        #requireResource("confluence.web.resources:aui-forms")
+        #requireResource("confluence.sections.user.view.follow:resources")
+        #rssautodiscovery($action.rssDescriptor)
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("context" "profile")
+        #decoratorParam("mode"  "follow")
+        #decoratorParam("helper" $action.helper)
+
+        <body>
+            <div id="follow-container">
+                <div id="activity">
+	                #if($action.undoUnfollowNeeded)
+	                    #applyDecorator("success")
+	                        <span>$i18n.getText('stop.following.email.confirmation', [$htmlUtil.htmlEncode($action.undoUnfollowUser.fullName)])</span>
+	                        <a href="$req.contextPath/followuser.action?mode=network&username=$action.undoUnfollow&#url_xsrfToken()">$i18n.getText('undo.word')</a>
+	                    #end
+	                #end
+                    <h2>
+                        <span>$i18n.getText('activity.description.my')</span>
+                        <div class="activity-toolbar">
+                            #if($viewingMyProfile)
+                                <a class="icon email-notification-icon" title="$i18n.getText('activity.description.my.email')" href="$req.contextPath/users/viewmyemailsettings.action">&nbsp;</a>
+                                <a class="icon rss-icon" title="$i18n.getText('activity.description.my.feed')" href="$req.contextPath$rssDescriptor.atomHref">&nbsp;</a>
+                            #else
+                                <a class="icon rss-icon" title="$i18n.getText('activity.description.feed')" href="$req.contextPath$rssDescriptor.atomHref">&nbsp;</a>
+                            #end
+                        </div>
+                    </h2>
+                    #if ("$!action.followersList" != "")
+                        $action.helper.renderConfluenceMacro("{recently-updated:spaces=*|author=%s|theme=social|hideHeading=true|max=15}", $action.followersList)
+                    #else
+                        #if($viewingMyProfile == true)
+                            <div class="padded">$i18n.getText('community.macro.following.my', [0])</div>
+                        #else
+                            <div class="padded">$i18n.getText('community.macro.following', ["$action.user.fullName",0])</div>
+                        #end
+                    #end
+                </div>
+                <div id="follow">
+                    $action.helper.renderConfluenceMacro("{network:following|username=%s}", $action.username)
+                    <br/>
+                    $action.helper.renderConfluenceMacro("{network:followers|username=%s}", $action.username)
+                </div>
+            </div>
+        </body>
+    #end
+</html>

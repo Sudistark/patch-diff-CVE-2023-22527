@@ -1,0 +1,6 @@
+			<content tag="operations">
+                #if( $permissionHelper.canRemove($action.authenticatedUser, $group))
+				<img src="$staticResourceUrlPrefix/images/icons/bullet_creme.gif" height="8" width="8" alt=""/>
+				<a href="$req.contextPath/admin/users/removegroup-confirm.action?name=$group">$action.getText("remove.name")</a>
+                #end
+			</content>

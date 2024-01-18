@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <content tag="no-page-header">true</content>
+    </head>
+    <body>
+        <p></p>
+        <center>
+        <div class="greybox" style="width: 60%; background: #f0f0f0; text-align: left; padding: 10px">
+            <h4 style="margin: 3px 0 3px 0">$action.getText('your.license.has.expired')</h4>
+            <p>$action.getText("licenseexpired.explanation")</p>
+            <p>$action.getText('buy.new',[$action.getText('hitcounter.buy.new')]) $action.getText("licenceexpired.purchase")</p>
+            $action.getText('extend.evaluation.or.contact.us',[$action.getText('hitcounter.my.atlassian'),$action.getText('mailto.sales')])
+        </div>
+        </center>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+#parse ( "/template/includes/actionerrors.vm" )
+<div id="resultsDiv"></div>
+
+<div class="hidden parameters">
+    <input type="hidden" title="isAdministrator" value="$permissionHelper.isConfluenceAdministrator($action.authenticatedUser)">
+    <input type="hidden" title="removePageConfirmLabel" value="$action.getText('remove.page.confirmation.message')">
+
+    #if ($openNode)
+        <input type="hidden" title="expandedNodes" class="list" value="$openId">
+        #foreach ($nodeId in $openedNodes)
+            <input type="hidden" title="expandedNodes" class="list" value="$nodeId">
+        #end
+    #end
+</div>
+
+<div class="tree-container">
+    #if ($permissionHelper.canEdit($remoteUser, $space))
+        <div class="tree-message">$action.getText("tip.browse.movepage")</div>
+    #end
+    <div id="tree-div"></div>
+</div>

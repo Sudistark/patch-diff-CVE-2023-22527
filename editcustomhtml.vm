@@ -1,0 +1,36 @@
+#macro(customHtmlInput $id $labelText $autofocus)
+    <textarea rows="4" id="${id}" name="${id}" class="textarea max-textarea" #if (${autofocus}) autofocus="autofocus"#end>${labelText}</textarea>
+#end
+
+<html>
+<head>
+    <title>$action.getText("custom.html")</title>
+    <meta name="help-path" content="/admin/lookandfeel/help/customhtml.vm"/>
+</head>
+
+<body>
+<content tag="selectedWebItem">customhtml</content>
+#parse ("/template/includes/actionerrors.vm")
+<form action="$req.contextPath/admin/doeditcustomhtml.action" method="post" class="aui top-label">
+    #form_xsrfToken()
+    <h2>$action.getText("customhtml.title")</h2>
+    <div class="field-group">
+        <label for="beforeHeadEnd" >$action.getText("customhtml.head.end")</label>
+        #customHtmlInput("beforeHeadEnd", $htmlUtil.htmlEncode($!beforeHeadEnd), true)
+    </div>
+    <div class="field-group">
+        <label for="afterBodyStart">$action.getText("customhtml.body.start")</label>
+         #customHtmlInput("afterBodyStart", $htmlUtil.htmlEncode($!afterBodyStart), false)
+    </div>
+    <div class="field-group">
+        <label for="beforeBodyEnd">$action.getText("customhtml.body.end")</label>
+        #customHtmlInput("beforeBodyEnd", $htmlUtil.htmlEncode($!beforeBodyEnd), false)
+    </div>
+    #ssubmit("theme='aui'"
+             "editMode=true"
+             "submitName=update"
+             "submitValue=$i18n.getText('update.name')")
+</form>
+#parse ( "/breadcrumbs.vm" )
+</body>
+</html>

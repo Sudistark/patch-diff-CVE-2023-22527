@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>$action.getText("title.add.${contentType}")</title>
+        <meta name="ajs-site-title" content="#siteTitle()" />
+    </head>
+
+    #set ($decorator = $req.getParameter("inline"))
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "${contentType}")
+        #decoratorParam("mode" "edit")
+
+        <body>
+            #parse ("/pages/includes/createpage-form.vm")
+        </body>
+    #end
+
+    ## needs to be outside of the applyDecorator macro so that this tag bubbles up to main.vmd
+    <content tag="bodyClass">contenteditor create</content>
+
+</html>

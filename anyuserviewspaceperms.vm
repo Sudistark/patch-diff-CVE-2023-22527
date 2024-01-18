@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode" "view-space-administration")
+
+        <body>
+
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "spacepermissions")
+                #decoratorParam("helper" $action.helper)
+                #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "spacepermissions")
+
+
+                <form name="disableanyuserpermission" action="disableanyuserviewspacepermission.action?key=$htmlUtil.urlEncode($key)" method="post" class="aui">
+                    #form_xsrfToken()
+                    <div>
+                        <h2 id="any-user-view-space-permissions-title">$action.getText("any.user.view.space.permissions.title")</h2>
+                        <p id="any-user-view-space-permissions-desc1">$action.getText("any.user.view.space.permissions.desc1")</p>
+                        <p id="any-user-view-space-permissions-desc2">$action.getText("any.user.view.space.permissions.desc2")</p>
+                        <div class="primary-button-container">
+                            <input type="submit" value="$action.getText('any.user.view.space.permissions.disable.button')" id="any-user-view-space-permissions-disable-btn" name="disable" class="aui-button aui-button-primary">
+                            <input type="submit" value="$action.getText('cancel.name')" id="any-user-view-space-permissions-cancel-btn" name="cancel" class="aui-button aui-button-link">
+                        </div>
+                    </div>
+
+                </form>
+            #end
+        </body>
+
+    #end
+</html>

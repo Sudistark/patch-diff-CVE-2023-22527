@@ -1,0 +1,44 @@
+#entityPagination($action.paginationSupport "javascript:searchGroups")
+<center>
+    <table cellspacing="0" class="grid" width="25%" align="center">
+    <tr>
+        <th>$action.getText("group.name")</th>
+        <th>$action.getText("repository")</th>
+    </tr>
+
+        #if( $users.isEmpty())
+    <td colspan="4">
+                $action.getText("there.are.no.groups")
+    </td>
+        #else
+            #set( $groups =$action.paginationSupport.page  )
+
+            #foreach( $group in $groups.iterator())
+
+               #if ("$!group" == "")
+               #else
+                <tr # if ($ velocityCount%2== 0) bgcolor="#f0f0f0"# end>
+
+                                #if ($action.viewAll)
+                    <td valign="top">*
+                        <strike>
+                            <a href="viewuser.action?username=$!generalUtil.doubleUrlEncode($!user.name)">$!group.name</a>
+                        </strike>
+                    </td>
+                                #else
+                    <td valign="top">
+                        <a href="viewuser.action?username=$!generalUtil.doubleUrlEncode($user.name)">$!group.name</a>
+                    </td>
+                                #end
+                    <td>
+                                $userAccessor.getRepository($group).getName()
+                    </td>
+                </tr>
+
+                 #set ($group = "")
+                #end
+            #end
+        #end
+    </table>
+</center>
+#entityPagination($action.paginationSupport "javascript:searchGroups")

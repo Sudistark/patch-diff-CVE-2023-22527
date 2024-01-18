@@ -1,0 +1,14 @@
+<html>
+<head>
+    <title>$action.getText("title.xsrf.expired")</title>
+</head>
+<body>
+    <div class='PageContent'>
+        #if ($actionErrors && $actionErrors.size() > 0)
+            #parse ( "/template/includes/actionerrors.vm" )
+        #else    
+            $action.getText("atlassian.xwork.xsrf.badtoken")
+        #end
+    </div>
+</body>
+</html>

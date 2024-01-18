@@ -1,0 +1,206 @@
+#macro (renderDraftActions $spaceKey $draft $resumable)
+    <td class="draft-actions">
+        #if(($resumable || $action.isViewableDraft($draft)) && $action.isDiscardableDraft($draft))
+            <button class="aui-button aui-dropdown2-trigger aui-dropdown2-trigger-arrowless" aria-controls="draft-actions-dropdown-$draft.id" aria-haspopup="true">
+                <span class="aui-icon aui-icon-small aui-iconfont-more">$action.getText('actions.word')</span>
+            </button>
+            <div id="draft-actions-dropdown-$draft.id" class="aui-style-default aui-dropdown2">
+                <ul class="aui-list-truncate">
+                    <li class="draft-actions-list-item">
+                        #if($resumable)
+                            <a id="resume-draft-$draft.id" class="resume-draft-link" href="$req.contextPath/pages/resumedraft.action?draftId=$draft.id">
+                                $action.getText('resume.editing')
+                            </a>
+                        #elseif ($action.isViewableDraft($draft))
+                            <a id="resume-draft-$draft.id" class="view-legacy-draft" href="#" data-draftId="$draft.id" data-draftTitle="$draft.title">
+                                $action.getText('view.legacy.draft')
+                            </a>
+                        #end
+                    </li>
+                    <li class="draft-actions-list-item">
+                        ## Discard unpublished changes in the shared draft, which has page attached to it, is possible,
+                        ## but not straight forward. Discard link for those can be added later, if this become highly requested feature.
+                        ## In order to keep UI consistent, it was decided also not to show discard link to unpublished drafts
+                        <a id="discard-draft-$draft.id" class="discard-draft-link" href="#" data-draftId="$draft.id">
+                            $action.getText('discard.name')
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        #elseif ($action.isViewableDraft($draft))
+            <a id="resume-draft-$draft.id" class="view-legacy-draft" href="#" data-draftId="$draft.id" data-draftTitle="$draft.title">
+                $action.getText('view.legacy.draft')
+            </a>
+        #end
+    </td>
+#end
+
+#macro (renderDraft $spaceKey $draft $resumable)
+    <tr id="draft-$draft.id">
+        <td class="draft-title-description">
+            ## Legacy drafts will have a type of 'draft' so we need to read the draftType to determine which icon to display (page or blogpost)
+            #set ($type = $draft.type)
+
+            #if ($action.isLegacyDraft($draft))
+                #set ($type = $draft.draftType)
+            #end
+
+            #iconSpan($type $type)
+
+            #if ($resumable)
+                <a class="drafts-title resume-draft-link" href="$req.contextPath/pages/resumedraft.action?draftId=$draft.id">
+                    #if ("$!{draft.title}" != "") $!{draft.title} #else <em>$action.getText('untitled.draft.title')</em> #end
+                </a>
+            #else
+                #if ($action.isViewableDraft($draft) && $action.isDiscardableDraft($draft))
+                    <a class="drafts-title view-legacy-draft" href="#" data-draftId="$draft.id" data-draftTitle="$draft.title">
+                        #if ("$!{draft.title}" != "") $!{draft.title} #else <em>$action.getText('untitled.draft.title')</em> #end
+                    </a>
+                #else
+                    #if ("$!{draft.title}" != "") $!{draft.title} #else <em>$action.getText('untitled.draft.title')</em> #end
+                #end
+            #end
+
+            <div class="draft-summary">
+                #if ($draft.bodyAsString.length() > 0)
+                    $generalUtil.shortenString($draft.excerpt, 150)
+                #else
+                    <em>$action.getText('draft.no.content')</em>
+                #end
+            </div>
+        </td>
+
+        <td class="draft-last-modified">
+            $generalUtil.getRelativeTime($draft.lastModificationDate)
+        </td>
+
+        #renderDraftActions($spaceKey $draft $resumable)
+    </tr>
+#end
+
+#macro (renderDraftsBySpace $draftsBySpace $resumable)
+    #foreach ($space in $draftsBySpace.keySet())
+        <li>
+            <div>
+                #if($space.personal)
+                    <div class="space-logo">
+                        #logoBlock($space.key)
+                    </div>
+                #else
+                    #logoBlock($space.key)
+                #end
+                <div class="draft-space-title">$space.name</div>
+            </div>
+
+            <div class="drafts-container">
+                #set ($drafts = $draftsBySpace.get($space))
+                <table class="aui">
+                    <thead>
+                        <tr>
+                            <th>$action.getText('draft')</th>
+                            <th>$action.getText('last.saved')</th>
+                            <th>$action.getText('actions.word')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach ($draft in $drafts)
+                            #renderDraft($space.key $draft $resumable)
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </li>
+    #end
+#end
+
+<html>
+<head>
+    <title>$htmlUtil.htmlEncode($pageTitle)</title>
+    #if ($action.editingUser)
+        <meta name="ajs-editing-user" content="$action.editingUser" />
+    #end
+</head>
+
+<body>
+    #requireResource("confluence.web.resources:draft-changes")
+    #requireResource("confluence.web.resources:view-my-drafts")
+    #requireResource("confluence.web.resources:page-message")
+    #requireResource("com.atlassian.auiplugin:aui-dropdown2")
+
+    #applyDecorator("root")
+    #decoratorParam("context" "profile")
+    #decoratorParam("mode" "drafts")
+    #decoratorParam("helper" $action.helper)
+    #decoratorParam("infopanel-width" "200px")
+
+    #if(!$darkFeatures.isDarkFeatureEnabled('react.ui'))
+        <div id="draft-space-list" class="view-my-drafts recently-updated">
+            <div id="errors"></div>
+
+            <h2>$action.getText('drafts.name')</h2>
+            <p>$action.getText('viewdrafts.page.desc')</p>
+
+            <ol id="resumable-draft-space-list" class="drafts-by-space">
+                #if ($action.resumableDraftsBySpace.isEmpty())
+                    <li>
+                        <span>$action.getText('no.drafts.found')</span>
+                    </li>
+                #else
+                    #renderDraftsBySpace($action.resumableDraftsBySpace true)
+                #end
+            </ol>
+
+            #if (!$action.nonResumableDraftsBySpace.isEmpty())
+                #if ($action.collaborativeEditingHelper.isSharedDraftsFeatureEnabled(''))
+                    <h2>$action.getText('drafts.personal.name')</h2>
+                    <p>$action.getText('viewdrafts.page.personal.desc')</p>
+                #else
+                    <h2>$action.getText('drafts.shared.name')</h2>
+                    <p>$action.getText('viewdrafts.page.shared.desc')</p>
+                #end
+
+                <ol id="non-resumable-draft-space-list" class="drafts-by-space">
+                    #renderDraftsBySpace($action.nonResumableDraftsBySpace false)
+                </ol>
+            #end
+        </div>
+    #else
+        ## TODO: The code above has been changed, so the React code has to adapted to the draft list changes
+        ## TODO: Remove this container once the parent container is converted to React.
+        ## NOTE: This container should not be targetted with CSS or test rules.
+        <div id="confluence-ui"></div>
+        ## TODO: Convert to a Java/REST API.
+        <script>
+            var __INITIAL_STATE__ = typeof __INITIAL_STATE__ !== 'undefined' ? __INITIAL_STATE__ : {};
+            __INITIAL_STATE__ = _.extend(__INITIAL_STATE__, {
+                drafts: {
+                    #foreach ($space in $draftsBySpace.keySet())
+                        #set ($drafts = $draftsBySpace.get($space))
+                        #foreach ($draft in $drafts)
+                            '$draft.id': {
+                                id: '$draft.id',
+                                space: {
+                                    id: '$space',
+                                    spaceKey: '$space',
+                                    name: '$spaceManager.getSpace($space).name',
+                                    logo: '$spaceManager.getLogoForSpace($spaceKey).getDownloadPath()',
+                                },
+                                excerpt: '$draft.excerpt',
+                                type: '$draft.type',
+                                title: '$draft.title',
+                                pageId: 0,
+                                pageVersion: 0,
+                                lastModified: '$generalUtil.getRelativeTime($draft.lastModificationDate)',
+                                resumeLink: '$req.contextPath/pages/resumedraft.action?draftId=$draft.id'
+                            },
+                        #end
+                    #end
+                }
+            });
+        </script>
+        <script src="$action.getFrontendServiceURL()/download/vendor.js"></script>
+        <script src="$action.getFrontendServiceURL()/download/drafts.js"></script>
+    #end
+#end
+</body>
+</html>

@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    <body>
+        #parse ( "/breadcrumbs.vm" )
+
+        <dl>
+        #foreach ($classloader in $action.threadContextClassLoaders)
+            <dt>ClassLoader: $classloader</dt>
+            <dd>
+                <ol>
+                #foreach ($item in $action.getClassLoaderClasspath($classloader))
+                    <li>$item</li>
+                #end
+                </ol>
+            </dd>
+        #end
+        </dl>
+
+        #set ($jarSets = $action.jarSetsWithCommonClasses)
+        #if ($jarSets.empty)
+                <div class='panelMacro'><table class='tipMacro'>
+                    <colgroup><col width='24'><col></colgroup>
+                    <tr>
+                        <td valign='top'><img src="$staticResourceUrlPrefix/images/icons/emoticons/check.png" width="16" height="16" align="absmiddle" alt="" border="0"></td>
+                        <td>No duplicate class files found in classpath JARs</td>
+                    </tr>
+                </table></div>
+        #else
+
+        <div class='panelMacro'><table class='warningMacro'>
+            <colgroup><col width='24'><col></colgroup>
+            <tr>
+                <td valign='top'><img src="$staticResourceUrlPrefix/images/icons/emoticons/forbidden.png" width="16" height="16" align="absmiddle" alt="" border="0"></td>
+                <td>Duplicate class files found in classpath JARs</td>
+            </tr>
+        </table></div>
+
+        <dl>
+            #foreach( $jarSet in $jarSets)
+            <dt>
+            <p>The following JARs have classes in common:</p>
+            <ul>
+                #foreach( $jar in $jarSet.iterator() )
+                    <li>$jar</li>
+                #end
+            </ul>
+            </dt>
+            <dd>
+            <p>Packages with duplicates:</p>
+            <ul>
+                #foreach( $package in $action.getCommonPackages($jarSet) )
+                    <li>$package</li>
+                #end
+             </ul>
+             </dd>
+            #end
+            </dl>
+        #end
+
+        <p>This is excluding the following known duplicates:</p>
+        <ul>
+        #foreach ($exclusion in $action.knownDuplicates)
+            <li>$exclusion</li>
+        #end
+        </ul>
+        </ul>
+    </body>
+</html>

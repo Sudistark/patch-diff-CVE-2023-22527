@@ -1,0 +1,23 @@
+<form name="connecttojira" method="POST" action="connecttojira.action" class="aui">
+
+    <div class="progress-status">
+        <span id='wait-spinner'><img src="$staticResourceUrlPrefix/images/icons/wait.gif"></span>
+        <span class="smalltext" id="taskCurrentStatus">$htmlUtil.htmlEncode($task.currentStatus)</span>
+    </div>
+
+    <div class="field-group">
+        <label id="task-elapsed-time-label" for="taskElapsedTime">$action.getText("time.elapsed"):</label>
+        <span id="taskElapsedTime" name="taskElapsedTime" class="setup-field-value">$task.prettyElapsedTime</span>
+    </div>
+
+    <div id="hidden-longrunningtask-fields" style="display:none;">
+        <span id="taskTimeRemaining"></span>
+        <span id="percentComplete"></span>
+        <span id="taskProgressBar">
+            <span id="taskGrayBar" class="graybar">&nbsp;</span>
+            <span id="taskGreenBar" class="greenbar">&nbsp;</span>
+        </span>
+    </div>
+
+</form>
+

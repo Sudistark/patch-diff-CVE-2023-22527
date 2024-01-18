@@ -1,0 +1,19 @@
+<html>
+	<head>
+		<title>$action.getText("setup.already.title")</title>
+	</head>
+
+	<body>
+        #parse ("/setup/analytics-data.vm")
+        #parse ( "/template/includes/actionerrors.vm" )
+
+   		#if ($actionErrors.size() == 0)
+            <p>
+            $action.getText("setup.already.text")
+            </p>
+            <p>
+            $action.getText('setup.return.to.confluence', ["$!action.getGlobalSettings().getBaseUrl()"])
+            </p>
+        #end
+	</body>
+</html>

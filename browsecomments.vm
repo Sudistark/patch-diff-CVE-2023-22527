@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Comments Browser</title>
+</head>
+<body>
+<p>This page displays the most recently added comments and allows to quickly spot and delete spam comments.
+
+#if ($action.defaultEncoding.toUpperCase() != "UTF-8")
+    <p class="error">To run this test, Confluence's default encoding must be set to UTF-8.
+       Confluence's current encoding is $action.defaultEncoding.</p>
+#else
+
+<form method="POST" action="deletecomments.action">
+#form_xsrfToken()
+<table class="grid">
+    #foreach ($comment in $comments)
+    <tr>
+        <td valign="top" align="left" width="5%" bgcolor="#f0f0f0" style="padding:5px">
+            <input type="checkbox" name='deleteCommentsList' value="$comment.id" >
+        </td>
+        <td valign="top" align="left" width="33%" bgcolor="#f0f0f0" style="padding:5px">
+            $comment.getCreationDate()
+        </td>
+        <td valign="top" align="left" width="33%" bgcolor="#f0f0f0" style="padding:5px">
+            $comment.getContent()
+        </td>
+    </tr>
+    #end
+</table>
+
+    #form_xsrfToken()
+<input type="submit" value="Delete Comments">
+</form>
+
+#end
+
+</body>
+</html>

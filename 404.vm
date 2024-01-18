@@ -1,0 +1,32 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.core.actions.FourOhFourAction" *#
+<html>
+    <head>
+        <title>$action.getText("title.404")</title>
+        <meta name="decorator" content="atl.general">
+    </head>
+    <body>
+        #if ($req)<meta name="confluence-request-uri" content="$htmlUtil.htmlEncode($req.requestURI)">#end
+        #if ($req)<meta name="confluence-query-string" content="$htmlUtil.htmlEncode($req.queryString)">#end
+        <content tag="bodyClass">error-page</content>
+		<p>$action.getText("404.message")</p>
+		<ul>
+		    <li>$action.getText("404.message.reason1")</li>
+		    <li>$action.getText("404.message.reason2")</li>
+		</ul>
+		#parse ( "/template/includes/actionerrors.vm" )
+
+		#if ($actionErrors.size() == 0)
+			<h3 id="searchheading">$action.getText("404.search.title")</h3>
+			<form method="GET" action="$req.contextPath/dosearchsite.action" name="searchForm" class="aui">
+				<input type="text" accessKey="s" id="searchfield" name="queryString" size="40" class="text"/>
+				<input type="submit" value="$action.getText('search.name')" class="aui-button"/>
+			</form>
+			<h3>$action.getText("404.nav.title")</h3>
+			<ul>
+				<li><a href="$req.contextPath/">$action.getText("404.nav.home")</a></li>
+				<li><a href="$req.contextPath/dashboard.action">$action.getText("404.nav.dashboard")</a></li>
+			</ul>
+		#end
+        #parse('/breadcrumbs.vm')
+    </body>
+</html>

@@ -1,0 +1,40 @@
+#set ($headingPageTitle     = $action.getText("heading.page.title"))
+#set ($headingPageSpace     = $action.getText("heading.page.space"))
+#set ($headingModifier      = $action.getText("heading.modifier"))
+#set ($headingModDate       = $action.getText("heading.mod.date"))
+
+#set ($thereAreNoPages = $parameters.thereAreNoPages)
+#if (!$thereAreNoPages)
+    #set ($thereAreNoPages      = $action.getText("there.are.no.pages"))
+#end
+
+#set ($showrss              = $parameters.showrss)
+#set ($showmore             = $parameters.showmore)
+#set ($showless             = $parameters.showless)
+#set ($textShowLess         = $action.getText("show-less"))
+#set ($textShowMore         = $action.getText("show-more"))
+#set ($tableWidth           = "99%") 
+#set ($displayChangeComments = $parameters.displayChangeComments) 
+
+#if ($parameters.parentWindow)
+    #set ($parentWindow = $parameters.parentWindow)
+#end
+
+#if ($parameters.insertLink)
+  #set ($insertLink = $parameters.insertLink)
+#end
+
+#if ($parameters.rightIcon)
+  #set ($rightIcon = $parameters.rightIcon)
+#end
+
+#if ($parameters.contentOther)
+  #set ($contentOther = $parameters.contentOther)
+#end
+
+#set ($showModifier = true)
+#if ($parameters.showModifier)
+  #set ($showModifier = $parameters.showModifier)
+#end
+
+#parse("template/xhtml/pagelist.vm")

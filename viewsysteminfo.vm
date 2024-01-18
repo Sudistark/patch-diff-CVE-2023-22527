@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    <body>
+        <content tag="selectedWebItem">systeminfo</content>
+        #parse ( "/breadcrumbs.vm" )
+
+        #parse ( "/template/includes/actionerrors.vm" )
+        #if ($actionErrors.size() == 0)
+            <div>
+                #parse ( "/admin/systeminfo.vm" )
+            </div>
+        #end
+    </body>
+</html>

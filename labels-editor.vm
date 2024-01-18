@@ -1,0 +1,3 @@
+## Please use /com/atlassian/confluence/plugins/labels/components/labels-editor.vm instead
+$deprecated.since("5.8")
+#parse("/com/atlassian/confluence/plugins/labels/components/labels-editor.vm")

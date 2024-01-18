@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Preview Macro</title>
+
+    #requireResource("confluence.web.resources:master-scripts")
+    #requireResource("confluence.web.resources:master-styles")
+    #requireResourcesForContext("preview")
+    #standardHeader()
+
+    <script>
+        window.onload = function() {
+            window.parent.AJS.MacroBrowser.previewOnload(document.body);
+        }
+    </script>
+</head>
+<body id="com-atlassian-confluence" class="content-preview">
+    <div id="main">
+        <div id="content" class="page edit">
+            <div class="wiki-content">
+               $!macroPreview
+            </div>
+        </div>
+    </div>
+    #javascripts()
+</body>
+</html>

@@ -1,0 +1,35 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.PageNotPermittedAction" *#
+
+<html>
+<head>
+    <title>$i18n.getText('no.permission')</title>
+    <title>$i18n.getText('title.add.page')</title>
+
+    <content tag="breadcrumbs">
+        <ol>
+            <li>
+                <a href="$req.getContextPath()/dashboard.action">Dashboard</a>
+            </li>
+        </ol>
+    </content>
+</head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("mode" "view-information")
+        #decoratorParam("context" "global")
+
+<body>
+    <div class="padded">
+        #if (!$action.isRequestAccessPluginEnabled())
+            #requireResource("confluence.web.resources:page-restricted-resources")
+            <div id="page-restricted-container" class="blank-experience-container page-restricted">
+                <p>$action.getText("restrictedpage.text")</p>
+                <div id="page-restricted"></div>
+            </div>
+        #end
+        #webPanelForLocation('atl.confluence.restricted.page' $action.context)
+    </div>
+</body>
+    #end
+</html>

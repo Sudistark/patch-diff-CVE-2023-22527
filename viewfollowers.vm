@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>$action.getText("network.name")</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("context" "profile")
+        #decoratorParam("mode"  "follow")
+        #decoratorParam("helper" $action.helper)
+
+        <body>
+
+        <h2 class="subheading">$action.getText("community.macro.followers", ["$user.fullName", $paginationSupport.total])</h2>
+
+        #if ($paginationSupport.total > 0)
+            #parse("/users/follow-list.vm")
+        #else
+            $action.getText("user.followers.no.one", ["$user.fullName"])
+        #end
+        </body>
+    #end
+</html>

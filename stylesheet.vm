@@ -1,0 +1,2 @@
+$action.getText('stylesheet.help.description')
+<p>$action.getText('stylesheet.help.edit.background.knowledge',[$action.getText('url.velocity')])</p>

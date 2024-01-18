@@ -1,0 +1,366 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.PageInfoAction" *#
+#* @vtlvariable name="displayableItems" type="java.util.List<com.atlassian.confluence.plugin.descriptor.web.descriptors.ConfluenceWebItemModuleDescriptor>" *#
+#* @vtlvariable name="exportItems" type="java.util.List<com.atlassian.confluence.plugin.descriptor.web.descriptors.ConfluenceWebItemModuleDescriptor>" *#
+<html>
+<head>
+    <title>$action.getActionName($action.getClass().getName())#if($page.title) - $page.title#end</title>
+    #requireResource("com.atlassian.confluence.plugins.confluence-page-hierarchy-plugin:confluence-copy-page-hierarchy-plugin-loader")
+</head>
+    <content tag="title-text-span">$action.getActionName($action.getClass().getName())</content>
+
+    #set ($confPage = $action.page)
+    #set ($helper = $action.helper)
+    #set ($pageType = $confPage.getType())
+
+    <!-- call the page decorator -->
+    #applyDecorator("root")
+        #decoratorParam("helper" $helper)
+        #decoratorParam("mode" "view-information")
+        #decoratorParam("context" "$pageType")
+
+        <body>
+            <table class="pageInfoLayoutTable">
+                <tr>
+                    <td valign="top" width="50%">
+
+                        <div class="basicPanelContainer">
+                            <div class="basicPanelBody">
+
+                            <table class="pageInfoTable">
+                                <tr class="alternateRow">
+                                    <td class="label" width="40%">$action.getText('title.name'):</td>
+                                    <td>$confPage.title</td>
+                                    <td align=right>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">$action.getText('author.name'):</td><td width="30%" >#userLink($confPage.creator)</td>
+                                    <td align=right> $action.dateFormatter.format($confPage.creationDate)</td>
+                                </tr>
+                                <tr class="alternateRow">
+                                    <td class="label">$action.getText('last.changed.by'):</td><td nowrap>#userLink($confPage.lastModifier)</td>
+                                    <td align=right>$action.dateFormatter.format( $confPage.lastModificationDate )</td>
+                                </tr>
+                                <tr>
+                                    <td class="label" nowrap>$action.getText('tiny.link'): <span class="smalltext" style="font-weight: normal">$action.getText('tiny.link.desc')</span></td>
+                                    <td colspan="2">#tinyLink()</td>
+                                </tr>
+
+                                #set ($exportItems = $webInterfaceManager.getDisplayableItems("system.page.operations.export", $action.webInterfaceContext))
+                                #if (!$exportItems.isEmpty())
+	                                <tr class="alternateRow">
+	                                    <td class="label">$action.getText('export.as'):</td>
+	                                    <td nowrap>
+			                               #foreach ($item in $exportItems)
+			                                   #if ($velocityCount > 1) &middot; #end
+			                                   #set ($itemLabel = $item.label.getDisplayableLabel($req, $action.webInterfaceContext.toMap()))
+	                                           #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $action.webInterfaceContext.toMap()))
+			                                   <a #if ($item.link.id) id="$item.link.id" #end href="$itemRenderedUrl"> $itemLabel</a>
+			                               #end
+	                                    </td>
+	                                    <td align=right>&nbsp;</td>
+	                                </tr>
+                                #end
+                            #set ($sectionKey = "system.page.operations")
+                            #set ($displayableItems = $webInterfaceManager.getDisplayableItems($sectionKey, $action.webInterfaceContext))
+                            #if (!$displayableItems.isEmpty())
+                                <tr>
+                                    <td class="label">$action.getText('operations.word'):</td>
+                                    <td nowrap colspan="2">
+                                        #foreach($item in $displayableItems)
+                                            #set ($itemLabel = $item.label.getDisplayableLabel($req, $action.webInterfaceContext.toMap()))
+                                            #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $action.webInterfaceContext.toMap()))
+                                            <a #if ($item.link.id) id="$item.link.id" #end href="$itemRenderedUrl" rel="nofollow">$itemLabel</a>&nbsp;
+                                        #end
+                                    </td>
+                                </tr>
+                            #end
+                            </table>
+                        </div>
+                    </div>
+
+                    #if (!$action.incomingLinksMap.isEmpty())
+                        <div class="basicPanelContainer">
+                            <div class="basicPanelTitle">
+                                $helper.getText("action.page.incoming.links")
+                            </div>
+                            <div class="basicPanelBody">
+                                <table class="pageInfoTable">
+                                    #foreach ($link in $action.incomingLinksMap.asMap().entrySet())
+                                        <tr>
+                                            <td>
+                                                #set ($destSpace = false)
+                                                #set ($destSpace = $link.key)
+
+                                                #if ($destSpace)
+
+                                                    <span class="smalltext">$htmlUtil.htmlEncode($destSpace.name) ($link.value.size())</span>
+                                                    <br>
+                                                    #foreach ($linkedPage in $link.value)
+                                                        &nbsp; &nbsp; #contentLink2($linkedPage true false)
+                                                        <br>
+                                                    #end
+                                                #end
+                                            </td>
+                                        </tr>
+                                    #end
+                               </table>
+                            </div>
+                        </div>
+                    #end
+            #if ($action.getPermittedChildren().size() > 0 || $page.parent)
+                <script>
+                    function showChildrenDiv()
+                    {
+                        document.getElementById('showAllLinkDiv').style.display = 'none';
+                        document.getElementById('childrenDiv').style.display = 'block';
+                        document.getElementById('hideChildrenLinkDiv').style.display = 'block';
+                    }
+                    function hideChildrenDiv()
+                    {
+                        document.getElementById('showAllLinkDiv').style.display = 'block';
+                        document.getElementById('childrenDiv').style.display = 'none';
+                        document.getElementById('hideChildrenLinkDiv').style.display = 'none';
+                    }
+                </script>
+                <div class="basicPanelContainer">
+                    <div class="basicPanelTitle">
+                        $action.getText('hierarchy.word')
+                    </div>
+                    <div class="basicPanelBody">
+                        <table class="pageInfoTable">
+                        #if( $page.parent )
+                            <tr>
+                                <td>
+                                <span class="smalltext">$helper.getText("parent.title")</span>
+                                <br>
+                                &nbsp; &nbsp; #contentLink2 ($page.parent true false) <br/>
+                                </td>
+                            </tr>
+                        #end
+                        #if( $action.getPermittedChildren().size() > 0)
+                            #set ($children = $action.getPermittedChildren())
+                            #set ($displayCount = $action.initialVisibleChildCount)
+                            <tr>
+                                <td>
+                                <span class="smalltext">$helper.getText("children.title") ($children.size())</span>
+                                <br>
+                                #foreach ($child in $children)
+                                    #if ($velocityCount <= $displayCount)
+                                        &nbsp; &nbsp; #contentLink2 ($child true false) <br/>
+                                    #end
+                                #end
+                                #if($children.size() > $displayCount)
+                                    <div id="showAllLinkDiv"><a href="" onClick="showChildrenDiv(); return false;">$action.getText('show.all')</a></div>
+                                    <div id="childrenDiv" style="display: none">
+                                        #foreach ($child in $children)
+                                            #if ($velocityCount > $displayCount)
+                                                &nbsp; &nbsp; #contentLink2 ($child true false) <br/>
+                                            #end
+                                        #end
+                                    </div>
+                                    <div id="hideChildrenLinkDiv" style="display: none"><a href="" onClick="hideChildrenDiv(); return false;">$action.getText('hide.name')</a></div>
+                                #end
+                                </td>
+                            </tr>
+                        #end
+                       </table>
+                    </div>
+                </div>
+            #end
+            <div class="basicPanelContainer" style="width: 100%">
+                <div class="basicPanelTitle">
+                    $helper.getText("action.page.labels")
+                </div>
+                #if ($page.getLabelsForDisplay($remoteUser).size() > 0)
+                    #set ($globalLabels = $page.getGlobalLabels($remoteUser))
+                    #set ($userLabels = $page.getPersonalLabels($remoteUser))
+
+                    #if ($globalLabels.size() > 0)
+                        <div class="basicPanelBody">
+                            <div class="label">$action.getText('global.labels') ($globalLabels.size())</div>
+                                #set ($labels = $globalLabels)
+                                #parse("/com/atlassian/confluence/plugins/labels/components/labels-list.vm")
+                        </div>
+                    #end
+                    #if ($userLabels.size() > 0)
+                        <div class="basicPanelBody">
+                            <div class="label">$action.getText('personal.labels') ($userLabels.size())</div>
+                                #set ($labels = $userLabels)
+                                #parse("/com/atlassian/confluence/plugins/labels/components/labels-list.vm")
+                        </div>
+                    #end
+                #else
+                    <div class="basicPanelBody">
+                        $helper.getText("action.no.labels")
+                    </div>
+                #end
+            </div>
+
+            #if ($action.thisPagePermissions.size() > 0 || $action.inheritedContentPermissions.size() > 0)
+                <div class="basicPanelContainer" style="width: 100%">
+                    <div class="basicPanelTitle">
+                        $action.getText('page.permissions')
+                    </div>
+                    <div class="basicPanelBody">
+                        #if ($action.thisPagePermissions.size() > 0)
+                            $action.getText('page.restrictions'):
+                            <ul>
+                            #foreach ($permission in $action.thisPagePermissions)
+                                <li>
+                                    #if ($permission.isGroupPermission())
+                                        $action.getText('only.users.in.group.can.action',["$permission.groupName","$permission.type.toLowerCase()"])
+                                    #else
+                                        $action.getText('only.user.can.action', ["$permission.userSubject.name","$permission.type.toLowerCase()"])
+                                    #end
+                                    <span class="smalltext">(set by #userLink($permission.creator) at $action.dateFormatter.formatDateTime($permission.creationDate))</span>
+
+                                    #if( $permissionHelper.canSetPermissions($action.authenticatedUser, $page ))
+                                        <a href="${req.contextPath}/pages/removepagepermission.action?#url_xsrfToken()&pageId=$page.id&permissionId=$permission.id"
+                                        id="remove-page-permission-link-$permission.id">
+                                        <img src="$staticResourceUrlPrefix/images/icons/ulock_16.gif" height=16 width=16 border=0 title="$action.getText("remove.name")"></a>
+                                    #end
+                                    <br>
+                                </li>
+                            #end
+                            </ul>
+                         #end
+
+                         #if ($action.inheritedContentPermissions.size() > 0)
+                            $action.getText('restrictions.from.parent.pages'):
+                            <ul>
+                            #foreach ($permission in $action.inheritedContentPermissions)
+                                <li>
+                                    #if ($permission.isGroupPermission())
+                                        #contentLink2($permission.owningSet.owningContent true false) &ndash; $action.getText('only.users.in.group.can.action',["$permission.groupName","$permission.type.toLowerCase()"])
+                                    #else
+                                        #contentLink2($permission.owningSet.owningContent true false) &ndash; $action.getText('only.user.can.action', ["$permission.userSubject.name","$permission.type.toLowerCase()"])
+                                    #end
+                                </li>
+                            #end
+                            </ul>
+                         #end
+                    </div>
+                </div>
+            #end
+
+    </td>
+
+                    <td valign="top" width="50%">
+                        <div class="basicPanelContainer" style="width: 100%">
+                            <div class="basicPanelTitle">
+                                #if (!$action.latestChanges.isEmpty())
+                                    <a href="viewpreviousversions.action?pageId=$confPage.id">$action.getText('recent.changes')</a>
+                                #else
+                                    $action.getText('recent.changes')
+                                #end
+                            </div>
+
+                            <div class="basicPanelBody">
+                                #if ($action.changesSinceLastLogin)
+                                    #if ($action.changesSinceLastLogin.numberOfChanges > 0)
+                                        <strong>$action.getText('since.you.last.logged.in'):</strong><br>&nbsp; &nbsp;
+                                        #if ($action.changesSinceLastLogin.numberOfChanges == 1)
+                                            $action.getText('user.made.one.change', ["#userList($action.changesSinceLastLogin.users)"])
+                                        #elseif ($action.changesSinceLastLogin.numberOfChanges > 1)
+                                            $action.getText('user.made.many.changes', ["#userList($action.changesSinceLastLogin.users)", "$action.changesSinceLastLogin.numberOfChanges"])
+                                        #end
+
+                                        <span class="smallfont">(<a href="viewchangessincelastlogin.action?pageId=$confPage.id" title="$action.getText('view.all.changes.since.last.login')">$action.getText('view.name.smalls')</a>)</span><br>
+                                    #end
+
+                                    #if ($action.changesSinceLastEdit && $action.changesSinceLastEdit.numberOfChanges > 0)
+                                        <strong>$action.getText('since.you.last.edited'):</strong><br>&nbsp; &nbsp;
+                                        #if ($action.changesSinceLastEdit.numberOfChanges == 1)
+                                            $action.getText('user.made.one.change', ["#userList($action.changesSinceLastEdit.users)"])
+                                        #elseif ($action.changesSinceLastEdit.numberOfChanges > 1)
+                                            $action.getText('user.made.many.changes', ["#userList($action.changesSinceLastEdit.users)", "$action.changesSinceLastEdit.numberOfChanges"])
+                                        #end
+
+                                        <span class="smallfont">(<a href="viewchangessincelastedit.action?pageId=$confPage.id" title="$action.getText('view.all.changes.since.last.edit')">$action.getText('view.name.smalls')</a>)</span><br>
+                                    #end
+                                    <br/>
+                               #end
+
+                                #if (!$action.latestChanges.isEmpty())
+                                    <table class="tableview" width="100%" cellspacing="0" cellpadding="0" style="padding: 5px">
+                                        <tr>
+                                            <th>$action.getText('time.name')</th>
+                                            <th>$action.getText('editor.name')</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                        #foreach ($change in $action.latestChanges)
+                                            <tr #alternateRowColors()>
+                                                <td #if ($change.isVersionCommentAvailable()) style="border-bottom:0px" #end><a href="$req.contextPath${generalUtil.getPageUrl($change)}">$dateFormatter.formatDateTime($change.lastModificationDate)</a></td>
+                                                <td #if ($change.isVersionCommentAvailable()) style="border-bottom:0px" #end>#userLink ($change.getContributors().get(0))</td>
+                                                <td #if ($change.isVersionCommentAvailable()) style="border-bottom:0px" #end>
+                                                    #if ($velocityCount != $action.latestChanges.size())
+                                                        #set ($previousPageId = $action.latestChanges.get($velocityCount).id)
+                                                        <a href="diffpages.action?pageId=${change.id}&originalId=$previousPageId">$action.getText('view.changes')</a>
+                                                    #else
+                                                        &nbsp;
+                                                    #end
+                                                </td>
+                                            </tr>
+                                            #if ($change.isVersionCommentAvailable())
+                                            <tr #alternateRowColors()>
+                                                <td colspan=3>
+                                                    $change.renderedVersionComment
+                                                </td>
+                                            </tr>
+                                            #end
+                                        #end
+                                    </table>
+
+                                    <div align="right" style="padding: 5px">
+                                        <a href="viewpreviousversions.action?pageId=$confPage.id">$action.getText('view.page.history')</a>
+                                    </div>
+                                    #else
+                                    <div style="padding: 5px">$action.getText('no.changes.made')</div>
+                                #end
+                           </div>
+                        </div>
+
+                        #if (($action.outgoingLinks && !$action.outgoingLinks.isEmpty()) || ($action.externalLinks && !$action.externalLinks.isEmpty()))
+                        <div class="basicPanelContainer">
+                            <div class="basicPanelTitle">
+                                $helper.getText("action.page.outgoing.links")
+                            </div>
+                            <div class="basicPanelBody">
+                                <table class="pageInfoTable">
+
+                                #if ($action.externalLinks && !$action.externalLinks.isEmpty())
+                                    <span class="smalltext">$action.getText('external.links', ["$action.externalLinks.size()"])</span>
+                                    #foreach ($externalLink in $action.externalLinks) <br>
+                                        &nbsp; &nbsp; <img src="$staticResourceUrlPrefix/images/icons/linkext7.gif" width="7" height="7" style="border-right:10px">   $action.renderUrlLink($externalLink)
+                                    #end
+                                #end
+
+                                    #foreach ($link in $action.outgoingLinks.asMap().entrySet())
+                                        <tr>
+                                            <td>
+                                            #set ($destSpace = false)
+                                            #set ($destSpace = $link.key)
+                                            #if ($destSpace)
+                                                <span class="smalltext">$htmlUtil.htmlEncode($destSpace.name) ($link.value.size())</span>
+                                                #foreach ($linkedPage in $link.value)
+                                                   &nbsp; &nbsp; #contentLink2($linkedPage true false)<br>
+                                                #end
+                                            #else
+
+                                            #end
+                                            </td>
+                                        </tr>
+                                    #end
+
+                               </table>
+                            </div>
+                        </div>
+                #end
+
+            </td>
+            </tr>
+            </table>
+
+        </body>
+    #end
+</html>

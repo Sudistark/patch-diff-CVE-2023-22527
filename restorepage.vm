@@ -1,0 +1,44 @@
+#* @vtlvariable name="i18n" type="com.atlassian.sal.api.message.I18nResolver" *#
+<html>
+<head>
+    <title>$action.getActionName($action.getClass().getName())</title>
+
+
+</head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.themeHelper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+
+        <body>
+
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "importpage")
+                #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam("helper" $action.themeHelper)
+
+                <p>
+                    $action.getText("restore.page.desc")
+                </p>
+
+                <table>
+                    <form method="POST" action="restore.action?key=$htmlUtil.urlEncode($key)" enctype="multipart/form-data">
+                        #form_xsrfToken()
+                        <label class="label" for="file">$i18n.getText('file'):</label>
+                        <input type="file" name="file" size="50" id="file">
+                        <tr>
+                            <td colspan="2">
+                                #ssubmit("value=getText('restore-action')" "theme='notable'" )
+                            </td>
+                        </tr>
+                    </form>
+                </table>
+            #end
+        </body>
+
+    #end
+</html>

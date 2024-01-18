@@ -1,0 +1,48 @@
+#if ($action.themeSet)
+    <p class="errorbox">$action.getText("theme.set")</p>
+#else
+    #parse ("/template/includes/actionerrors.vm")
+    <div>
+    #set ($lastType = "blah")
+    #foreach ($decorator in $action.getAllDefaultDecorators())
+        #if ($lastType != $decorator.type)
+            #if ($lastType != "blah")
+                </table></div>
+            #end
+
+            #set ($lastType = $decorator.type)
+            <h2>$action.getText($decorator.typeNameKey)</h2>
+            <p class="stepdesc">$action.getText($decorator.typeDescriptionKey)</p>
+            <div align="left" style="margin-bottom:20px;" class="layouts-container">
+            <table class="grid aui" border="0" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th width="60%">$action.getText("heading.decorator")</th>
+                        <th nowrap>$action.getText("heading.operations")</th>
+                    </tr>
+                </thead>
+        #end
+
+        <tr>
+            <td valign="top"><strong>$action.getText($decorator.nameKey)</strong>
+                <div class="smalltext" style="margin-left: 2em;">$action.getText($decorator.descriptionKey)</div></td>
+            </td>
+            <td valign="top">
+                #if ($action.hasTemplate($decorator.fileName))
+                    <a href="editdecorator.action?decoratorName=$decorator.fileName#if ($key)&key=$htmlUtil.urlEncode(${key})#end">$action.getText("edit.name")</a>
+                    &middot;
+                    <a href="resetdecorator.action?decoratorName=$decorator.fileName#if ($key)&key=$htmlUtil.urlEncode(${key})#end&#url_xsrfToken()">$action.getText("reset.default")</a>
+                #else
+                    &lt; $action.getText("default") &gt;
+                    &middot;
+                    <a href="editdecorator.action?decoratorName=$decorator.fileName#if ($key)&key=$htmlUtil.urlEncode(${key})#end">$action.getText("create.custom")</a>
+                #end
+                    &middot;
+                    <a href="viewdefaultdecorator.action?decoratorName=$decorator.fileName#if ($key)&key=$htmlUtil.urlEncode(${key})#end">$action.getText("view.default")</a>
+            </td>
+        </tr>
+    #end
+    </table></div>
+    </div>
+#end
+

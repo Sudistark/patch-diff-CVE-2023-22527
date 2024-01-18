@@ -1,0 +1,62 @@
+<div class="greybox view-space-details">
+    <div>
+        #if( $permissionHelper.canEdit($action.authenticatedUser, $space))
+            <a href="$req.contextPath/spaces/editspace.action?key=$htmlUtil.urlEncode($space.key)" class="icon icon-edit"> </a>
+            <a href="$req.contextPath/spaces/editspace.action?key=$htmlUtil.urlEncode($space.key)">$editSpaceName</a>
+        #end
+
+        <form action="#" method="post" id="d" class="aui">
+            <fieldset>
+                <div class="field-group">
+                    <label for="spaceName">$spaceName</label>
+                    <span id="spaceName" class="field-value">$htmlUtil.htmlEncode($space.name)</span>
+                </div>
+
+                <div class="field-group">
+                    <label for="spaceKeyText">$spaceKeyText</label>
+                    <span id="spaceKeyText" class="field-value">$space.key</span>
+                </div>
+
+                #if( $space.homePage )
+                <div class="field-group">
+                    <label for="spaceHomePage">$spaceHomePage</label>
+                    <span id="spaceHomePage" class="field-value">#contentLink2($space.homePage true false)</span>
+                </div>
+                #end
+
+                <div class="field-group">
+                    <label for="spaceCreator">$spaceCreator</label>
+                    <span id="spaceCreator" class="field-value">#userLink ($space.creator)</span>
+                    <div class="description">($dateFormatter.format($space.creationDate))</div>
+                </div>
+
+                <div class="field-group">
+                    <label for="spaceTeamLabelsText">$spaceTeamLabelsText</label>
+                    <span id="spaceTeamLabelsText" class="field-value">
+                        #labels($teamLabelsOnThisSpace)
+                        #if($permissionHelper.canAdminister($remoteUser, $space))
+                            <span>[<a href="$req.contextPath/spaces/editspacelabels.action?key=$htmlUtil.urlEncode($space.key)" id="editTeamLabelsLink">$action.getText('edit.name')</a>]</span>
+                        #end
+                    </span>
+                </div>
+
+                <div class="field-group">
+                    <label for="spaceDescription">$spaceDescription</label>
+                    <span id="spaceDescription" class="field-value">$generalUtil.plain2html($space.description.bodyContent.body)</span>
+                </div>
+
+                <div class="field-group">
+                    <label for="spaceAdmins">$spaceAdmins</label>
+                    <span id="spaceAdmins" class="field-value">
+                        #foreach ($admin in $adminsList)
+                            #userLink($admin)#if($velocityCount < $adminsList.size()),#end
+                        #end
+                        #if ($thereAreMoreAdmins)
+                            <a href="$allAdminsUrl">&hellip;</a>
+                        #end
+                    </span>
+                </div>
+        </form>
+
+    </div>
+</div>

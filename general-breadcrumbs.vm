@@ -1,0 +1,3 @@
+<!-- This theme is using a deprecated template: general-breadcrumbs.vm. 
+    This template has been deprecated since Confluence 2.8, use /breadcrumbs.vm instead. -->
+#parse ("/breadcrumbs.vm")

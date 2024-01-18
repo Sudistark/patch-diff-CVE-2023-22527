@@ -1,0 +1,25 @@
+<nav class="aui-navgroup aui-navgroup-horizontal">
+    <div class="aui-navgroup-inner">
+        <div class="aui-navgroup-primary">
+            <ul class="aui-nav">
+                <li #if ($selectedTab == 'summary') class="aui-nav-selected"#end>
+                    <a #if($darkFeatures.isDarkFeatureEnabled('confluence.reindex.improvements'))
+                        href="$req.contextPath/plugins/servlet/rebuildindex" #else
+                        href="$req.contextPath/admin/search-indexes.action" #end>
+                        $action.getText("index.tab.search.indexes")
+                    </a>
+                </li>
+                <li #if ($selectedTab == 'contentQueue') class="aui-nav-selected"#end>
+                    <a href="$req.contextPath/admin/viewcontentindexqueue.action">
+                        $action.getText("index.tab.content.queue")
+                    </a>
+                </li>
+                <li #if ($selectedTab == 'changeQueue') class="aui-nav-selected"#end>
+                    <a href="$req.contextPath/admin/viewchangeindexqueue.action">
+                        $action.getText("index.tab.changes.queue")
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

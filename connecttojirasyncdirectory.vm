@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>$action.getText("connect.to.jira.sync.directory")</title>
+    </head>
+
+    <body>
+        #parse ("/setup/analytics-data.vm")
+        #parse ("/setup/setup-button.vm")
+        <br/>
+        #set ($package = 'setup/')
+        #set ($nextButton = 'nextButton')
+        #set ($longrunningtasktemplate = "/setup/templateconnecttojirasyncdirectory.vm")
+        #parse ("/admin/longrunningtask-common.vm")
+
+        <h3>$action.getText("admin.account.created.message")</h3>
+        <p class="description">${action.getText("connect.to.jira.sync.description")}</p>
+        <form class="aui" name="connecttojirasyncdirectory" action="connecttojirasyncdirectory.action" method="post">
+            #form_xsrfToken()
+            <input id="longrunningtaskid" type="hidden" value="$action.taskId"/>
+            <div class="buttons-container">
+                <div class="buttons">
+                    #set ($isDisable = $action.task && !$action.task.complete)
+                    #setupSubmitButton("nextButton", "nextButton", "$action.getText('setup.next')", "setup-next-button", $isDisable)
+                </div>
+            </div>
+        </form>
+    </body>
+</html>

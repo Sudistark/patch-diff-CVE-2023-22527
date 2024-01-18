@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+		<meta name="help-path" content="/admin/trust/help/trustedapp-help.vm"/>
+	</head>
+	<body>
+        <content tag="selectedWebItem">trustedapplications</content>
+        #parse ( "/template/includes/actionerrors.vm" )
+        <form name="edit-trusted-app" action="trustedapp-save.action" method="post" class="edit-trust-app">
+        	<fieldset>
+        	    <legend class="steptitle">$action.getText("trusted.applications.details")</legend>
+        		<div>
+		            <label class="label" for="applicationName">$action.getText("trusted.applications.name"):</label>
+		            <input id="applicationName" type="text" name="applicationName" value="$applicationName"/>
+		            <label class="label" for="applicationKeyAlias">$action.getText("trusted.applications.alias"):</label>
+		            <input readonly id="applicationKeyAlias" type="text" name="applicationKeyAlias" value="$applicationKeyAlias"/>
+		            <label class="label" for="timeout">$action.getText("trusted.applications.request.timeout"):</label>
+		            <input id="timeout" type="text" name="requestTimeout" value="$requestTimeout"/>
+		            <label class="label" for="ipRestrictions">$action.getText("trusted.applications.ip.restrictions"):</label>
+		            <textarea id="ipRestrictions" rows="5" cols="40" name="ipRestrictions" >$ipRestrictions</textarea>
+		            <label class="label" for="urlRestrictions">$action.getText("trusted.applications.url.restrictions"):</label>
+		            <textarea id="urlRestrictions" rows="5" cols="40" name="urlRestrictions">$urlRestrictions</textarea>
+	            </div>
+	            <input type="hidden" name="id" value="$id">
+	            #form_xsrfToken()
+	            <div class="buttons"> 
+	            	<input name="save" value="Save" type="submit">
+	            	<input name="cancel" value="Cancel" type="submit">
+	            </div>
+            </fieldset>
+        </form>
+    </body>
+#parse ("/breadcrumbs.vm")
+</html>

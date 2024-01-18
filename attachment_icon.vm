@@ -1,0 +1,57 @@
+#* @vtlvariable name="fileName" type="java.lang.String" *#
+## TODO Get rid of this file in favour of using ContentTypesDisplayMapper instead
+
+## It is preferable to use i18n for localisation instead of action (e.g. to work correctly in notifications).
+## However there are too many usages of this include to test then all thoroughly hence this 'decision' here
+#if (!$i18n)
+    #set($i18n = $action)
+#end
+
+
+## Required if the attachment is a search result.
+#if ($attachment.fileName)
+    #set($fileName = $attachment.fileName)
+#else
+    #set($fileName = $attachment.displayTitle)
+#end
+
+#if ($fileName.endsWith('.pdf') || $attachment.mediaType.equals('application/pdf'))<span class="aui-icon content-type-attachment-pdf" title="$i18n.getText("pdf.file")">$i18n.getText("pdf.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('image/gif') || $fileName.endsWith('.gif'))<span class="aui-icon content-type-attachment-image" title="$i18n.getText("gif.file")">$i18n.getText("gif.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('image/jpeg') || $fileName.endsWith('.jpeg'))<span class="aui-icon content-type-attachment-image" title="$i18n.getText("jpeg.file")">$i18n.getText("jpeg.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('image/jpeg') || $fileName.endsWith('.jpg'))<span class="aui-icon content-type-attachment-image" title="$i18n.getText("jpeg.file")">$i18n.getText("jpeg.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('image/png') || $fileName.endsWith('.png'))<span class="aui-icon content-type-attachment-image" title="$i18n.getText("png.file")">$i18n.getText("png.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('text/xml') || $fileName.endsWith('.xml'))<span class="aui-icon content-type-attachment-xml" title="$i18n.getText("xml.file")">$i18n.getText("xml.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('text/html') || $fileName.endsWith('.html'))<span class="aui-icon content-type-attachment-html" title="$i18n.getText("html.file")">$i18n.getText("html.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('application/javascript') || $attachment.mediaType.startsWith('text/javascript') || $attachment.mediaType.startsWith('application/x-javascript') || $fileName.endsWith('.js'))<span class="aui-icon content-type-attachment-js" title="$i18n.getText("js.file")">$i18n.getText("js.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('text/css') || $fileName.endsWith('.css'))<span class="aui-icon content-type-attachment-css" title="$i18n.getText("css.file")">$i18n.getText("css.file")</span>#*
+*##elseif ($fileName.endsWith('.java'))<span class="aui-icon content-type-attachment-java" title="$i18n.getText("java.file")">$i18n.getText("java.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('application/java-archive') || $fileName.endsWith('.jar') || $fileName.endsWith('.war') || $fileName.endsWith('.ear'))<span class="aui-icon content-type-attachment-jar" title="$i18n.getText("jar.file")">$i18n.getText("jar.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('text/plain'))<span class="aui-icon content-type-attachment-text" title="$i18n.getText("text.file")">$i18n.getText("text.file")</span>#*
+*##elseif ($attachment.mediaType.startsWith('application') && $attachment.mediaType.indexOf('zip') != -1)<span class="aui-icon content-type-attachment-zip" title="$i18n.getText("zip.file")">$i18n.getText("zip.file")</span>#*
+*##elseif ($fileName.endsWith('.xlt'))<span class="aui-icon content-type-attachment-excel97-template" title="$i18n.getText("excel97.template.file")">$i18n.getText("excel97.template.file")</span>#*
+*##elseif ($fileName.endsWith('.pot'))<span class="aui-icon content-type-attachment-powerpoint97-template" title="$i18n.getText("powerpoint97.template.file")">$i18n.getText("powerpoint97.template.file")</span>#*
+*##elseif ($fileName.endsWith('.dot'))<span class="aui-icon content-type-attachment-word97-template" title="$i18n.getText("word97.template.file")">$i18n.getText("word97.template.file")</span>#*
+*##elseif ($fileName.endsWith('.xls') || $attachment.mediaType.startsWith('application/vnd.ms-excel'))<span class="aui-icon content-type-attachment-excel97" title="$i18n.getText("excel97.file")">$i18n.getText("excel97.file")</span>#*
+*##elseif ($fileName.endsWith('.ppt') || $attachment.mediaType.startsWith('application/vnd.ms-powerpoint'))<span class="aui-icon content-type-attachment-powerpoint97" title="$i18n.getText("powerpoint97.file")">$i18n.getText("powerpoint97.file")</span>#*
+*##elseif ($fileName.endsWith('.doc') || $attachment.mediaType.startsWith('application/msword'))<span class="aui-icon content-type-attachment-word97" title="$i18n.getText("word97.file")">$i18n.getText("word97.file")</span>#*
+*##elseif ($fileName.endsWith('.xlsm'))<span class="aui-icon content-type-attachment-excel-macro" title="$i18n.getText("excel.macro.file")">$i18n.getText("excel.macro.file")</span>#*
+*##elseif ($fileName.endsWith('.xlsx') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))<span class="aui-icon content-type-attachment-excel" title="$i18n.getText("excel.file")">$i18n.getText("excel.file")</span>#*
+*##elseif ($fileName.endsWith('.xlst') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.template'))<span class="aui-icon content-type-attachment-excel-template" title="$i18n.getText("excel.template.file")">$i18n.getText("excel.template.file")</span>#*
+*##elseif ($fileName.endsWith('.pptm'))<span class="aui-icon content-type-attachment-powerpoint-macro" title="$i18n.getText("powerpoint.macro.file")">$i18n.getText("powerpoint.macro.file")</span>#*
+*##elseif ($fileName.endsWith('.pptx') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation'))<span class="aui-icon content-type-attachment-powerpoint" title="$i18n.getText("powerpoint.file")">$i18n.getText("powerpoint.file")</span>#*
+*##elseif ($fileName.endsWith('.ppsx') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.presentationml.slideshow'))<span class="aui-icon content-type-attachment-powerpoint-slideshow" title="$i18n.getText("powerpoint.slideshow.file")">$i18n.getText("powerpoint.slideshow.file")</span>#*
+*##elseif ($fileName.endsWith('.potx') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.presentationml.template'))<span class="aui-icon content-type-attachment-powerpoint-template" title="$i18n.getText("powerpoint.template.file")">$i18n.getText("powerpoint.template.file")</span>#*
+*##elseif ($fileName.endsWith('.docx') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document'))<span class="aui-icon content-type-attachment-word" title="$i18n.getText("word.file")">$i18n.getText("word.file")</span>#*
+*##elseif ($fileName.endsWith('.dotx') || $attachment.mediaType.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.template'))<span class="aui-icon content-type-attachment-word-template" title="$i18n.getText("word.template.file")">$i18n.getText("word.template.file")</span>#*
+*##elseif ($fileName.endsWith('.swf') || $attachment.mediaType.startsWith('application/x-shockwave-flash'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.mov') || $attachment.mediaType.startsWith('video/quicktime'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.wma') || $attachment.mediaType.startsWith('audio/x-ms-wma'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.wmv') || $attachment.mediaType.startsWith('audio/x-ms-wmv'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.mpeg') || $attachment.mediaType.startsWith('video/mpeg'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.mpg') || $attachment.mediaType.startsWith('video/mpeg'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.ram') || $attachment.mediaType.startsWith('audio/x-pn-realaudio'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.rm') || $attachment.mediaType.startsWith('application/vnd.rn-realmedia'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.mp3') || $attachment.mediaType.startsWith('audio/mpeg'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.mp4') || $attachment.mediaType.startsWith('video/mp4') || $attachment.mediaType.startsWith('audio/mp4') )<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##elseif ($fileName.endsWith('.avi') || $attachment.mediaType.startsWith('video/x-msvideo'))<span class="aui-icon content-type-attachment-multimedia" title="$i18n.getText("multimedia.file")">$i18n.getText("multimedia.file")</span>#*
+*##else<span class="aui-icon content-type-attachment-unknown" title="$i18n.getText("unknown.file")">$i18n.getText("unknown.file")</span>#end

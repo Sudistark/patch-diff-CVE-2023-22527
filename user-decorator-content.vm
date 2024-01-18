@@ -1,0 +1,14 @@
+#if ($action.myProfile)
+    <content tag="spacename">$action.getText("user.preferences.title")</content>
+#else
+    <content tag="spacename">$action.getText("user.profiles.title")</content>
+#end
+
+#if ($action.space)
+    <content tag="spacekey">$action.space.key</content>
+#end
+
+#set ($usernameHtml = $user.name)
+##$user.name
+##$sitemeshPage.addProperty("username", $user.name);
+<content tag="username">$usernameHtml</content>

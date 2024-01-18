@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>$action.getText("title.advanced.search.tips")</title>
+	</head>
+	<body>
+	    <div style="width: 80%">
+        <p>
+        <h3>$action.getText("wildcard.searches.title")</h3>
+        <p>$action.getText("wildcard.searches.desc3")</p>
+        <p><center><div class="greyboxfilled" style="width: 400px">$action.getText("wildcard.searches.desc3.example")</div></center></p>
+        <p>$action.getText("wildcard.searches.desc2")</p>
+        <p><center><div class="greyboxfilled" style="width: 400px">$action.getText("wildcard.searches.desc2.example")</div></center></p>
+        </p>
+
+        <h3>$action.getText("boolean.minus.title")</h3>
+        <p>$action.getText("boolean.minus.desc")</p>
+        <p><center><div class="greyboxfilled" style="width: 400px">$action.getText("boolean.minus.desc.example")</div></center></p>
+
+        <h3>$action.getText("phrase.searches.title")</h3>
+        <p>$action.getText("phrase.searches.desc")</p>
+
+        <h3>$action.getText("boolean.or.title")</h3>
+        <p>$action.getText("boolean.or.desc")</p>
+        <p><center><div class="greyboxfilled" style="width: 400px">$action.getText("boolean.or.desc.example")</div></center></p>
+
+        <h3>$action.getText("fuzzy.searches.title")</h3>
+        <p>$action.getText("fuzzy.searches.desc")</p>
+        <p><center><div class="greyboxfilled" style="width: 400px">$action.getText("fuzzy.searches.desc.example")</div></center></p>
+        </div>
+		#parse ( "/breadcrumbs.vm" )
+	</body>
+</html>

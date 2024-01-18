@@ -1,0 +1,77 @@
+## Velocity template for one blog post in a list of blog posts
+## For use in a method that's looping through some sort of blog post list; this will format the display of each post
+## Used currently for the monthly blog post view, the recent blog post view, and the blog-post macro
+##
+## Expected variables:
+## $blog - the current blog post object
+## $blogBody - the text of the current blog post
+## $showIconBlock - whether the creator's display picture should be shown
+## $trimmed - set to true if $blogBody is an excerpt instead of the entire text
+
+<div class="blog-post-listing">
+    #if($showIconBlock)
+        <div class="logo-heading-block">
+            <span class="logoBlock">
+                 <span class="aui-avatar aui-avatar-large">
+                     <span class="aui-avatar-inner">
+                         #userLogoBlock($blog.creator)
+                     </span>
+                 </span>
+            </span>
+            <span class="blogHeading">
+                <a class="blogHeading" href="$req.contextPath$blog.urlPath">$blog.title</a>
+                <div class="page-metadata not-personal">$action.getText("macros.blogpost.by.posted.on", ["#userLink($blog.creator)", $action.dateFormatter.formatBlogDate($blog.creationDate)])</div>
+            </span>
+        </div>
+    #else
+        <span class="blogHeading">
+            <a class="blogHeading" href="$req.contextPath$blog.urlPath">$blog.title</a>
+            <div class="page-metadata">$action.getText("macros.blogpost.posted.on", [$action.dateFormatter.formatBlogDate($blog.creationDate)])</div>
+        </span>
+    #end
+
+    <div class="wiki-content">
+        $blogBody
+    </div>
+    #if ($!trimmed)
+        <p><a href="$req.contextPath$blog.urlPath" title="$action.getText("macros.blogpost.read.rest.of", [$generalUtil.escapeXml($blog.title)])">$action.getText("macros.blogpost.read.more")</a></p>
+    #end
+
+    #set($commentsNumber = $blog.comments.size())
+    #if($permissionHelper.canEdit($action.authenticatedUser, $blog))
+        #set($edits = true)
+    #end
+    #set($labels = $blog.getLabelsForDisplay($user))
+
+    #if(($commentsNumber > 0) || $edits || $labels.size() > 0)
+    <div class="endsection">
+        #if($edits)
+
+            <a href="$req.contextPath/pages/editblogpost.action?pageId=$blog.id">$action.getText("edit.name")</a>
+            #if($commentsNumber > 0 || $labels.size() > 0)
+                &nbsp;&middot;&nbsp;
+            #end
+        #end
+
+        #if ($commentsNumber > 0)
+            <a href="$req.contextPath$generalUtil.customGetPageUrl($blog)showComments=true#comments">
+                #if ($commentsNumber != 1) $action.getText("comment.plural", [$commentsNumber])#else $action.getText("comment.singular")#end</a>
+            #if($labels.size() > 0)
+                &nbsp;&middot;&nbsp;
+            #end
+        #end
+        #if ($labels.size() > 0)
+            <ul class="label-list">
+                $soyTemplateRendererHelper.getRenderedTemplateHtml(
+                    "com.atlassian.confluence.plugins.confluence-labels:labels-resources-server",
+                    "Confluence.Templates.Labels.labels.soy",
+                    {
+                        "labels" : $labels,
+                        "spaceKey" : $blog.space.key,
+                        "editable" : false
+                    })
+             </ul>
+        #end
+    </div>
+    #end
+</div>

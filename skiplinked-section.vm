@@ -1,0 +1,7 @@
+<a href="#${sectionName}-end" class="assistive">$endLabel</a>
+<div id="${sectionName}-start" class="assistive"></div>
+
+$body
+
+<a href="#${sectionName}-start" class="assistive">$startLabel</a>
+<div id="${sectionName}-end" class="assistive"></div>

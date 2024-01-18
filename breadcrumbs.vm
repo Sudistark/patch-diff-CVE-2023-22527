@@ -1,0 +1,68 @@
+#requireResource("confluence.web.resources:breadcrumbs")
+
+#if (!$breadcrumbsId)
+    #set ($breadcrumbsId = "breadcrumbs")
+#end
+
+<content tag="breadcrumbs">
+    #set ($breadcrumbs = $helper.breadcrumbs)
+    #set ($numCrumbs = $breadcrumbs.size())
+
+    #set ($ellipsisCrumbs = $helper.getEllipsisCrumbs($breadcrumbs))
+    #set ($ellipsisShown = false)
+
+    <nav aria-label="$i18n.getText('breadcrumbs.name')">
+        <ol id="$breadcrumbsId">
+        ## Here we want to implement pseudo-breadcrumbs for the template editor, rather than using BreadcrumbAction which would return nothing.
+        #if ($contentType == "template")
+            #if (!$space.key)
+                <li class="first">
+                    <span><a href="$req.contextPath/admin/viewgeneralconfig.action" target="_blank">$i18n.getText("administration.name")</a></span>
+                <li>
+                    <span><a href="$req.contextPath/pages/templates2/listglobaltemplates.action" target="_blank">$i18n.getText("templates.name")</a></span>
+            #else
+                <li class="first">
+                    <span><a href="$req.contextPath/display/$space.key" target="_blank">$space.name</a></span>
+                <li>
+                    <span><a href="$req.contextPath/pages/templates2/listpagetemplates.action?key=$space.key" target="_blank">$i18n.getText("templates.name")</a></span>
+            #end
+        #else
+            #foreach( $breadcrumb in $breadcrumbs )
+                #if ($ellipsisCrumbs.contains($breadcrumb))
+                    #set ($breadcrumbHidden = true)
+                    #if(!$ellipsisShown)
+                        <li id="ellipsis" title="$i18n.getText("breadcrumbs.ellipsis.tooltip")"><button class="elipsis-button" aria-label="$i18n.getText("breadcrumbs.ellipsis.tooltip")"><strong>&#8230;</strong></button></li>
+                        #set ($ellipsisShown = true)
+                    #end
+                #else
+                    #set ($breadcrumbHidden = false)
+                #end
+
+                #set($showTooltip = false)
+                #if($breadcrumb.tooltip)
+                    #set($showTooltip = true)
+                    #set ($toolTip = $i18n.getText($htmlUtil.htmlEncode($breadcrumb.tooltip)))
+                #end
+
+            <li#if ($breadcrumbHidden) class="hidden-crumb" #end#if ($velocityCount == 1) class="first" #end>
+                #if ($breadcrumb.displayTitle)
+                    #set ($displayTitle = $breadcrumb.displayTitle)
+                #else
+                    #set ($displayTitle = $action.getText($htmlUtil.htmlEncode($breadcrumb.title)))
+                #end
+
+                #if ($breadcrumb.target)
+                    <span class="$!breadcrumb.cssClass"><a href="$req.contextPath$breadcrumb.target"#if($mode == "edit" || $mode == "richtext" ) target="_blank"#end#if ($showTooltip) title="$toolTip"#end>$displayTitle</a></span>
+                    ## We only need to target blank here because viewing templates doesn't render breadcrumbs.
+                #else
+                    <span class="$!breadcrumb.cssClass">$displayTitle</span>
+                #end
+            ## Omit the closing element as it's not required by HTML5 and it solves this problem cleanly:
+            ## http://css-tricks.com/fighting-the-space-between-inline-block-elements/
+            ##        </li>
+            #end
+        #end
+        </ol>
+    </nav>
+
+</content>

@@ -1,0 +1,35 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.admin.actions.AttachmentStorageSetupAction" *#
+<html>
+
+<head>
+<title>$action.getText("webdav.edit.configuration")</title>
+<meta name="help-path" content="/admin/help/attachmentstoragesetup.vm"/>
+<content tag="selectedWebItem">attachmentstoragesetup</content>
+</head>
+
+<body>
+#parse ( "/template/includes/actionerrors.vm" )
+
+<form name="doeditattachmentstorage" action="doeditattachmentstorage.action" method="POST" class="aui">
+    #form_xsrfToken()
+    <fieldset class="group">
+        <legend><span>$action.getText("attachment.storage")</span></legend>
+        <div class="radio">
+            <input class="radio storage-type" #if($action.attachmentStorageType == "file.system.based.attachments.storage")checked="checked"#end name="attachmentStorageType" id="attachmentStorageType.file.system.based.attachments.storage" type="radio" value="file.system.based.attachments.storage">
+            <label for="filesystem-storage">$action.getText("file.system.based.attachments.storage")</label>
+        </div>
+        <div class="radio">
+            <input class="radio storage-type" #if($action.attachmentStorageType == "database.based.attachments.storage")checked="checked"#end name="attachmentStorageType" id="attachmentStorageType.database.based.attachments.storage" type="radio" value="database.based.attachments.storage" disabled>
+            <label for="database-storage">$action.getText("database.based.attachments.storage")</label>
+        </div>
+    </fieldset>
+
+    #ssubmit("theme='aui'"
+             "editMode=true"
+             "submitValue=$action.getText('save.name')")
+</form>
+
+#parse("/breadcrumbs.vm")
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+$action.getText('cache.statistics.page.description.text')
+
+<p>$action.getText('distribution.data.for.caches')</p>
+
+#doc("help.cache.statistics" "$action.getText('more.about.cache.statistics')")

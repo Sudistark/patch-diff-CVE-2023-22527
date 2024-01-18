@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>$action.getText("title.finish.setup")</title>
+    $webResourceManager.requireResourcesForContext("setup.setup-success")
+</head>
+
+<body>
+    #parse ("/setup/analytics-data.vm")
+    #parse ("/setup/setup-button.vm")
+    #parse ( "/template/includes/actionerrors.vm" )
+
+    #if ($actionErrors.size() == 0)
+    <div class="setup-hint">
+        $action.getText("setup.success.hint1")
+    </div>
+    #if ($action.hasBundled())
+        <div class="setup-hint">
+            $action.getText("setup.success.hint2")
+        </div>
+    #end
+    <div class="setup-hint">
+        $action.getText("setup.success.hint3")
+    </div>
+
+    <div class="aui-panel setup-success">
+        <div class="setup-success-button">
+            <a class="finishAction aui-button aui-button-primary setup-button" href="$req.contextPath/">
+                $action.getText('start.using.now')
+            </a>
+            <a href="$req.contextPath/admin/console.action" class="finishAction further-configuration aui-button aui-button-link" id="further-configuration">$action.getText('setup.invite.users')</a>
+        </div>
+    </div>
+    #end
+</body>
+</html>

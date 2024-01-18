@@ -1,0 +1,30 @@
+<strong>$action.getText($task.nameKey, $task.name)</strong>
+<table>
+    <tr>
+        <td align="right" NOWRAP><strong>$action.getText("time.elapsed"): </strong></td>
+        <td><span id="taskElapsedTime">$task.prettyElapsedTime</span></td>
+    </tr>
+    <tr>
+        <td align="right" NOWRAP><strong>$action.getText("time.remaining"): </strong></td>
+        <td><span id="taskTimeRemaining">$task.prettyTimeRemaining</span> (estimated)</td>
+    </tr>
+    <tr>
+        <td align="right" NOWRAP><strong>$action.getText("completion.name"): </strong></td>
+        <td><span id="percentComplete">${task.percentageComplete}</span>% complete</td>
+    </tr>
+</table>
+
+<div style="margin-left: auto; margin-right: auto; margin-top:10px; margin-bottom:10px; text-align:center;">
+<table width=500 class="grid" style="margin-left: auto; margin-right: auto;">
+    <tr id="taskProgressBar">
+        #if ($task.percentageComplete > 0)
+            <td id="taskGreenBar" width="${task.percentageComplete}%" class="greenbar">&nbsp;</td>
+        #end
+        #if ($task.percentageComplete < 100)
+            <td id="taskGrayBar" class="graybar">&nbsp;</td>
+        #end
+    </tr>
+</table>
+<span class="smalltext" style="text-align:center" id="taskCurrentStatus">$htmlUtil.htmlEncode($task.currentStatus)</span>
+</div>
+

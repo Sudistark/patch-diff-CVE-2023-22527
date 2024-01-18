@@ -1,0 +1,11 @@
+#if (!$parameters.notable)
+    #if ($parameters.description)
+      #if ($i18n.getText($parameters.description))
+          <div class="smallfont">$i18n.getText($parameters.description)</div>
+      #else
+          <div class="smallfont">$parameters.description</div>
+      #end
+    #end
+      </td>
+    </tr>    
+#end

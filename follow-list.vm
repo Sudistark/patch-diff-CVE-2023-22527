@@ -1,0 +1,12 @@
+#requireResource("confluence.sections.user.follow.list:resources")
+<div class="follow-list-container">
+    <ul class="follow">
+    #foreach ($name in $paginationSupport.page)
+        <li class="followee">
+            $helper.renderConfluenceMacro("{profile:user=$name|mode=people-directory}")
+        </li>
+    #end
+    </ul>
+    <br clear="all"/>
+    #pagination($action.paginationSupport "$req.contextPath$req.servletPath?username=$username&")
+</div>

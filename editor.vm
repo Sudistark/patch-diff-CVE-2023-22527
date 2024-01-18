@@ -1,0 +1,219 @@
+#* TODO Update this doc
+This is a template for the RTE editor. This template includes all necessary resources and further templates combined
+with includes/editor-base-template.vm
+
+-- Required Parameters:
+--   * $formname       - the name of the form the text area is in
+--   * $name           - name of the textarea input that gets submitted
+--   * $contentType    - the type of the content the textarea will be displayed for.
+--   * $contentId      - the id of the content the textarea will be displayed for. Use 0 for new pages.
+                         If not specified, it will fallback to using the page or draft id.
+
+-- Optional Parameters:
+--   * $heartbeat        - if 'true' and the editor's ajax is enabled, heartbeats are used - otherwise false
+--   * $fullscreen        - if 'true' then the editor should be styled as a fullscreen editor
+--   * $autoStart        - if 'true' then the Editor will start automatically when it has loaded.
+                           if 'false' then the Editor will be made ready to start, but won't be activated.
+                           The default is false which means you will need to initialise it manually by calling
+                           AJS.Rte.BootstrapManager.initialise() with Javascript.
+--   * $dynamicLoading   - if 'true' then it is assumed the Editor is being loaded dynamically after the initial
+                           page render so page metadata will be handled differently and CSS and JS resources
+                           won't be requested.
+                           if 'false' then standard resource retrieval and metadata behaviour is followed.
+--   * $showDraftStatus  - if 'false' then do not show the draft status bar. E.g. if your content doesn't have a draft save mechanism.
+*#
+
+<script type="text/x-template" title="editor-css" id="editor-css-resources">
+    $webResourceManager.getEditorCssResources($spaceKey)
+</script>
+
+## this template is used in different editing contexts, so we want to guarantee consistency in the assignments.
+#if ($parameters.useWatch && $parameters.useWatch == "true")
+  #set($useWatch = true)
+#else
+  #set($useWatch = false)
+#end
+
+#if ($action.versionComment)
+  #set($versionComment = $action.versionComment)
+#else
+  #set($versionComment = "")
+#end
+
+#set($minEditorHeight = $parameters.minEditorHeight)
+
+#if ($parameters.heartbeat && $parameters.heartbeat == "true")
+    #set( $heartbeat = true)
+#else
+    #set ( $heartbeat = false )
+#end
+
+#if ($parameters.autoStart && $parameters.autoStart == "true")
+    #set ($autoStart = true)
+#else
+    #set ($autoStart = false)
+#end
+
+#if ($action.newAbstractPage)
+    #set ($newPage = true)
+#else
+    #set ($newPage = false)
+#end
+
+#if ($action.wysiwygContent)
+    #set($wysiwygContent = $action.wysiwygContent)
+#else
+    #set($wysiwygContent = $parameters.wysiwygContent)
+#end
+
+#if ($parameters.contentId)
+    #set($contentId = $parameters.contentId)
+#else
+    #set($contentId = $action.entityId)
+#end
+
+#if ($parameters.contentType == "page" || $parameters.contentType == "blogpost" || $parameters.contentType == "template")
+    #set($usePageLayouts = true)
+    #set($useInlineTasks = true)
+    #set($showPrecursor = true)
+#else
+    #set($useInlineTasks = false)
+#end
+
+#if ($parameters.contentType == "page" || $parameters.contentType == "blogpost")
+    #set($usePluggableStatus = true)
+#else
+    #set($usePluggableStatus = false)
+#end
+
+#if ($parameters.contentType == "template")
+    #set($attachmentSourceId = 0)
+#else
+    #set($attachmentSourceId = $action.attachmentSourceContent.id)
+#end
+
+#if ($parameters.contentType == "template")
+    #set($useTemplates = true)
+#end
+
+#if($parameters.titlePlaceholder)
+    #set ($titlePlaceholder = $parameters.titlePlaceholder)
+#else
+    #if($parameters.contentType == "page")
+        #set ($titlePlaceholder = $action.getText("existing.page.placeholder").toString())
+    #elseif($parameters.contentType == "blogpost")
+        #set ($titlePlaceholder = $action.getText("existing.blogpost.placeholder").toString())
+    #else
+        #set ($titlePlaceholder = "")
+    #end
+#end
+
+#set ($context = {
+    "id": "rte",
+    "fullscreen": $parameters.fullscreen,
+    "minEditorHeight": $parameters.minEditorHeight,
+    "usePageLayouts": $usePageLayouts,
+    "usePluggableStatus": $usePluggableStatus,
+    "useInlineTasks": $useInlineTasks,
+    "useTemplates": $useTemplates,
+    "useWatch": $useWatch,
+    "useDraft": $action.useDraft,
+    "showDraftStatus": $parameters.showDraftStatus,
+    "versionComment": $versionComment,
+    "content": $wysiwygContent,
+    "versionMismatch": $versionMismatch,
+    "i18n": $action.i18n,
+    "req": $req,
+    "locale": $action.locale,
+    "webResourceManager": $webResourceManager,
+    "webInterfaceManager": $webInterfaceManager,
+    "webInterfaceContext": $webInterfaceContext,
+    "textareaName": "wysiwygContent",
+    "fieldErrors": $fieldErrors,
+    "userWatchingOwnContent" : $action.isUserWatchingOwnContent(),
+    "useDatePicker": $parameters.useDatePicker,
+    "postingDate": $parameters.postingDate,
+    "postingTime": $parameters.postingTime,
+    "darkFeatures": $darkFeatures,
+    "dynamicLoading": $parameters.dynamicLoading,
+    "isTitleReadOnly": $parameters.isTitleReadOnly,
+    "isLinkCreation": $parameters.isLinkCreation,
+    "titlePlaceholder": $titlePlaceholder,
+    "actionErrors": $parameters.actionErrors,
+    "actionMessages": $parameters.actionMessages,
+    "showDraftMessage": $parameters.showDraftMessage,
+    "existingDraft": $parameters.existingDraft,
+    "dateFormatter": $parameters.dateFormatter,
+    "conflictFound": $parameters.conflictFound,
+    "mergeRequired": $parameters.mergeRequired,
+    "pageId": "$parameters.pageId",
+    "contentId": "$contentId",
+    "contentType": $parameters.contentType,
+    "showPrecursor": $showPrecursor,
+    "newPage": $newPage
+})
+
+#if($parameters.wrapEditorWithContainer == "true")
+<div class="editor-container">
+#end
+
+#webPanelForLocation("atl.editor" $context)
+
+#if($parameters.wrapEditorWithContainer == "true")
+</div>
+#end
+
+## Define all page metadata in a Velocity Map so that it can handled as required by the 'dynamicLoading' parameter
+#set ($metadataMap = {
+    'content-id': $contentId,
+    'content-type': $parameters.contentType,
+    'draft-type': $parameters.draftType,
+    'draft-id': "$draftId",
+    'existing-draft-id' : "$existingDraftId",
+    'new-page': "$newPage",
+    'attachment-source-content-id': "$attachmentSourceId",
+    'can-attach-files': "$permissionHelper.canAttachFile($action.authenticatedUser, $action.attachmentSourceContent)",
+    'heartbeat': "$heartbeat",
+    'use-watch': "$useWatch",
+    'version-comment': "$versionComment",
+    'user-watching-own-content' : "$action.isUserWatchingOwnContent()",
+    'min-editor-height': $minEditorHeight,
+    'editor-mode': $action.mode,
+    'action-locale': "$action.locale",
+    'editor-plugin-resource-prefix': $webResourceHelper.getStaticResourcePrefix($action.editorVersion),
+    'auto-start': "$autoStart",
+    'form-name': $parameters.formname,
+    'use-inline-tasks' : "$useInlineTasks",
+    'shared-drafts': "$!{action.collaborativeEditingHelper.isSharedDraftsFeatureEnabled($spaceKey)}",
+    'edit-mode': "$!{action.collaborativeEditingHelper.getEditMode($spaceKey)}",
+    'draft-share-id': "$!{action.draftShareId}",
+    'show-draft-message':"$parameters.showDraftMessage",
+    'conf-revision': "$!{action.confluenceRevision}",
+    'sync-revision-source': "$!{action.synchronyRevisionSource}",
+    'collaborative-editor-status': "",
+    'collaborative-content': "$action.isCollaborativeContent()"
+})
+
+#*
+ Note that if using dynamicLoading then the metadata rendered here must be extracted
+ from the template and appended to the <head> of the document.
+ This can be done in Javascript using AJS.renderTemplate('dynamic-editor-metadata')
+*#
+#if ($parameters.dynamicLoading == "true")
+<script type="text/x-template" title="dynamic-editor-metadata" id="dynamic-editor-metadata-template">
+    #foreach( $key in $metadataMap.keySet() )
+        #renderMetadatum($key, $metadataMap.get($key))
+    #end
+    #webPanelForLocation("atl.editor.settings" $context)
+</script>
+#else
+    #requireResourcesForContext("editor")
+    #requireResourcesForContext("macro-browser")
+    #foreach( $key in $metadataMap.keySet() )
+        #putMetadata($key, $metadataMap.get($key))
+    #end
+    #webPanelForLocation("atl.editor.settings" $context)
+#end
+
+## Templates
+#parse("/template/includes/table-dialog-templates.vm")

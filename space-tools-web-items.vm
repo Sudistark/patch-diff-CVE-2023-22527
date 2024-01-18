@@ -1,0 +1,7 @@
+#* @vtlvariable name="spaceToolsTabsHelper" type="com.atlassian.confluence.spaces.actions.SpaceToolsTabsHelper" *#
+<div id="space-tools-web-items" class="hidden">
+    #set ($spaceToolsTabs = $spaceToolsTabsHelper.getNavigation($action))
+    #foreach ($item in $spaceToolsTabs.getFirstLevelNavigation())
+        <div data-label="$item.label" data-href="$item.link">$item.label</div>
+    #end
+</div>

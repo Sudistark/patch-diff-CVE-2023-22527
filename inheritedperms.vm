@@ -1,0 +1,11 @@
+<head><title>$action.getText('page.restrictions.help.title')</title></head>
+
+<body>
+$action.getText('page.restrictions.description')
+<p>
+$action.getText('page.restrictions.permission.heirarchy.desc')
+<p>
+$action.getText('page.restrictions.permission.heirarchy.example')
+<p>
+$action.getText('page.restrictions.note')
+</body>

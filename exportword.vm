@@ -1,0 +1,66 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns:v='urn:schemas-microsoft-com:vml'
+      xmlns='urn:w3-org-ns:HTML'>
+<head>
+## MS Word on Windows doesn't realise the encoding is UTF-8 unless this meta tag is present
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>$!page.title</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>$pixelsPerInch</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+        ## MSWord specific styles. TODO: we should allow these values to be changable - https://jira.atlassian.com/browse/CONF-29780
+        <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        #include("/includes/css/print.css")
+-->
+    </style>
+</head>
+<body>
+    <h1>$!page.title</h1>
+    <div class="Section1">
+        $renderedPageContent
+    </div>
+</body>
+</html>

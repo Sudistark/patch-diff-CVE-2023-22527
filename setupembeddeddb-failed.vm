@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<title>$action.getText("title.setup.embedded.database.failed")</title>
+	</head>
+
+	<body>
+        #parse ("/setup/analytics-data.vm")
+        <p>$action.getText("setup.embedded.database.failed.message")</p>
+
+        <p>
+            <a href="$req.contextPath/setup/setupembeddeddb-start.action?database=$database" class="setup-db-fail-button">#setupButton("", "", $action.getText("setup.embedded.database.again"), "", false)</a>
+            <a href="$req.contextPath/setup/setupdbchoice-start.action?database=$database" class="setup-db-fail-button aui-button aui-button-link">$action.getText("restart.database.setup")</a>
+        </p>
+
+		#parse ( "/template/includes/actionerrors.vm" )
+	</body>
+</html>

@@ -1,0 +1,182 @@
+## @group aui overrides
+
+a:not(.aui-button,.aui-dialog2-header-close) {
+    color: $colorScheme.linkColor;
+}
+
+## CONFSRVDEV-19326 AUI 9 drop down styling issue fix
+.aui-dropdown2 a:not(.aui-button,.aui-dialog2-header-close) {
+    color: initial;
+}
+
+## Override so that buttons styled like links will use the 'link' colour from the colour scheme.
+.aui-toolbar .aui-buttons .toolbar-item-link:hover button.toolbar-trigger,
+.aui-toolbar .aui-buttons .toolbar-item-link button.toolbar-trigger,
+.aui-navgroup-horizontal .aui-nav > li a,
+.aui-dialog .dialog-page-menu li.page-menu-item button.item-button,
+body.spaces .aui-tabs > .tabs-menu .menu-item a,
+body.spaces .aui-tabs > .tabs-menu .menu-item a:link,
+body.spaces .aui-tabs > .tabs-menu .menu-item a:visited {
+    color: $colorScheme.linkColor;
+}
+
+.aui-nav-vertical li.active a,
+.aui-nav-vertical li.active a:hover {
+    color: $colorScheme.menuItemSelectedTextColor;
+    background-color: $colorScheme.menuItemSelectedBackgroundColor;
+}
+
+#com-atlassian-confluence .aui-dd-parent .aui-dropdown .dropdown-item a,
+.aui-dropdown2 .aui-dropdown2-section li a {
+    color: $colorScheme.menuItemTextColor;
+}
+
+## AUI now has different DOM structure for buttons
+.aui-dialog .dialog-button-panel a.button-panel-link {
+    color: $colorScheme.linkColor;
+}
+
+## Assuming that we want to treat these pseudo links like normal links, so colour accordingly
+.aui-button.aui-button-link {
+    color: $colorScheme.linkColor;
+}
+
+.aui-dropdown2-in-header.aui-style-default a,
+.aui-dropdown2-in-header.aui-style-default a:visited,
+.aui-dropdown2-in-header.aui-style-default a:link,
+.aui-dropdown2-in-header.aui-style-default:hover a,
+.aui-dropdown2-in-header.aui-style-default:hover a:visited,
+.aui-dropdown2-in-header.aui-style-default:hover a:link{
+    color: $colorScheme.topBarMenuItemTextColor;
+}
+
+.aui-dropdown2.aui-style-default:hover .aui-dropdown2-checkbox,
+.aui-dropdown2.aui-style-default:hover .aui-dropdown2-radio,
+.aui-dropdown2.aui-style-default:hover a {
+    color: $colorScheme.menuItemTextColor;
+}
+
+.aui-dropdown2.aui-style-default:hover a:not(.aui-dropdown2-disabled):focus,
+.aui-dropdown2.aui-style-default:hover a:not(.aui-dropdown2-disabled):hover,
+.aui-dropdown2.aui-style-default:hover a.active:not(.aui-dropdown2-disabled),
+.aui-dropdown2.aui-style-default:hover .aui-dropdown2-radio:not(.aui-dropdown2-disabled):hover {
+    color: $colorScheme.menuItemSelectedTextColor;
+    background-color: $colorScheme.menuItemSelectedBackgroundColor;
+}
+
+#com-atlassian-confluence .aui-dd-parent a.perms-dropdown-trigger:hover,
+#com-atlassian-confluence .aui-dd-parent a.perms-dropdown-trigger:focus,
+#com-atlassian-confluence .aui-dd-parent .aui-dropdown .dropdown-item.active a,
+.ajs-menu-bar .ajs-menu-item li.active a,
+.aui-dd-parent .aui-dropdown li.active,
+.ajs-menu-bar .ajs-menu-item.opened .ajs-drop-down li.active a,
+.ajs-content-hover .popup-follow a:hover {
+    color: $colorScheme.menuItemSelectedTextColor;
+    background-color: $colorScheme.menuItemSelectedBackgroundColor;
+}
+
+.ajs-menu-bar .ajs-menu-item.opened a.trigger {
+    background-color: $colorScheme.menuSelectedBackgroundColor;
+}
+
+/*************** NEW HEADER COLORS ***************/
+#header .aui-header {
+    background-color: $colorScheme.topBarColor;
+    color: $colorScheme.breadcrumbsTextColor;
+}
+
+.aui-header .aui-dropdown2-trigger:hover,
+.aui-header .aui-dropdown2-trigger.active,
+#header .aui-header .aui-nav-link.active,
+#header .aui-header .aui-nav-imagelink.active,
+#header .aui-header .aui-nav-imagelink:focus,
+#header .aui-header .aui-nav-imagelink:hover,
+#header .aui-header a:focus,
+#header .aui-header a:hover,
+#header .aui-header a:active {
+    background-color: $colorScheme.topBarMenuSelectedBackgroundColor;
+    border-color: $colorScheme.topBarMenuSelectedBackgroundColor;
+    color: $colorScheme.topBarMenuSelectedTextColor;
+}
+
+.aui-header .aui-dropdown2-trigger.active::after,
+.aui-header .aui-dropdown2-trigger:hover::after {
+    border-top-color: $colorScheme.topBarMenuSelectedTextColor;
+}
+
+.aui-header .aui-dropdown2-trigger::after {
+    border-top-color: $colorScheme.breadcrumbsTextColor;
+}
+
+.aui-header .aui-dropdown2-trigger,
+#header .aui-header .aui-nav-link ,
+#header .aui-header .aui-nav-imagelink,
+#header .aui-header a {
+    color: $colorScheme.breadcrumbsTextColor;
+}
+
+#header .aui-header .aui-dropdown2 {
+    border-color: $colorScheme.topBarColor;
+}
+#header .aui-header .aui-dropdown2 li.separator {
+    border-top-color: $colorScheme.topBarColor;
+}
+
+## this duplication is needed for search which is still a aui-dropdown
+#header .aui-header .aui-dd-parent .aui-dropdown a:focus,
+#header .aui-header .aui-dd-parent .aui-dropdown a:hover,
+#header .aui-header .aui-dd-parent .aui-dropdown a:active,
+#header .aui-header .aui-dd-parent .aui-dropdown li.active a {
+    color: $colorScheme.menuItemSelectedTextColor;
+    background-color: $colorScheme.menuItemSelectedBackgroundColor;
+}
+
+#header .aui-header li.aui-nav a.aui-nav-link a{
+    color: $colorScheme.topBarMenuItemTextColor;
+}
+
+#app-switcher.aui-dropdown2.aui-style-default .active,
+.aui-dropdown2-trigger.app-switcher-trigger:hover,
+.aui-dropdown2.aui-style-default .active {
+    background-color: $colorScheme.menuItemSelectedBackgroundColor;
+    color: $colorScheme.menuItemSelectedTextColor;
+}
+
+#set ($buttonTopBGColour = $colorScheme.headerButtonBaseBackgroundColor)
+## buttonHoverTopBGColour should be a 20% opaicty black overlay on top of button, 5% darken is an approximation
+#set ($buttonHoverTopBGColour = $colourUtils.darken($buttonTopBGColour, 5))
+
+#header .aui-header .aui-nav .aui-button-primary {
+    background-color: $buttonTopBGColour;
+    color: $colorScheme.headerButtonTextColor;
+}
+
+#header .aui-header .aui-nav .aui-button-primary:hover,
+#header .aui-header .aui-nav .aui-button-primary:focus {
+    filter: brightness(1.2);
+    color: $colorScheme.headerButtonTextColor;
+}
+
+.aui-header .aui-quicksearch input[type='text'],
+.aui-header .aui-quicksearch input[type='text'][type='text']:focus {
+    background: $colorScheme.searchFieldBackgroundColor
+}
+
+## The search field has a white text color and a 60% opacity white when the field is not focused
+## If the user has not chosen a custom color, they will get the default effect. Once they modify the
+## search text color, both the focused and unfocused state will be a solid color because we are unable
+## to do an opacity change at this time.
+#if ( $colorScheme.searchFieldTextColor != "#ffffff")
+    .aui-header .aui-quicksearch:after,
+    .aui-header .aui-quicksearch input[type='text'],
+    .aui-header .aui-quicksearch input[type='text'][type='text']:focus {
+        color: $colorScheme.searchFieldTextColor;
+    }
+#end
+
+#header .aui-header .aui-nav .aui-button-primary:active {
+    background-color: $buttonTopBGColour;
+    color: $colorScheme.headerButtonTextColor;
+}
+
+## @end

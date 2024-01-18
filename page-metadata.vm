@@ -1,0 +1,7 @@
+<div class="page-metadata">
+    <ul>
+        <li class="page-metadata-modification-info">
+            #pageByline($page $action.dateFormatter false)
+        </li>
+    </ul>
+</div>

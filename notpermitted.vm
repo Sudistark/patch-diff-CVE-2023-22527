@@ -1,0 +1,16 @@
+<html>
+<head>
+    <title>$action.title</title>
+    <meta name="decorator" content="atl.general">
+    $webResourceManager.requireResourcesForContext("error.page")
+</head>
+<body>
+    #parse ( "/breadcrumbs.vm" )
+    <div id="content" class="access-error-container $action.cssClass">
+        <div class="access-error">
+            <h2>$action.title</h2>
+            <p>$action.message</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.setup.actions.SetupStartAction" *#
+#if ($action.FromScratch)
+    #parse ("/setup/setup-choice-box.vm")
+    <div class="setup-hint">$action.getText("setup.start.hint")</div>
+    #setupChoiceBox("install" "setup.start.eval.heading" "setup.start.eval.wizard")
+    #setupChoiceBox("custom" "setup.start.custom.heading" "setup.start.custom.wizard")
+    <input type="hidden" id="setupType" name="setupType" value=""></input>
+
+    <div class="buttons-container">
+        <div class="buttons">
+            #setupNextButton(false)
+        </div>
+    </div>
+
+#elseif($action.isClusterToStandalone())
+    ## downgrade from cluster
+    <div class="cluster-welcome-div">
+        <input type="hidden" id="setupType" name="setupType" value="cluster.to.standalone"/>
+        <h2 id="cluster-logo-message">$action.getText("setup.start.cluster.downgrade.heading")</h2>
+        <div id="cluster-migration-info">
+            <p>$action.getText("setup.start.cluster.downgrade.wizard")</p>
+        </div>
+
+        #parse ("/template/includes/actionerrors.vm")
+
+        #if ($action.messageHolder.actionWarnings.size() == 0)
+            <div class="buttons-container">
+                <div class="buttons">
+                    #setupSubmitButton("", "setupTypeCustom", "$action.getText('setup.start.cluster.downgrade.start-setup')", "start-setup-button", false)
+                </div>
+            </div>
+        #end
+    </div>
+#end

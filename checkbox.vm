@@ -1,0 +1,15 @@
+#set( $labelName = $i18n.getText("$parameters.label") )
+#if( !$labelName )
+#set( $labelName = $parameters.label )
+#end
+#if( $parameters.value )
+    #set( $value = $parameters.value )
+#else
+    #set( $value = true )
+#end
+<input type="checkbox" name="${parameters.name}" id="${parameters.name}" value="$value"#*
+    *##if( ${parameters.nameValue.toString()} == "true") checked="checked"#end#*
+    *##if ($parameters.disabled == true) disabled="disabled"#end#*
+	*##if ($parameters.tabindex) tabindex="$!htmlUtil.htmlEncode($parameters.tabindex)" #end#*
+	*##if ($parameters.onclick) onclick="$!htmlUtil.htmlEncode($parameters.onclick)"#end#*
+*#> #if($parameters.label) <label for="${parameters.name}"><span class="label">$labelName</span></label>#end

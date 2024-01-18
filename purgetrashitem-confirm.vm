@@ -1,0 +1,33 @@
+<html>
+    <head>
+        #set ($contentType = $type)
+        <title>$action.getText("com.atlassian.confluence.pages.actions.PurgeTrashItemAction.action.name", [$contentType])</title>
+    </head>
+
+    <body>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+        #applyDecorator ("root")
+            #decoratorParam ("context" "spaceadminpanel")
+            #decoratorParam ("selection" "trash")
+            #decoratorParam ("title" $action.getText("com.atlassian.confluence.pages.actions.PurgeTrashItemAction.action.name", [$contentType]))
+            #decoratorParam ("selectedTab" "admin")
+            #decoratorParam ("selectedSpaceToolsWebItem" "trash")
+            #decoratorParam("helper" $action.helper)
+
+            #applyDecorator ("confirm")
+                #decoratorParam ("formAction" "dopurgetrashitem.action")
+                #decoratorParam ("cssClasses" "simple-confirmation")
+                $action.getText("purge.confirm", [$contentType, $htmlUtil.htmlEncode($contentEntityObject.getTitle())])
+                <input type="hidden" name="key" value="$htmlUtil.urlEncode($key)">
+                <input type="hidden" name="contentId" value="$contentId">
+            #end
+        #end
+    #end
+        #parse ( "/breadcrumbs.vm" )
+    </body>
+</html>

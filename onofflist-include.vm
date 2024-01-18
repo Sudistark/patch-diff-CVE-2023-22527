@@ -1,0 +1,25 @@
+#set( $labelValue = $i18n.getText($parameters.label) )
+#if( !$labelValue )
+    #set( $labelValue = $parameters.label )
+#end
+
+<div class="checkbox">
+#if ($editMode == false)
+    #onoffAUI($parameters.name $parameters.nameValue)
+    <label for="${parameters.name}">$labelValue</label>
+#else
+    <input type="checkbox" class="checkbox" value="true" name="$parameters.name"
+    #if($parameters.disabled) disabled #end
+    #if ($parameters.nameValue == 'true') checked="checked" #end
+    #if ($parameters.tabindex)tabindex="$!htmlUtil.htmlEncode($parameters.tabindex)"#end
+    id="${parameters.name}">
+    <label for="${parameters.name}">$labelValue</label>
+    #if ($parameters.inlineText)
+        <div class="description">$parameters.inlineText</div>
+    #end
+#end
+#set($descHtml = $parameters.description)
+#if ($descHtml)
+    <div class="description">$descHtml</div>
+#end
+</div>

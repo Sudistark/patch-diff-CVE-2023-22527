@@ -1,0 +1,140 @@
+##deprecated - do not use this
+#*
+-- Required Parameters:
+--   * formName   - determines the form in which the textfield is has to be set
+--   * buttonName - name of the button form input
+--   * imgTitle   - image title
+
+-- Optional Parameters:
+--   * name         - name and ID of the text field (default: groupsToAdd)
+--   * buttonOff    - remove the button if not needed (default: true)
+--   * buttonLabel  - text on the form button (default: Add)
+--   * textAreaOn   - name of the field, defining the space it should look in (default: off)
+--   * groupSearchActionName   - name of the action we want to call from within the group picker. From 2.10, Renamed from actionName.
+--   * contentId    - id of the content (if you have to filter the groups related to the content, we will need to pass in the contentId
+--   * radio        - whether the list should be radio buttons instead of select boxes
+--   * searchAction - to be passed when a search should be performed on opening the window
+--   * windowProperties - properties of the popup search window
+--   * linkId       - id of the link element
+*#
+
+#set ($label         = $parameters.label)
+#set ($formName      = $parameters.formName)
+#set ($name          = $parameters.name)
+#set ($value         = $parameters.value)
+#set ($fieldClass    = $parameters.fieldClass)
+#set ($size          = $parameters.size)
+#set ($textAreaOn    = $parameters.textAreaOn)
+#set ($buttonOff     = $parameters.buttonOff)
+#set ($buttonLabel    = $parameters.buttonLabel)
+#set ($buttonName    = $parameters.buttonName)
+#set ($groupSearchActionName    = $parameters.groupSearchActionName)
+#set ($contentId     = $parameters.contentId)
+#set ($searchAction = $parameters.searchAction)
+#set ($imgTitle       = $parameters.imgTitle)
+#set ($windowProperties = $parameters.windowProperties)
+#set ($linkId = $parameters.linkId)
+#set ($showUnlicensedUsers = $parameters.showUnlicensedUsers)
+#set ($additionalDataAttrs = $parameters.additionalDataAttrs)
+
+#if (!$name)
+    #set ($name = "groupsToAdd")
+#end
+
+#if (!$size)
+    #set ($size = "40")
+#end
+
+#if (!$buttonOff)
+    #set ($buttonOff = false)
+#end
+
+#if (!$buttonLabel)
+    #set ($buttonLabel = $action.getText('add.word'))
+#end
+
+#if (!$textAreaOn)
+    #set ($textAreaOn = "off")
+#end
+
+#if (!$searchAction)
+    #set ($searchAction = "opengrouppicker.action")
+#end
+
+#if (!$onFocus)
+    #set ($onFocus = "")
+#end
+
+#if (!$windowProperties)
+    #set ($windowProperties = "status=yes,resizable=yes,top=100,left=200,width=580,height=550,scrollbars=yes") ## not sure if these are sensible defaults?
+#end
+
+#if (!$linkId)
+    #set ($linkId = "entitypicker-popup-link")
+#end
+
+<table width="100%">
+      #if ($action.fieldErrors.get($name))
+          #foreach ($error in $action.fieldErrors.get($name))
+          <tr>
+              <td align="left" class="error">
+                #set( $message = $action.getText(${error}) )
+                #if( $message && $message != "" )
+                  $message
+                #else
+                  $error
+                #end
+              </td>
+          </tr>
+          #end
+      #end
+    <tr>
+        <td align="left" valign="top" nowrap>
+
+            #if($label)
+            <label>$label</label>
+            #end
+            <div style="display: inline-block;">
+                #if ($textAreaOn == "on")
+                    <textarea name="$name" rows="3" cols="40">$!value</textarea>
+                #else
+                    <input type="text" id="$name" name="$name" value="$!value" size="$!size"  class="$!fieldClass text"
+                           data-none-message="$action.getText('usersearch.no.results')" data-dropdown-target="#${name}-autocomplete-dd"
+                           data-resize-to-input="true" $!additionalDataAttrs />
+                #end
+
+                #scomponent("theme='custom'" "template='popup-link.vm'"
+                            "tagName=button"
+                            "url=$req.contextPath/spaces/$searchAction?key=$!key&startIndex=0#if($groupSearchActionName)&actionName=$!groupSearchActionName&existingGroups=$!value#end#if($showUnlicensedUsers)&showUnlicensedUsers=$showUnlicensedUsers#end"
+                            "windowName=EntitiesPicker"
+                            "windowProperties=$windowProperties"
+                            "onPopupSubmit=set${name}TextField"
+                            "linkId=$linkId"
+                            "cssClass='userpicker button'"
+                            "spanCssClass=aui-icon aui-icon-small aui-iconfont-search")
+                #end
+
+                #if ($textAreaOn != "on")
+                    #if (!$buttonOff)
+                        <input name="$buttonName" type="submit" value="$buttonLabel" class="button"/>
+                    #end
+                #end
+
+                <div id="${name}-autocomplete-dd" class="autocomplete-user-or-group-target"></div>
+            </div>
+
+            <script type="text/javascript">
+                function set${name}TextField(entityNames)
+                {
+                    var element = document.forms.${formName}.${name};
+                    if (entityNames != ""){
+                        if (element.value == "")
+                            element.value = entityNames;
+                        else
+                            element.value = element.value + ", " + entityNames;
+                    }
+                }
+            </script>
+        </td>
+    </tr>
+</table>

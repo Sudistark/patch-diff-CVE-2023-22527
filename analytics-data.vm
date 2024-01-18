@@ -1,0 +1,3 @@
+#renderMetadatum("server-id" $action.serverId)
+#renderMetadatum("setup-session-id" $action.setupSessionId)
+#renderMetadatum("SEN" $action.supportEntitlementNumber)

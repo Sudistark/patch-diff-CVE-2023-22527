@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>$action.getText("title.attachment.not.found")</title>
+</head>
+<body style="margin:5px">
+
+    #parse ( "/breadcrumbs.vm" )
+
+    <div id="content" style="margin:10px;">
+
+        <p>
+            $action.getText("attachment.not.found.note1")
+        </p>
+        <p>
+            $action.getText("attachment.not.found.note2")
+        </p>
+        <p>
+            &lt;&lt; <a href="$req.contextPath/pages/viewpageattachments.action?pageId=$pageId">$action.getText("attachment.not.found.back")</a>
+        </p>
+
+    </div>
+
+</body>
+</html>

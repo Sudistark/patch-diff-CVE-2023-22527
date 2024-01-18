@@ -1,0 +1,30 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.setup.actions.SetupDBChoiceAction" *#
+<html>
+<head>
+    <title>$action.getText("setupdbchoice.title")</title>
+    $webResourceManager.requireResourcesForContext("setup.setup-select-database-choice")
+</head>
+<body>
+    #parse ("/setup/analytics-data.vm")
+    #parse ("/setup/setup-button.vm")
+    #parse ("/setup/setup-choice-box.vm")
+    #parse ("/setup/setup-progress-indicator.vm" )
+
+    <div class="setup-hint">$action.getText("setup.step.description.dbchoice")</div>
+
+    <form method="POST" id="setupdbchoice" name="setupdbchoice" action="setupdbchoice.action" class="aui">
+        <div class="aui-group setup-start-group">
+            #setupChoiceBox("custom" "external.no.datasource.database" "external.no.datasource.description")
+
+            #form_xsrfToken()
+            <input type="hidden" id="thisNodeClustered" name="thisNodeClustered" value="$action.isThisNodeClustered()"></input>
+            <input type="hidden" id="dbChoice" name="dbChoice" value=""></input>
+            <div class="buttons-container setup-progress-spinner-container">
+                <div class="buttons">
+                    #setupNextButton(false)
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

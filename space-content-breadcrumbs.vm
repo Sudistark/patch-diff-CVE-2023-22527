@@ -1,0 +1,9 @@
+<!-- This theme is using a deprecated template: space-content-breadcrumbs.vm. 
+    This template has been deprecated since Confluence 2.8, use /breadcrumbs.vm instead. -->
+#parse ("/breadcrumbs.vm")
+
+#if ($helper.spaceKey)
+    <content tag="spacename">$helper.spaceName</content>
+    <content tag="spacekey">$helper.spaceKey</content>
+    <content tag="spaceaction">true</content>
+#end

@@ -1,0 +1,1 @@
+<input type="checkbox" name="${parameters.name}" id="${parameters.name}" class="checkbox" value="true" #if( ${parameters.nameValue.toString()} == "true" )checked="checked"#end/>

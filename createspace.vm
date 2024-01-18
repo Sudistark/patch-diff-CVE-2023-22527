@@ -1,0 +1,8 @@
+$action.getText('createspace.page.description')
+
+<p>$action.getText('createspace.space.key.description')</p>
+
+<p><strong>$action.getText('example.values')</strong><br/>
+<strong>$action.getText('key.word')</strong>: $action.getText('key.example')<br/>
+<strong>$action.getText('name.word')</strong>: $action.getText('space.name.example')<br/>
+<strong>$action.getText('description.word')</strong>: $action.getText('description.example')

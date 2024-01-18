@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>$action.getText("raise.support.request.title")</title>
+	</head>
+	<body>
+    <content tag="selectedWebItem">supportrequest</content>
+
+    <div class="steptitle">$action.getText('raise.support.request.success.heading')</div>
+
+    <div class="bottomMargin">
+        $action.getText('raise.support.request.success')
+    </div>
+    
+#if (!$action.isMailServerAvailable())
+	<p>
+	<div class="warningMessage">$action.getText("raise.support.request.reminder")</div>
+#end
+        #parse("/breadcrumbs.vm")
+	</body>
+</html>

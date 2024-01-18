@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>$action.getActionName($action.getClass().getName()) - $action.fileName</title>
+</head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+        #decoratorParam("help-path" "/spaces/help/lookandfeel.vm")
+
+       <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "layouts")
+                #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "layouts")
+                #decoratorParam("helper" $action.helper)
+
+                <div class="templatebox" style="width:90%">
+                <code>$action.content</code>
+                </div>
+                <input type="button" value="$action.getText('back.witharrows.name')" onClick="javascript:history.go(-1);">
+
+            #end
+        #end
+</body>
+</html>

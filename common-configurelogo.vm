@@ -1,0 +1,42 @@
+<p>$action.getText("can.configure.logo.here")</p>
+
+<span id="enable-disable-space-logo">
+<strong>$action.getText("logo.word"):</strong>
+#if ($action.isLogoDisabled())
+    <a href="enable${actionDescriminator}logo.action?#url_xsrfToken()&key=$!space.key">$action.getText("common.words.on")</a> &middot; <strong class="bad">$action.getText("common.words.off")</strong>
+#else
+    <strong class="good">$action.getText("common.words.on")</strong> &middot; <a href="disable${actionDescriminator}logo.action?#url_xsrfToken()&key=$!space.key">$action.getText("common.words.off")</a>
+#end
+</span>
+
+#if (!$action.isLogoDisabled())
+    <p>
+    #if (!$logo)
+        <em>
+            #if($space)$action.getText("no.space.logo.defined")
+            #else $action.getText("no.default.space.logo.defined")
+            #end
+        </em>
+    #else
+        <img class="space-logo" src="$htmlUtil.htmlEncode("${req.contextPath}${logo.downloadPath}")"/>
+    #end
+    </p>
+
+    <form name="uploadlogo" method="post" action="upload${actionDescriminator}logo.action#if($space)?key=$htmlUtil.urlEncode($space.key)#end" enctype="multipart/form-data">
+        #form_xsrfToken()
+        <div class="formtitle">$action.getText("browse.for.logo")</div>
+        <label class="label" for="file">$i18n.getText('file'):</label>
+        <input type="file" name="file" size="50" id="file">
+        <div style="padding-top: 5px">
+            #ssubmit("theme='aui'"
+                     "editMode=false"
+                     "editValue=$i18n.getText('upload.logo')"
+                     "editName=logosubmit")
+        </div>
+    </form>
+
+    <ul class="static-menu">
+    #if ($logo) <li><a id="reset-logo" href="delete${actionDescriminator}logo.action?#url_xsrfToken()&key=$!space.key">$action.getText("reset.logo.to.default")</a></li> #end
+    #if ($permissionHelper.isConfluenceAdministrator($remoteUser) && $space) <li><a href="$req.contextPath/admin/configuredefaultspacelogo.action">$action.getText("configure.default.space.logo")</a></li>#end
+    </ul>
+#end

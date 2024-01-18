@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>$action.getText("setupsteperror.title")</title>
+	</head>
+
+	<body>
+        #parse ("/setup/analytics-data.vm")
+        #parse ("/setup/setup-button.vm")
+        <p></p>
+		$action.getText("setupsteperror.description")
+		<p></p>
+        $action.getText("setupsteperror.continue"):
+        <form  method="POST" action="${setupPersister.currentStep}.action">
+            #setupSubmitButton("", "", "$action.getText('setupsteperror.continue.button')", "", false);
+        </form>
+        <p></p>
+       #parse ( "/template/includes/actionerrors.vm" )
+        <p>
+
+

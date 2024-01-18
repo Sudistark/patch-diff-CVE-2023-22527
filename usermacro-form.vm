@@ -1,0 +1,1 @@
+<p>$action.getText('user.macro.help',[$docBean.getLink('help.user.macros')])

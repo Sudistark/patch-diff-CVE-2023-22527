@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<title>$htmlUtil.htmlEncode($space.name) - $action.getText("title.rss.feeds")</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spacecontentpanel")
+                #decoratorParam ("title" $action.getText("title.rss.feeds"))
+                #decoratorParam ("selection" "rss")
+                #decoratorParam ("selectedTab" "content")
+                #decoratorParam ("selectedSpaceToolsWebItem" "rss")
+                #decoratorParam("helper" $action.helper)
+
+                #if ($remoteUser)
+                    #set ($feedAuthen="&amp;publicFeed=false&amp;os_authType=basic")
+                #else
+                    #set ($feedAuthen="&amp;publicFeed=true")
+                #end
+
+                #if($generalUtil.globalSettings.baseUrl)
+                    #set ($feedContext="$generalUtil.globalSettings.baseUrl")
+                #else
+                    #set ($feedContext="$req.contextPath")
+                #end
+
+                <p>
+                    $action.getText("text.description.rss")
+                </p>
+                <ul class="space-feed-list">
+                    <li><a href="$feedContext/spaces/createrssfeed.action?types=page&amp;spaces=$space.key&amp;maxResults=15&amp;title=%5B$htmlUtil.urlEncode($space.name)%5D+$action.getText("rss.feed.page.title")$feedAuthen">$action.getText("rss.feed.space.pages")</a>
+                    <li><a href="$feedContext/spaces/createrssfeed.action?types=blogpost&amp;spaces=$space.key&amp;maxResults=15&amp;title=%5B$htmlUtil.urlEncode($space.name)%5D+$action.getText("rss.feed.blogpost.title")$feedAuthen">$action.getText("rss.feed.space.news")</a>
+                    <li><a href="$feedContext/spaces/createrssfeed.action?types=mail&amp;spaces=$space.key&amp;maxResults=15&amp;title=%5B$htmlUtil.urlEncode($space.name)%5D+$action.getText("rss.feed.mail.title")$feedAuthen">$action.getText("rss.feed.space.mail")</a>
+                    <li><a href="$feedContext/spaces/createrssfeed.action?types=comment&amp;spaces=$space.key&amp;maxResults=15&amp;title=%5B$htmlUtil.urlEncode($space.name)%5D+$action.getText("rss.feed.comment.title")$feedAuthen">$action.getText("rss.feed.space.comments")</a>
+                    <li><a href="$feedContext/spaces/createrssfeed.action?types=attachment&amp;spaces=$space.key&amp;maxResults=15&amp;title=%5B$htmlUtil.urlEncode($space.name)%5D+$action.getText("rss.feed.attachment.title")$feedAuthen">$action.getText("rss.feed.space.attachments")</a>
+                    <li><a href="$feedContext/spaces/createrssfeed.action?types=page&amp;types=comment&amp;types=blogpost&amp;types=mail&amp;types=attachment&amp;spaces=$space.key&amp;maxResults=15&amp;title=%5B$htmlUtil.urlEncode($space.name)%5D+$action.getText("rss.feed.all.content.title")$feedAuthen">$action.getText("rss.feed.space.all")</a>
+                </ul>
+                #if ( $action.isAnonymousUser())
+                <p>
+                    $action.getText("text.description.rss.public.feeds", ["$feedContext/dashboard/configurerssfeed.action"])
+                </p>
+                #end
+            #end
+
+            #if (!$space)
+                #parse ("/breadcrumbs.vm")
+                #parse ("/general-operations.vm")
+            #end
+    #end
+</html>

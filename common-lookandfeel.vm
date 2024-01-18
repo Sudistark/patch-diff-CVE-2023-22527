@@ -1,0 +1,91 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.spaces.actions.SpaceColourSchemeAction" *#
+#requireResource("confluence.web.resources:ajs")
+#requireResource("confluence.web.resources:lookandfeel")
+
+#putMetadata('context-path', $req.contextPath)
+
+#macro (editColourRow $colourKey $colour)
+<tr class="colour-scheme-option">
+    <td><label for="$colourKey">$action.getText("colourname.$colourKey")</label></td>
+    <td><div id="swatch.$colourKey" class="color-swatch"#if($colour) style="background-color: $colour;"#end></div></td>
+    <td>
+        <input type="text" id="$colourKey" name="colourMap['$action.schemeKeyToParamKey($colourKey)']" value="$!colour" class="colour-input text" />
+        <img id="image.$colourKey" src="$staticResourceUrlPrefix/images/icons/lgicn_16.gif" class="colour-image" >
+    </td>
+</tr>
+#end
+
+## macro to list the color schemes
+#macro (colorSchemeList $scheme $key $name $desc $selected)
+#set($spaceKey = ${action.key})
+#parse ("/template/includes/actionerrors.vm")
+<div class="look-and-feel">
+    <div class="form-block #if($key == $selected)greyboxfilled #else greybox #end">
+        <h2>$name</h2>
+        <p>$desc</p>
+        <form id="change-colour-scheme-$key" method="POST" action="dochangecolourscheme.action#if ($spaceKey)?key=$htmlUtil.urlEncode($spaceKey)#end">
+        #form_xsrfToken()
+        <table>
+            <tr>
+                #foreach ($colourKey in $action.colourKeys)
+                    #set ($color = $action.getColour($scheme, $colourKey))
+                    <td><div class="color-swatch" title="$action.getText("colourname.$colourKey")" style="background-color: #if($color) $color #else #ffffff #end;"></div></td>
+                #end
+                <td>
+                    #if ($key == $selected)
+                        <span class="form-element-small selected">$action.getText('text.selected')</span>
+                    #else
+                        #ssubmit("theme='aui'"
+                                 "editMode=false"
+                                 "editValue=$i18n.getText('select.name')"
+                                 "editName=$key")
+                    #end
+                </td>
+            </tr>
+        </table>
+        </form>
+        #if ($selected == 'custom' && $key == 'custom')
+        <input id="edit-scheme-link" class="submit aui-button inline-control-link" type="submit" name="edit" value="$action.getText('edit.name')">
+        <div id="edit-scheme" #if ($actionErrors.size() == 0)class="hidden"#end>
+             <p>$action.getText("desc.colourscheme")</p>
+             <div>
+                 <form method="POST" id="edit-colour-scheme-$key" action="doeditcolourscheme.action#if ($spaceKey)?key=$htmlUtil.urlEncode($spaceKey)#end" class="aui">
+                     #form_xsrfToken()
+                     <table class="greyboxfilled" style="background-color:#fff">
+                         #foreach ($colourKey in $action.colourKeys)
+                             #editColourRow($colourKey $action.getColour($scheme, $colourKey))
+                         #end
+                     </table>
+                     <div class="buttons-container">
+                         <div class="buttons">
+                             #ssubmit("name='confirm'" "value='update.name'" "theme='notable'" "cssClass='aui-button aui-button-primary'")
+                             #ssubmit("name='resetDefaults'" "value='reset.colourscheme.name'" "theme='notable'" "cssClass='aui-button'")
+                             #ssubmit("name='cancel'" "value='cancel.name'" "theme='notable'" "cssClass='aui-button aui-button-link cancel'")
+                         </div>
+                     </div>
+                 </form>
+             </div>
+        </div>
+        #end
+    </div>
+</div>
+#end
+
+    #set($selectedColorScheme = $action.getColourSchemeType())
+
+    #if ($spaceKey)
+        $action.getText('spaces.lookandfeel.help')
+        <p><em>$action.getText('spaces.lookandfeel.note')</em></p>
+
+        #set ($scheme = $action.getGlobalColourScheme())
+        #colorSchemeList($scheme 'global' $action.getText('scheme.title.global') $action.getText('scheme.desc.global') $selectedColorScheme)
+    #end
+
+    #set ($themeScheme = $action.getThemeColourScheme())
+    #if ($themeScheme)
+        #colorSchemeList($themeScheme 'theme' $action.getText('scheme.title.theme') $action.getText('scheme.desc.theme') $selectedColorScheme)
+    #end
+
+    #set ($customScheme = $action.getCustomColourScheme())
+    #colorSchemeList($customScheme 'custom' $action.getText('scheme.title.custom') $action.getText('scheme.desc.custom') $selectedColorScheme)
+

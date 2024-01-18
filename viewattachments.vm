@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>$action.getActionName($action.getClass().getName())#if($page.title) - $page.title#end</title>
+</head>
+
+#set ($max = $action.maxAttachments - 1)
+<content tag="title-text-span">$action.getActionName($action.getClass().getName())</content>
+
+<!-- call the appropriate decorator for the given content (page or blogpost) -->
+#applyDecorator("root")
+    #decoratorParam("helper" $action.helper)
+    #decoratorParam("mode" "view-attachments")
+    #decoratorParam("context" "$action.page.type")
+
+    #requireResource("confluence.web.resources:attachments")
+    #requireResourcesForContext("viewattachments")
+
+    <body>
+
+    <div class="hidden parameters">
+        <input type="hidden" id="show-history-text" value="$action.getText('show.attachment.history')">
+        <input type="hidden" id="hide-history-text" value="$action.getText('hide.attachment.history')">
+    </div>
+
+    <div class="pagecontent"><div id="viewAttachmentsDiv">
+
+        <div id="view-attachments" class="attachment-section">
+
+        #if ($latestVersionsOfAttachments.size() > 0)
+            #set ($contextPath = "$req.contextPath/pages/viewpageattachments.action?pageId=$pageId&sortBy=$sortBy&")
+            #set ($sortPathPrefixHtml = "?pageId=$page.id&sortBy=")
+            #set ($showActions = "true")
+            #set ($old = "true")
+            #set ($attachmentHelper = $action)
+            #parse("/pages/includes/attachments-table.vm")
+            #if ($action.latestVersionsOfAttachments.size() > 1)
+               <a id="download-all-link" href="$req.contextPath/pages/downloadallattachments.action?pageId=$pageId" title="$action.getText('download.all.desc')">$action.getText('download.all')</a>
+            #end
+            #pagination($action.paginationSupport $contextPath)
+        #else
+            $action.getText('currently.no.attachments')
+        #end
+        </div>
+
+        #if( $action.hasAttachFilePermissions() )
+            <div id="upload-div" class="attachment-section">
+                #parse ("/pages/uploadattachments.vm")
+            </div>
+        #end
+    </div></div>
+
+    </body>
+#end
+</html>

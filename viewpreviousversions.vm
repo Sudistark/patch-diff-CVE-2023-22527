@@ -1,0 +1,29 @@
+#* @vtlvariable name="allVersions" type="java.util.List<com.atlassian.confluence.core.VersionHistorySummary>" *#
+#* @vtlvariable name="showActions" type="boolean" *#
+#* @vtlvariable name="isOfflineCollabEditingMode" type="boolean" *#
+#* @vtlvariable name="revertPermitted" type="boolean" *#
+#* @vtlvariable name="removeHistoricalVersionPermitted" type="boolean" *#
+#* @vtlvariable name="page" type="com.atlassian.confluence.pages.AbstractPage" *#
+
+<html>
+    <head>
+        <title>$i18n.getText("title.view.previous.versions")#if($page.title) - $page.title#end</title>
+    </head>
+
+    <content tag="title-text-span">$i18n.getText("title.view.previous.versions")</content>
+
+    #if($darkFeatures.isDarkFeatureEnabled('confluence.retention.rules'))
+        <p>$i18n.getText("view.previous.versions.desc")</p>
+    #end
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $helper)
+        #decoratorParam("mode" "view-information")
+        #decoratorParam("calendar-width" "200px")
+        #decoratorParam("context" "$page.type")
+
+        #parse ("/pages/includes/previous-versions-table.vm")
+        <p><a href="${req.contextPath}/pages/viewinfo.action?pageId=${page.id}" class="aui-button aui-button-link">$i18n.getText('return.to.page.info')</a></p>
+    #end
+</html>
+

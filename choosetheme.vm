@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+        #decoratorParam("help-path" "/spaces/help/choosetheme.vm")
+
+        <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "choosetheme")
+                #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "choosetheme")
+                #decoratorParam("helper" $action.helper)
+
+                <form method="POST" action="dochoosetheme.action" name="choosethemeform">
+                    #form_xsrfToken()
+                    #parse ("/includes/common-choosetheme.vm")
+                    <input type="hidden" name="changesSaved" value="true">
+
+                    #ssubmit("theme='aui'"
+                             "editMode=false"
+                             "editValue=$i18n.getText('confirm.name')"
+                             "editName=$i18n.getText('confirm.name')")
+                </form>
+            #end
+        </body>
+
+    #end
+</html>

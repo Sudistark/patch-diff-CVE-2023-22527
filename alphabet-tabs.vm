@@ -1,0 +1,32 @@
+<center><div style="padding-top: 5px">
+    <ul id="squaretab">
+        <li><a#if (!$action.startsWith || $action.startsWith.length() == 0) id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=">$action.getText("all")</a></li>
+        <li><a#if ($action.startsWith == 'a') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=a">A</a></li>
+        <li><a#if ($action.startsWith == 'b') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=b">B</a></li>
+        <li><a#if ($action.startsWith == 'c') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=c">C</a></li>
+        <li><a#if ($action.startsWith == 'd') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=d">D</a></li>
+        <li><a#if ($action.startsWith == 'e') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=e">E</a></li>
+        <li><a#if ($action.startsWith == 'f') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=f">F</a></li>
+        <li><a#if ($action.startsWith == 'g') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=g">G</a></li>
+        <li><a#if ($action.startsWith == 'h') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=h">H</a></li>
+        <li><a#if ($action.startsWith == 'i') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=i">I</a></li>
+        <li><a#if ($action.startsWith == 'j') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=j">J</a></li>
+        <li><a#if ($action.startsWith == 'k') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=k">K</a></li>
+        <li><a#if ($action.startsWith == 'l') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=l">L</a></li>
+        <li><a#if ($action.startsWith == 'm') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=m">M</a></li>
+        <li><a#if ($action.startsWith == 'n') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=n">N</a></li>
+        <li><a#if ($action.startsWith == 'o') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=o">O</a></li>
+        <li><a#if ($action.startsWith == 'p') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=p">P</a></li>
+        <li><a#if ($action.startsWith == 'q') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=q">Q</a></li>
+        <li><a#if ($action.startsWith == 'r') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=r">R</a></li>
+        <li><a#if ($action.startsWith == 's') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=s">S</a></li>
+        <li><a#if ($action.startsWith == 't') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=t">T</a></li>
+        <li><a#if ($action.startsWith == 'u') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=u">U</a></li>
+        <li><a#if ($action.startsWith == 'v') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=v">V</a></li>
+        <li><a#if ($action.startsWith == 'w') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=w">W</a></li>
+        <li><a#if ($action.startsWith == 'x') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=x">X</a></li>
+        <li><a#if ($action.startsWith == 'y') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=y">Y</a></li>
+        <li><a#if ($action.startsWith == 'z') id=current #end href="$alphaLinkUrl?key=$action.spaceKey&startsWith=z">Z</a></li>
+        <!--<li><a#if ($action.startsWith == 'numeric') id=current #end href="$alphaLinkUrl?key=$generalUtils.htmlEncode($action.spaceKey)&startsWith=numeric">0 - 9</a></li>-->
+    </ul>
+</div></center>

@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <title>Restore Successful</title>
+
+
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.themeHelper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+
+        <body>
+
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "importpage")
+                #decoratorParam ("title" $action.getText("action.name"))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam("helper" $action.themeHelper)
+
+                <p>
+                $action.getText("restore.page.successful")
+                </p>
+
+            #end
+
+        </body>
+
+    #end
+</html>

@@ -1,0 +1,4 @@
+<head><title>$action.getText('minor.edit.help.title')</title></head>
+
+<body>$action.getText('minor.edit.help.text')
+</body>

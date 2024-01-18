@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+
+
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+        #applyDecorator ("root")
+            #decoratorParam ("context" "spaceadminpanel")
+            #decoratorParam ("selection" "")
+            #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+            #decoratorParam ("selectedTab" "admin")
+            #decoratorParam("helper" $action.helper)
+
+        #end
+
+    #end
+</html>

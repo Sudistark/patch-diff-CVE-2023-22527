@@ -1,0 +1,18 @@
+#set ($percentageUsed = $generalUtil.getPercentage($parameters.used, $parameters.total))
+#set ($freeAllocated = $parameters.allocated - $parameters.used)
+#set ($freeUnallocated = $parameters.total - $parameters.allocated)
+#set ($percentageFreeAllocated = $generalUtil.getPercentage($freeAllocated, $parameters.total))
+#set ($percentageAllocated = $generalUtil.getPercentage($parameters.allocated, $parameters.total))
+#set ($percentageFreeUnallocated = 100 - $percentageAllocated)
+#requireResource('confluence.web.components:memory-usage')
+<div #if ($parameters.id) id="$parameters.id" #end class="memory-meter $!parameters.cssClass">
+    <div class="memory-meter-bar" title="${freeUnallocated} MB $action.getText('free.unallocated.memory.percent', [${percentageFreeUnallocated}])" role="progressbar" aria-valuemin="0" aria-valuenow="${parameters.used}" aria-valuemax="${parameters.total}">
+        <span class="memory-meter-bar-used" style="width: ${percentageUsed}%" title="${parameters.used} MB $action.getText('used.memory.percent',[${percentageUsed}])"></span><span
+            class="memory-meter-bar-allocated" style="left: ${percentageUsed}%; width: ${percentageFreeAllocated}%" title="${freeAllocated} MB $action.getText('free.allocated.memory.percent',[${percentageFreeAllocated}])"></span>
+    </div>
+    <div class="memory-meter-legend">
+        <span><span class="aui-lozenge aui-lozenge-inprogress">${percentageUsed}%</span><span class="memory-meter-label">${parameters.used} MB $action.getText('used.memory')</span></span>
+        <span><span class="aui-lozenge aui-lozenge-inprogress aui-lozenge-subtle">${percentageFreeAllocated}%</span><span class="memory-meter-label">${freeAllocated} MB $action.getText('memory.free.label')</span></span>
+        <span><span class="aui-lozenge aui-lozenge-subtle">${percentageFreeUnallocated}%</span><span class="memory-meter-label">${freeUnallocated} MB $action.getText('free.unallocated.memory')</span></span>
+    </div>
+</div>

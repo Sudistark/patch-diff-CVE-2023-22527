@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+		<meta name="help-path" content="/admin/help/attachmentstoragesetup.vm"/>
+        <content tag="selectedWebItem">attachmentstoragesetup</content>
+	</head>
+
+	<body>
+		#parse ( "/template/includes/actionerrors.vm" )
+        <p></p>
+        <table class="grid" width="100%">
+            <tr>
+                <th colspan="2">$action.getActionName($action.getClass().getName())</th>
+            </tr>
+            <tr>
+                <td nowrap width="25%" align="right" valign="top"><label class="label">$action.getText("attachment.storage"):</label></td>
+                <td width="90%">
+                    #if ($action.isDatabaseConfigured())
+						<strong>$action.getText("webdav.database.word")</strong>
+					#else
+                        <strong>$action.getText("webdav.local.word"):</strong>
+						<p></p>
+                        $action.getLocalAttachmentDirectory()
+                    #end
+                </td>
+            </tr>
+        </table>
+        <form name="editattachmentstorage" action="editattachmentstorage.action" method="POST">
+            <div style="float: right;">
+                <input type="submit" value="$action.getText('edit.name')" />
+            </div>
+        </form>
+
+		#parse("/breadcrumbs.vm")
+	</body>
+</html>

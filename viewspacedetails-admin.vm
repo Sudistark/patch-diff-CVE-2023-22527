@@ -1,0 +1,65 @@
+#requireResource("confluence.web.resources:space-admin")
+
+<html>
+<head>
+    <title>$action.getText("title.view.space.details")</title>
+
+
+</head>
+
+#applyDecorator("root")
+#decoratorParam("helper" $action.helper)
+#decoratorParam("context" "space-administration")
+#decoratorParam("mode" "view-space-administration")
+
+#applyDecorator ("root")
+#decoratorParam ("context" "spaceadminpanel")
+#decoratorParam ("selection" "editspace")
+#decoratorParam ("title" $action.getText("action.name"))
+#decoratorParam ("selectedTab" "admin")
+#decoratorParam("helper" $action.helper)
+
+#alertAnonymous()
+
+<form class="aui space-details" action="$req.contextPath/spaces/editspace.action">
+    <h2>$action.getText('space.details')</h2>
+    <div class="field-group">
+        <label>$action.getText("space-name"):</label>
+        <span class="field-value">$htmlUtil.htmlEncode($space.name)</span>
+    </div>
+    <div class="field-group">
+        <label>$action.getText("space-desc"):</label>
+        <span class="field-value">$space.description.bodyAsString</span>
+    </div>
+    <div class="field-group">
+        <label>$action.getText("space-status"):</label>
+        <span class="field-value">$action.getText("space.$space.spaceStatus.toString().toLowerCase()")</span>
+        <!-- CONFDEV-8121 - temporarily elide changes that required new i18n keys
+        <div class="description">$action.getText("text.space.status")</div>
+        -->
+    </div>
+    <div class="field-group">
+        <label>$action.getText("space-homepage"):</label>
+        <span class="field-value">
+            #if ($space.homePage)
+                #contentLink2($space.homePage true false)
+            #else
+                &nbsp;
+            #end
+        </span>
+        <div class="description">$action.getText("text.space.home")</div>
+    </div>
+
+    ## Link to edit space details
+    #if( $permissionHelper.canEdit($action.authenticatedUser, $space))
+        <div class="buttons-container">
+            <div class="buttons">
+                <input type="hidden" name="key" value="$htmlUtil.urlEncode($space.key)">
+                <input type="submit" class="button submit" id="edit-space-details" value="$action.getText('edit.name')">
+            </div>
+        </div>
+    #end
+</form>
+#end
+#end
+</html>

@@ -1,0 +1,35 @@
+#macro(customDisabledHtmlInput $id $labelText)
+<textarea rows="4" id="${id}" name="${id}" class="textarea max-textarea" disabled="disabled">#if(${labelText} != "")${labelText}#else$action.getText("customhtml.not.configured")#end</textarea>
+#end
+<html>
+<head>
+    <title>$action.getText("custom.html")</title>
+    <meta name="help-path" content="/admin/lookandfeel/help/customhtml.vm"/>
+</head>
+
+<body>
+<content tag="selectedWebItem">customhtml</content>
+<form action="$req.contextPath/admin/editcustomhtml.action" method="post" class="aui top-label">
+    #form_xsrfToken()
+    <div class="field-group">
+        <label for="beforeHeadEnd">$action.getText("customhtml.head.end")</label>
+        #customDisabledHtmlInput("beforeHeadEnd", $htmlUtil.htmlEncode($!beforeHeadEnd))
+    </div>
+    <div class="field-group">
+        <label for="afterBodyStart">$action.getText("customhtml.body.start")</label>
+        #customDisabledHtmlInput("afterBodyStart", $htmlUtil.htmlEncode($!afterBodyStart))
+    </div>
+    <div class="field-group">
+        <label for="beforeBodyEnd">$action.getText("customhtml.body.end")</label>
+        #customDisabledHtmlInput("beforeBodyEnd", $htmlUtil.htmlEncode($!beforeBodyEnd))
+    </div>
+    <div class="buttons-container">
+       <div class="buttons">
+           #ssubmit("value='edit.name'" "theme='notable'" "cssClass='button submit'")
+       </div>
+    </div>
+</form>
+#parse ( "/breadcrumbs.vm" )
+</body>
+</html>
+

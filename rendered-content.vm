@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>$action.getText("preview.name")</title>
+
+    #requireResource("confluence.web.resources:master-scripts")
+    #requireResource("confluence.web.resources:master-styles")
+    #requireResourcesForContext("preview")
+    #standardHeader()
+</head>
+
+<body id="com-atlassian-confluence" class="#if($action.activeTheme)$action.activeTheme.bodyClass#end aui-theme-default aui-layout content-preview">
+    <div id="main" class="aui-page-panel">
+        <div id="content" class="page edit">
+            #parse ("/template/includes/actionerrors.vm")
+            <div class="wiki-content">
+               $!action.renderedContent
+            </div>
+        </div>
+    </div>
+    #javascripts()
+    <script>
+        //Moved to here instead of the head so it only gets fired when everything's already loaded.
+        (function() {
+            var triggerParent = function() {
+                var parent = window.parent;
+                parent.AJS.$(parent).trigger("render-content-loaded", document.body);
+            };
+            //This gets around a bug in firefox that seems to think the window is loaded already.
+            if (window.document.readyState == "complete")  triggerParent();
+            //Bound function to onload directly because batch.js isn't loading properly in IE.
+            window.onload = triggerParent;
+        })();
+    </script>
+</body>
+</html>

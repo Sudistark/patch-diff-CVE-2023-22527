@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<title>$action.getText("title.export.space") - $!key</title>
+    </head>
+
+	<body>
+
+        #applyDecorator ("root")
+            #decoratorParam ("context" "spacecontentpanel")
+            #decoratorParam ("selection" "export")
+            #decoratorParam ("title" $action.getText("action.name"))
+            #decoratorParam ("selectedTab" "content")
+
+            <p>Space export successful. You can download the file <a href="$req.contextPath$downloadPath">here</a>.<p>
+        #end
+	</body>
+</html>

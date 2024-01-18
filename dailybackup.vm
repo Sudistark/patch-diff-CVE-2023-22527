@@ -1,0 +1,5 @@
+<p>
+    
+    $action.getText('daily.backup.admin.page.description')
+    </p>
+    #doc("help.configuring.daily.backups" "$action.getText('more.about.daily.backups')")

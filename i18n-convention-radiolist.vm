@@ -1,0 +1,60 @@
+## Creates a radio button list. Uses the i18nPrefix parameter to determine the i18n key for
+## the label and description of the list.
+## The list parameter contains the radio button values. The i18nPrefix is combined
+## with the option value to find the i18n key for the radio buttons description.
+
+#set ($name = $parameters.name)
+#set ($i18nPrefix = $parameters.i18nPrefix)
+#set ($optionKeys = $parameters.list)
+#set ($selValue = $parameters.nameValue)    ## It is the "value" in the tag line
+
+#macro (renderLabel $i18nKey)
+    #set($i18nValue = $i18n.getText($i18nKey))
+    #if ($i18nValue != $i18nKey)
+        <legend>
+            <span>
+                $i18nValue
+                #if($parameters.required)
+                    <span class="aui-icon icon-required"></span>
+                    <span class="content">$parameters.required</span>
+                #end
+            </span>
+        </legend>
+    #end
+#end
+#macro (renderOptionLabel $key)
+    #set($i18nKey = "${i18nPrefix}.option.${key}.label")
+    #set($i18nValue = $i18n.getText($i18nKey))
+    #if ($i18nValue != $i18nKey)
+        $i18nValue
+    #else
+        &nbsp;
+    #end
+#end
+#macro (renderDescription $i18nKey)
+    #set($i18nVal = $i18n.getText($i18nKey))
+    #if ($i18nVal && ($i18nVal != $i18nKey))
+        <div class="description">$i18nVal</div>
+    #end
+#end
+
+<fieldset class="group radios">
+    #renderLabel("${i18nPrefix}.label")
+    #if ($editMode == false)
+       <div class="field-value">
+         #renderOptionLabel($selValue)
+       </div>
+    #else
+        #foreach( $optionKey in $optionKeys )
+            <div class="radio">
+                #set ($id = "${name}-$!optionKey")
+                <input type="radio" class="radio" name="$name" value="$!optionKey" id="$id"
+                       #if( $selValue == $optionKey )checked="checked"#end/>
+                <label for="$id">#renderOptionLabel($optionKey)</label>
+                #renderDescription("${i18nPrefix}.option.${optionKey}.desc")
+            </div>
+        #end
+        #renderDescription("${i18nPrefix}.desc")
+    #end
+</fieldset>
+

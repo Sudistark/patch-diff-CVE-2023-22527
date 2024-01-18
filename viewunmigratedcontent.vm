@@ -1,0 +1,6 @@
+<p>
+$action.getText('admin.migration.remigration.help')
+</p>
+<p>
+$action.getText('admin.migration.remigration.help2')
+</p>

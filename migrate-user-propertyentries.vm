@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>$action.actionName</title>
+	</head>
+	<body>
+        #parse('/template/includes/actionerrors.vm')
+        <form name="migrate-user-propertyentries" action="do-migrate-user-propertyentries.action" method="post" class="aui">
+            <p>$i18n.getText('migrate.user.propertyentries.description', [$req.contextPath])</p>
+            #form_xsrfToken()
+            <input type="hidden" name="synchronous" value="false" />
+            <input class="button" type="submit" name="migrate" value="$i18n.getText('migrate.name')">
+        </form>
+    </body>
+#parse('/breadcrumbs.vm')
+</html>

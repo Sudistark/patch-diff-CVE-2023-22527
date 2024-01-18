@@ -1,0 +1,6 @@
+<p>$action.getText('mailqueue.description')
+
+$action.getText('errorqueue.description')</p>
+</br>
+</br>
+#doc("help.the.mail.qeue" "$action.getText('more.about.the.mail.queue')")

@@ -1,0 +1,49 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.setup.actions.SetupStartAction" *#
+<html>
+<head>
+    <title>$action.getText("setup.start.title")</title>
+    $webResourceManager.requireResourcesForContext("setup.setup-select-install-type")
+</head>
+
+<body>
+    #parse ("/setup/analytics-data.vm")
+    #parse ("/setup/setup-button.vm")
+    <content tag="title-actioncontent">
+        <div id="header-actions-wait" class="aui-icon aui-icon-wait" style="margin-right:5px;display:none;"></div>
+        <!-- Trigger -->
+        <a id="language-trigger" href="#language" aria-owns="language" aria-haspopup="true" class="aui-button aui-style-default aui-dropdown2-trigger aui-icon-container">
+            <span class="aui-icon aui-icon-small aui-iconfont-weblink" style="margin-right:2px;">$action.getText("language.select")</span>
+            $action.getText("language.select")
+        </a>
+
+        #set ($installedLanguages = $action.getInstalledLanguages())
+
+        <!-- Dropdown -->
+        <div id="language" class="aui-style-default aui-dropdown2">
+            <ul class="aui-list-truncate">
+                #foreach ($locale in $installedLanguages)
+                    ## Don't show the current language
+                    #if ($action.getLocale().toString() != $locale.getName())
+                        <li>
+                            <a id="$locale.getName()"
+                               data-key="$locale.getName()"
+                               data-value="action.getLanguageManager().getDisplayName($locale)"
+                               href="$req.contextPath/setup/selectglobaldefaultlocale.action?globalDefaultLocale=$locale.getName()">
+                                $action.getLanguageManager().getDisplayName($locale)
+                            </a>
+                        </li>
+                    #end
+                #end
+            </ul>
+        </div>
+
+    </content>
+
+    <form method="POST" action="dosetupstart.action" name="startform" class="aui">
+        <div class="aui-group setup-start-group">
+            #form_xsrfToken()
+            #parse("/setup/setupstartform.vm")
+        </div>
+    </form>
+</body>
+</html>

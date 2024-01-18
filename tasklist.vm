@@ -1,0 +1,103 @@
+#requireResource("confluence.web.resources:admin-tasklist")
+
+#set($incomplete = $action.getIncompleteAdminTasks())
+#set($completed = $action.getCompletedAdminTasks())
+
+<h2 class="tasklist-console">$i18n.getText("admintask.title")</h2>
+
+<div id="aui-message-bar"></div>
+
+<div class="tasklist">
+    #if ($incomplete.size() > 0)
+    <ul class="tasks incomplete">
+        #foreach( $entry in $incomplete )
+            #adminTask($entry)
+        #end
+    </ul>
+    #else
+        <div class="aui-message aui-message-success success">
+            $i18n.getText("admintask.no.tasks")
+        </div>
+    #end
+
+    #if ($completed.size() > 0)
+        <p>
+            <a href="#" class="view-completed-tasks">$i18n.getText("admintask.view.completed.tasks", '<span class="count">', "$completed.size()", '</span>')</a>
+        </p>
+    <ul class="tasks completed">
+        #foreach( $entry in $completed )
+            #adminTask($entry)
+        #end
+    </ul>
+    #end
+</div>
+
+#macro(adminTask $task)
+    #set($taskTitle = $i18n.getText("${task.titleKey}"))
+    
+    
+    #set($taskDescKey = "${task.descriptionKey}")
+    #set($taskDesc  = $i18n.getText($taskDescKey, $action.getAllConfigurationUrisInContext($task)))
+
+	#set($taskActionTextKey = "${task.actionTextKey}")
+	#set($taskActionText = $i18n.getText($taskActionTextKey))
+	#if($taskActionText == $taskActionTextKey) 
+		#set($taskActionText = $i18n.getText("admintask.configuration.configure")) 
+	#end  
+
+<li class="task #if ($task.isCompleted) complete #else incomplete #end">
+    <h3>
+        #if ($task.isIgnorable() && !$task.isCompleted)
+            #if ($task.isIgnored())
+                <a class="task-checkbox dismissed"
+                   href="$req.contextPath/admin/unignoretask.action?key=$task.key&amp;#url_xsrfToken()"
+                   data-task-key="$task.key"
+                   title="$i18n.getText("admintask.task.dont.ignore.this")"
+                ><span>&nbsp;</span></a>$taskTitle
+            #else
+                <a class="task-checkbox"
+                   href="$req.contextPath/admin/ignoretask.action?key=$task.key&amp;#url_xsrfToken()"
+                   data-task-key="$task.key"
+                   title="$i18n.getText("admintask.task.ignore.this")"
+                ><span>&nbsp;</span></a>$taskTitle
+            #end
+        #else
+            $taskTitle
+        #end
+    </h3>
+    #if ($taskDesc)
+        <p class="description">$taskDesc</p>
+    #end
+
+    #if ($task.hasValue)
+        #set($configValue = $task.configuredValue)
+        #if (!$configValue) #set($configValue = $i18n.getText("admintask.configuration.no.value")) #end
+        <dl class="configuration">
+            <dt>#adminTaskStatus($task)</dt>
+            <dd>
+                $configValue
+                #if ($task.allConfigurationUris.size() > 0)
+                    <a href="$req.contextPath$task.firstConfigurationUri" class="goto">
+                        <span class="aui-icon aui-icon-small aui-iconfont-edit"></span> $taskActionText
+                    </a>
+                #end
+            </dd>
+        </dl>
+        #set($configValue = false)
+    #elseif ($task.allConfigurationUris.size() > 0)
+        ## Plugins' web-item have a url but no configuration value
+        <p class="configure">
+            <a href="$task.firstConfigurationUri" class="goto">
+                <span class="aui-icon aui-icon-small aui-iconfont-edit"></span> $taskActionText
+            </a>
+        </p>
+    #end
+</li>
+#end
+
+#macro (adminTaskStatus $task)
+    #set($valueTitleKey = "${task.configurationCurrentValueKey}")
+    #set($valueTitle = $i18n.getText($valueTitleKey))
+    #if ($valueTitle == $valueTitleKey) #set($valueTitle = $i18n.getText("admintask.configuration.current.value")) #end
+    $valueTitle## Don't worry semantic fans, I know what I'm doing. (CD)
+#end

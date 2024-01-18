@@ -1,0 +1,51 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.SearchUsersAction" *#
+
+#macro (browseUsersTabItem $tabName $selectedTab $first $url)
+<li class="menu-item #if($selectedTab.equals($tabName))active-tab#end #if($first)first#end">
+    <a id="${tabName}-tab-link" href="$url#${tabName}-pane"><strong>$i18n.getText("browseusers.${tabName}.tab.name")</strong></a>
+</li>
+#end
+
+#macro (browseUsersTabPane $tabName $selectedTab)
+<div class="tabs-pane #if($selectedTab.equals($tabName))active-pane#end" id="${tabName}-pane">
+    #parse("admin/users/browseusers-${tabName}-panel.vm")
+</div>
+#end
+
+<html>
+    <head>
+        <title>$i18n.getText('title.manage.users')</title>
+        #requireResourcesForContext('atl.admin.users')
+    </head>
+    <body>
+    <content tag="selectedWebItem">users</content>
+    #parse ("/template/includes/actionerrors.vm")
+
+    #set ($fielderrors = $action.getFieldErrors())
+    #set ($canAddUsers = $action.canAddUsers())
+## Although the use of aui-tab-events-bound data attr relies on aui-tab internals, this code reuses the styling of
+## aui-tabs, but implements it's behavior itself. Without this data attr, aui would attempt to use the urls as css selectors.
+        <div id="manage-users-tabs" class="aui-tabs horizontal-tabs" data-aui-tab-events-bound="true" data-aui-responsive>
+
+            #set ($items = $webInterfaceManager.getDisplayableItems("system.admin.user", $webInterfaceContext))
+            #set ($selectedTabKey = "browse-users-tab-${action.selectedTab}")
+            #if ($items.size() > 0)
+            <ul class="tabs-menu">
+                #foreach ($item in $items)
+                <li class="menu-item #if($selectedTabKey.equals($item.key))active-tab#end">
+                    <a id="$item.link.id" href="$item.link.getDisplayableUrl($req, $action.webInterfaceContext)">$item.label.getDisplayableLabel($req, $action.webInterfaceContext)</a>
+                </li>
+                #end
+            </ul>
+            #end
+            #browseUsersTabPane("search" $action.selectedTab)
+            #if ($canAddUsers)
+                #browseUsersTabPane("create" $action.selectedTab)
+                #browseUsersTabPane("invite" $action.selectedTab)
+                #browseUsersTabPane("signup" $action.selectedTab)
+            #end
+            #browseUsersTabPane("unsynced" $action.selectedTab)
+        </div>
+    #parse("/breadcrumbs.vm")
+    </body>
+</html>

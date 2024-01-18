@@ -1,0 +1,78 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.security.actions.ViewSpacePermissionDefaultsAction" *#
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+        <content tag="selectedWebItem">defaultspaceperms</content>
+    </head>
+    <body>
+        #applyDecorator("root")
+            #decoratorParam("helper" $action.helper)
+            ## use space.vmd if context starts with 'space-'. otherwise, the context string is the decorator name
+            #decoratorParam("context" "space-administration")
+            ## a hack, if the mode does not start with 'create-', space tabs will be shown
+            #decoratorParam("mode"  "create-default-space-permissions")
+                <form name="editdefaultspacepermissions" id="editdefaultspacepermissions" action="editdefaultspacepermissions.action" class="aui">
+
+                <div class="header">
+                    <div class="content-navigation">
+                        <button type="submit" name="edit" class="aui-button edit-permissions">
+                            <span class="aui-icon aui-icon-small aui-iconfont-edit"></span>
+                            $i18n.getText("globalperms.editpermissions")
+                        </button>
+                    </div>
+                    <h2 class="aui-style">$i18n.getText('admin.defaultspacepermissions.default.title')</h2>
+                </div>
+
+                <p>
+                    $i18n.getText("admin.defaultspacepermissions.default.desc")
+                    $i18n.getText("admin.defaultspacepermissions.default.confadmingroup.info")
+                </p>
+                #set($a =  ["g"])
+                #showPermissions($a $action "false")
+
+                <br/>
+                <table width="100%" border=0>
+                    <tr>
+                        <td width ="100%" align="right">
+
+                        </td>
+                    </tr>
+                </table>
+                <br />
+
+                <h2>$i18n.getText('admin.defaultspacepermissions.spaces.title')</h2>
+                <p>
+                    $i18n.getText("admin.defaultspacepermissions.spaces.desc")
+                </p>
+
+                <table id="space-permissions-table" cellspacing="0" width="100%" class="aui">
+                    <thead>
+                        <tr>
+                            <th width="40%">$i18n.getText("space-name")</th>
+                            <th width="30%">$i18n.getText("space-key")</th>
+                            <th width="30%">$i18n.getText("heading.operations")</th>
+                        </tr>
+                    </thead>
+
+	                ##pagination($action.paginationSupport "?")
+
+	                ##foreach ($space in $action.paginationSupport.getPage())
+	                #foreach ($space in $action.spaces)
+                    <tr #if( $velocityCount%2 == 0 ) class="alternateRow" #end>
+                        <td><a href="$req.contextPath$space.urlPath">$space.name</a></td>
+                        <td>$space.key</td>
+                        #if($action.hasSpacePermission($space))
+                            <td><a href="$req.contextPath/spaces/spacepermissions.action?key=$space.key">$i18n.getText('admin.defaultspacepermissions.spaces.managepermissions')</a></td>
+                        #else
+                            ## Recover Permissions
+                            <td><a href="#" class="recover-permissions-link" data-space-key="$space.key">$i18n.getText('admin.defaultspacepermissions.spaces.recoverpermissions')</a></td>
+                        #end
+                    </tr>
+                    #end
+                </table>
+                <br/>
+                </form>
+
+    #end
+    </body>
+</html>

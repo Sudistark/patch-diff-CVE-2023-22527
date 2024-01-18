@@ -1,0 +1,34 @@
+#*
+    DO NOT USE (since 5.7) - please use and update/improve the templates in notifications.soy instead.
+*#
+#macro (auiMessages $level $closeable $collection)
+    #foreach($message in $collection)
+        <div class="aui-message aui-message-$level $level shadowed #if($closeable)closeable#end">
+            $i18n.getText($message.key, $message.arguments)
+        </div>
+    #end
+#end
+#macro (auiMessagesHtml $level $closeable $collection)
+    #foreach($messageHtml in $collection)
+    <div class="aui-message aui-message-$level $level shadowed #if($closeable)closeable#end">
+        $generalUtil.cleanQuietly($messageHtml)
+    </div>
+    #end
+#end
+
+#set ($messageHolder = $action.messageHolder)
+#if ($actionErrors && $actionErrors.size() > 0)
+<div class="aui-message aui-message-error closeable">
+    <p class="title">$action.getText("errors.occurred")</p>
+    <ul>
+        #foreach($errorHtml in $actionErrors)
+            <li>$generalUtil.cleanQuietly($errorHtml)</li>
+        #end
+    </ul>
+</div>
+#end
+<div id="action-messages">
+    #auiMessagesHtml('success' true $actionMessages)
+    #auiMessages('info' false $messageHolder.actionInfos)
+    #auiMessages('warning' false $messageHolder.actionWarnings)
+</div>

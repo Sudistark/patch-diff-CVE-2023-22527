@@ -1,0 +1,22 @@
+## Required parameters
+## type - the type of element to insert (label, legend or skip-link). DEFAULT: label
+## label - text to show in the element
+## Optional parameters
+## value - value for the element
+##   -- legend: unused
+##   -- skip-link: id of the link to skip to
+##   -- label: id of the input element
+## id - id of the element
+
+#set ($id = $parameters.id)
+#set ($label = $parameters.label)
+#set ($value = $parameters.nameValue)
+#set ($type = $parameters.type)
+
+#if ($type == "legend")
+    <legend class="assistive"><span>$action.getText($label)</span></legend>
+#elseif ($type == "skip-link")
+    <a class="assistive" href="#$value">$action.getText($label)</a>
+#else
+    <label #if($id)id="$id"#end for="$value" class="assistive">$action.getText($label)</label>
+#end

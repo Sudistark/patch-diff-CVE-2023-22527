@@ -1,0 +1,44 @@
+#set( $labelValue = $i18n.getText($parameters.label) )
+#if( !$labelValue )
+    #set( $labelValue = $parameters.label )
+#end
+
+#if (!$parameters.id)
+    #set( $parameters.id = $parameters.name)
+#end
+
+<div class="field-group">
+    <label id="${parameters.id}-label" for="$parameters.id">
+        ${labelValue}
+        #if ($parameters.required)
+            <span class="aui-icon icon-required"></span>
+            <span class="content">$parameters.required</span>
+        #end
+    </label>
+    #if ($editMode == false)
+        #if ($parameters.renderWiki)
+        <span class="field-value">$parameters.renderWiki.render($parameters.nameValue)</span>
+        #else
+        <span class="field-value">$!htmlUtil.htmlEncode($parameters.nameValue)</span>
+        #end
+    #else
+        <textarea id="$parameters.id" name="$!htmlUtil.htmlEncode($parameters.name)"
+              cols="$!htmlUtil.htmlEncode($parameters.cols)"
+              rows="$!htmlUtil.htmlEncode($parameters.rows)"
+              placeholder="$!parameters.placeholder"
+            #if ($parameters.disabled && $parameters.disabled == true) disabled="disabled"                                      #end
+            #if ($parameters.autofocus && $parameters.autofocus == true) autofocus="autofocus"                                      #end
+            #if ($parameters.tabindex)         tabindex="$!htmlUtil.htmlEncode($parameters.tabindex)"    #end
+              style="#if ($width)width:$width; #end"
+              class="monospaceInput textarea $!htmlUtil.htmlEncode($parameters.cssClass)"
+            >$!htmlUtil.htmlEncode($parameters.nameValue)</textarea>
+        #if ($parameters.inlineText)
+            <div class="description">$parameters.inlineText</div>
+        #end
+    #end
+    #fielderrorAUI($parameters.name)
+    #set($descHtml = $parameters.description)
+    #if ($descHtml)
+        <div class="description">$descHtml</div>
+    #end
+</div>

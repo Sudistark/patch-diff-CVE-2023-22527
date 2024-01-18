@@ -1,0 +1,13 @@
+<div class="previewBoxTop">
+    <table width="100%">
+        <tr>
+            <td width="50%" align="right" valign="top">
+                <a name="previewStart"></a>
+                <span class="smalltext">Preview start</span>
+            </td>
+            <td width="50%" align="right" valign="top">
+                <a href="#previewEnd"><img src="$staticResourceUrlPrefix/images/icons/down_16.gif" border=0 align="absmiddle"></a>
+            </td>
+        </tr>
+</table>
+</div>

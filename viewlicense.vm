@@ -1,0 +1,5 @@
+<p><strong>$action.getText('license.page.help.newlicense.title')</strong><br/>$action.getText('license.page.help.newlicense.description')</p>
+<p><strong>$action.getText('license.page.help.makechange.title')</strong><br/>$action.getText('license.page.help.makechange.description')</p>
+<p><strong>$action.getText('license.page.help.setuptestsite.title')</strong><br/>$action.getText('license.page.help.setuptestsite.description')</p>
+<p><strong>$action.getText('license.page.help.addon.title')</strong><br/>$action.getText('license.page.help.addon.description', ["$req.contextPath/plugins/servlet/upm"])</p>
+<p><strong>$action.getText('license.page.help.morequestions.title')</strong><br/>$action.getText('license.page.help.morequestions.description')</p>

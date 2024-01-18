@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<title>$action.getText("title.remove.page")#if($page.title) - $page.title#end</title>
+		<content tag="no-page-header">true</content>
+		<!--<meta name="help-path" content="/pages/help/removepage.vm"/>-->
+	</head>
+
+    <content tag="title-text-span">$action.getActionName($action.getClass().getName())</content>
+
+	<body>
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("mode" "view-information")
+        #decoratorParam("context" "page")
+
+        #applyDecorator ("confirm")
+            #decoratorParam ("formName" "removepageform")
+            #decoratorParam ("formAction" "doremovepage.action?pageId=$page.id")
+
+            <p>$action.getText("alert.remove.page")</p>
+
+            <div style="color: #666666; width: 70%" align="left">
+            $action.getText('please.note')
+            <ul type="square">
+                <li>$action.getText('note.removing.moves.to.trashcan')</li>
+                <li>$action.getText("pages.incoming.links", [$incomingLinks.size(), "<a href='$req.contextPath/pages/viewinfo.action?pageId=$page.id'>", "</a>"])
+
+                #if( $page.equals( $space.homePage ) )
+                    <li>$action.getText("page.is.set.as.home", [$htmlUtil.htmlEncode($page.space.name)])
+                #end
+
+                #if( $page.parent )
+                    <li>$action.getText("page.has.parent", [$htmlUtil.htmlEncode($page.parent.space.name), $htmlUtil.htmlEncode($page.parent.title)])
+                #end
+            </ul>
+                #set( $pageChildrenCount = $action.pageChildrenCount )
+                #if( $pageChildrenCount > 0 )
+                    #set( $childrenWithInheritedPermissionsCount = $action.getChildrenCountWithInheritedPermissions() )
+                    #applyDecorator ("message")
+                        #decoratorParam("type" "warning")
+                        #decoratorParam("title" "Warning")
+                        <p>
+                            $action.getText("page.has.children", [$pageChildrenCount])
+                        </p>
+                        #if( $childrenWithInheritedPermissionsCount > 0 )
+                        <p id="page-has-children-with-inherited-permissions">
+                                $action.getText("page.permissions.lost", [$pageChildrenCount, $childrenWithInheritedPermissionsCount])
+                        </p>
+                        #end
+                    #end
+                #end
+            </div>
+
+        #end
+
+		#parse ( "/pages/page-breadcrumbs.vm" )
+    #end
+
+	</body>
+</html>

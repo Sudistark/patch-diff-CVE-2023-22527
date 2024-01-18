@@ -1,0 +1,13 @@
+<p>$action.getText("customhtml.help.desc")</p>
+<p>$action.getText("customhtml.help.locations"):</p>
+<ul>
+    <li>$action.getText("customhtml.help.location1")</li>
+    <li>$action.getText("customhtml.help.location2")</li>
+    <li>$action.getText("customhtml.help.location3")</li>
+</ul>
+<p>
+    $action.getText("customhtml.help.note")
+</p>
+<p>
+    $action.getText("customhtml.help.desc2")
+</p>

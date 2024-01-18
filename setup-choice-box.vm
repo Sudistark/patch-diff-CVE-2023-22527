@@ -1,0 +1,10 @@
+#macro(setupChoiceBox $id $header $description)
+    <div class="aui-item confluence-setup-choice-box" id="$id" data-setup-type="$id">
+        <div class="confluence-setup-choice-cell">
+            <img class="plugin-enabled-icon" src="$req.contextPath/setup/images/icon_setup_single_choice_enabled_24.png"/>
+            <img class="plugin-disabled-icon" src="$req.contextPath/setup/images/icon_setup_single_choice_disabled_24.png"/>
+            <h2 class="confluence-setup-choice-box-header">$action.getText($header)</h2>
+            <p class="confluence-setup-choice-box-description">$action.getText($description)</p>
+        </div>
+    </div>
+#end

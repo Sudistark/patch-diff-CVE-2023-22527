@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+
+
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+        <body>
+
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spacecontentpanel")
+                #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+                #decoratorParam("helper" $action.helper)
+            #end
+        </body>
+    #end
+</html>

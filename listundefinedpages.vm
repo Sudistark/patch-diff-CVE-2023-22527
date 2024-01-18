@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>$action.getText("title.undefined.pages")</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+        #if ($key)
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spacecontentpanel")
+                #decoratorParam ("title" $action.getText("undefined.pages.report"))
+                #decoratorParam ("selection" "undefined")
+                #decoratorParam ("selectedTab" "content")
+                #decoratorParam ("selectedSpaceToolsWebItem" "undefined")
+                #decoratorParam("helper" $action.helper)
+
+                #parse ("/pages/templates/common-listundefinedpages.vm")
+            #end
+        #else
+            #parse ("/pages/templates/common-listundefinedpages.vm")
+            #parse ("/breadcrumbs.vm")
+            #parse ("/general-operations.vm")
+        #end
+
+    #end
+</html>

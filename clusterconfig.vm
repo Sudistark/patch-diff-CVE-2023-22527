@@ -1,0 +1,15 @@
+<p>
+$action.getText("cluster.help.intro")
+</p>
+<p>
+<strong>$action.getText("cluster.status.title")</strong> $action.getText("cluster.status.description")
+</p>
+<p>
+<strong>$action.getText("cluster.name")</strong> $action.getText("cluster.name.description.help")
+</p>
+<p>
+<strong>$action.getText("shared.home.directory")</strong> $action.getText("shared.home.directory.description")
+</p>
+<p>
+<strong>$action.getText("active.nodes")</strong> $action.getText("active.nodes.description")
+</p>

@@ -1,0 +1,7 @@
+ <content tag="operations">
+ <div class="operations">
+     #if ($calendarForThisMonth)
+        #blogPostsByMonth($action)
+     #end
+ </div>
+ </content>

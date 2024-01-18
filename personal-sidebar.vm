@@ -1,0 +1,6 @@
+## Deprecated since 3.3. Empty since 3.4. Use: personal-sidebar-in-context.vm in an inline decorator such as
+## page.vmd or blogpost.vmd.
+
+## main.vmd might not be updated properly in some themes.
+## Provide a html comment to send people back to this file:
+<!-- personal-sidebar.vm is obsolete and no longer produces anything.  The current theme needs to be updated. -->

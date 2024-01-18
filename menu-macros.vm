@@ -1,0 +1,564 @@
+#* @vtlvariable name="webMenu" type="com.atlassian.confluence.web.WebMenu" *#
+#* @vtlvariable name="section" type="com.atlassian.confluence.web.WebMenuSection" *#
+## This macro file is a temporary holder for all the 'new' menu macros.
+
+#macro (menuMacros_renderBrowseMenu)
+<content tag="aui-browse-menu">
+    #menuMacros_renderAuiMenu("browse-menu-link", $action.getText("system.space.menu"), "browse", ["system.space"])
+</content>
+#end
+
+#macro (menuMacros_renderUserMenu)
+    #if ($bootstrap.isSetupComplete())
+        #if ($user)
+            #if ($user.fullName)
+                #set ($menuName = $user.fullName)
+            #else
+                #set ($menuName = $user.name)
+            #end
+            #menuMacros_renderMenu("user-menu-link", $htmlUtil.htmlEncodeAndReplaceSpaces($menuName), "user", ["system.user"])
+        #else
+            #foreach ($item in $action.webInterfaceManager.getDisplayableItems("system.user/anonymous", $action.webInterfaceContext))
+            <li class="ajs-menu-item normal">#renderItemLink($item false)</li>
+            #end
+        #end
+    #end
+#end
+
+#macro (menuMacros_renderActionMenu)
+    #menuMacros_renderTailedDropdownMenu("action-menu", "", "action aui-dropdown2-trigger-arrowless", "system.content.action", "more")
+#end
+
+#* Renders dynamic menu(s) or icons based on the provided section key. e.g. notifications and doctheme splitter.
+
+   Method Parameters:
+   * itemSectionKey - determines the web items to display
+*#
+#macro (menuMacros_renderHeaderLeftImageLinks)
+    ## CONFDEV-14204 - browse menu should appear just before the create button
+    #set ($createButtonFound = false)
+    #foreach ($item in $webInterfaceManager.getDisplayableItems("system.header/left", $action.webInterfaceContext))
+        #if ($item.link.id == "create-page-button")
+            #menuMacros_renderBrowseMenuForLegacySpace()
+            #set ($createButtonFound = true)
+        #end
+        <li>
+            #menuMacros_renderImageLink($item "")
+        </li>
+    #end
+    #if (!$createButtonFound)
+        #menuMacros_renderBrowseMenuForLegacySpace()
+    #end
+    #menuMacros_renderHeaderLeftButtonGroup()
+#end
+
+#macro(menuMacros_renderHeaderLeftButtonGroup)
+    <li class="aui-buttons">
+        #foreach ($item in $webInterfaceManager.getDisplayableItems("system.header/left.button.group", $action.webInterfaceContext))
+            #set($quickUrl = "#")
+            #if($item.webParams.get("quickUrl"))
+                #set ($map = $action.webInterfaceContext.toMap())
+                $!map.put("renderingQuickURL", true)
+                #set($quickUrl = $item.webParams.getRenderedParam("quickUrl", $map).toString())
+            #end
+            #set ($templateParameters = {
+                "id": $item.link.id,
+                "text": $item.label.getDisplayableLabel($req, $webInterfaceContext).toString(),
+                "type": $item.webParams.get("type"),
+                "extraAttributes": "title = '$htmlUtil.htmlEncode($item.tooltip.getDisplayableLabel($req, $webInterfaceContext))'",
+                "href": $quickUrl,
+                "extraClasses": $item.webParams.get("extraClasses"),
+                "iconText": $i18n.getTextStrict($item.webParams.get("iconText")),
+                "iconType": $item.webParams.get("iconType"),
+                "iconClass": $item.webParams.get("iconClass")
+            })
+            $soyTemplateRendererHelper.getRenderedTemplateHtml("com.atlassian.auiplugin:aui-experimental-soy-templates", "aui.buttons.button.soy", $templateParameters)
+        #end
+    </li>
+#end
+
+#macro (menuMacros_renderBrowseMenuForLegacySpace)
+    #if (!$theme.hasSpaceSideBar() && $sitemeshPage.getProperty("page.aui-browse-menu"))
+        <li id="browseMenu" role="menu">
+            $sitemeshPage.getProperty("page.aui-browse-menu")
+        </li>
+    #end
+#end
+
+#macro (menuMacros_renderHeaderRightImageLinks)
+    #foreach ($item in $webInterfaceManager.getDisplayableItems("system.header/right", $action.webInterfaceContext))
+    <li>
+        #menuMacros_renderImageLink($item "aui-align-right")
+    </li>
+    #end
+#end
+
+#macro (menuMacros_renderHeaderRightPanels)
+    ## extendedContext comes from header.vm and contains the current spacekey
+    #foreach ($item in $webInterfaceManager.getDisplayableWebPanels("system.header/right/panels", $extendedContext))
+    <li>
+        $item.getHtml($extendedContext)
+    </li>
+    #end
+#end
+
+## The workday plugin point is provided exclusively for workday, as such it only outputs the first webitem found
+#macro (menuMacros_renderHeaderWorkDayLink)
+    #set ($workDay = $webInterfaceManager.getDisplayableItems("system.header/workday-non-public", $action.webInterfaceContext))
+    #if ($workDay.size() > 0)
+        #menuMacros_renderImageLink($workDay.get(0) "aui-align-right")
+    #end
+#end
+
+#macro (menuMacros_renderImageLink $item $additionalClasses $webInterfaceContext)
+
+    #if (!$webInterfaceContext)
+        #set ($webInterfaceContext = $action.webInterfaceContext)
+    #end
+
+    #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $webInterfaceContext))
+    #if ($itemRenderedUrl == "")
+        #set ($itemRenderedUrl = "#")
+    #end
+    #set ($itemLabel = $item.label.getDisplayableLabel($req, $webInterfaceContext))
+    #set ($itemTooltip = $htmlUtil.htmlEncode($item.tooltip.getDisplayableLabel($req, $webInterfaceContext)))
+    #set ($itemClass = '')
+    #set ($itemClass = $item.styleClass)
+
+<a #if ($item.link.id) id="$item.link.id"#end href="$itemRenderedUrl" #if ($itemClass) class="$itemClass aui-nav-imagelink"#end #if ($item.link.hasAccessKey()) accessKey="$item.link.getAccessKey($helper)"#end #if ($itemTooltip) title="$itemTooltip"#end>
+    #if ($item.icon)
+        #set ($icon = $item.icon)
+        <img alt="$itemLabel" src="$icon.url.getDisplayableUrl($req, $webInterfaceContext)" height="$icon.height" width="$icon.width" title="$itemLabel">
+    #elseif($itemLabel)
+        <span>$itemLabel</span>
+    #end
+</a>
+#end
+
+
+#* Renders button(s) based on the provided section key. e.g. page view and edit buttons.
+   Optionally, the $mode variable can be set to an item key for a class of 'current' to be applied
+   to the button.
+
+   Method Parameters:
+   * buttonSectionKey - determines the web items to display as buttons
+   * buttonExtraClass - CSS class for the button anchor tag to inherit appropriate AUI styles
+*#
+#macro (menuMacros_renderButton $buttonSectionKey $buttonExtraClass)
+    #foreach ($item in $webInterfaceManager.getDisplayableItems($buttonSectionKey, $action.webInterfaceContext))
+        #set ($current = false)
+        #if ($mode == $item.key)
+            #set ($current = true)
+        #end
+        ## Would like to remove the ajs-button class. This class was pre aui-button styles and are duplicated by
+        ## aui-button at this point. People skinning confluence may be relying on this class however and their overrides
+        ## will break if the class name is removed. If this is not the case we should remove ajs-button class.
+        <li class="ajs-button normal">#renderItemLink($item $current false "aui-button $!buttonExtraClass")</li>
+    #end
+#end
+
+
+#* Renders a drop down menu e.g. content add, action menus.
+
+   Method Parameters:
+   * menuId        - the id of the menu
+   * menuTitle     - the menu title, which is displayed as the drop down menu link text
+   * menuClass     - the class of the menu drop down link
+   * webSectionKeys - determines the web items to display in the menu
+*#
+#macro(menuMacros_renderMenu $menuId $menuTitle $menuClass $webSectionKeys)
+    #set($webMenu = $webMenuManager.getMenu($menuId, $webSectionKeys, $action.webInterfaceContext))
+
+## don't display the menu if there are no menu sections
+    #if(!$webMenu.isEmpty())
+    <li class="normal ajs-menu-item">
+        <a id="$webMenu.id" class="$!menuClass trigger ajs-menu-title" href="#" role="button" aria-expanded="false"><span><span>$!menuTitle</span></span></a> ## two spans necessary for IE7 backgrounds
+        <div class="assistive ajs-drop-down">
+            #foreach ($section in $webMenu.sections)
+                <ul #if($section.id) id="$section.id"#end
+                    #if($section.className) class="$section.className"#end>
+                    #foreach ($item in $section.items)
+                    #renderItem($item)
+                #end
+                </ul>
+            #end
+        </div>
+    </li>
+    #end
+#end
+
+#* Renders a drop down menu e.g. content add, action menus.
+
+   Method Parameters:
+   * menuId        - the id of the menu
+   * menuTitle     - the menu title, which is displayed as the drop down menu link text
+   * menuClass     - the class of the menu drop down link
+   * webSectionKeys - determines the web items to display in the menu
+   * menuIconClass - icon font class to display on the dropdown menu button
+*#
+#macro(menuMacros_renderTailedDropdownMenu $menuId $menuTitle $menuClass $webSectionKeys $menuIconClass)
+    #set($webMenu = $webMenuManager.getMenu($menuId, $webSectionKeys, $action.webInterfaceContext))
+
+## don't display the menu if there are no menu sections
+    #if(!$webMenu.isEmpty())
+    <li class="normal ajs-menu-item">
+        <a id="${webMenu.id}-link" class="$!menuClass aui-button aui-button-subtle ajs-menu-title aui-dropdown2-trigger" href="#" aria-haspopup="true" aria-label="$action.getText('system.content.action.moreoptions')" aria-owns="$webMenu.id" data-container="#navigation">
+            <span>
+                #if ($menuIconClass)
+                    <span class="aui-icon aui-icon-small aui-iconfont-$menuIconClass" aria-label="$action.getText('system.content.action.moreoptions')"></span>
+                #end
+                $!menuTitle
+            </span>
+        </a> ## two spans necessary for IE7 backgrounds
+        <div id="$webMenu.id" class="aui-dropdown2 aui-style-default" #if($webMenu.id == "action-menu") role="menu" aria-labelledby="${webMenu.id}-link" #end>
+            #foreach ($section in $webMenu.sections)
+                <div class="aui-dropdown2-section">
+                    <ul #if($section.id) id="$section.id" #end
+                        #if($section.className) class="$section.className"#end
+                        #if($webMenu.id == "action-menu") role="presentation" #end>
+                        #foreach ($item in $section.items)
+                        #renderItem($item $webInterfaceContext "true")
+                    #end
+                    </ul>
+                </div>
+            #end
+        </div>
+    </li>
+    #end
+#end
+
+#macro (menuMacros_renderLeftNavMenu $menuId $webSectionKey $selection $collapsible $hideHeading)
+    #menuMacros_renderLeftNavMenus([$menuId], [$webSectionKey], $selection, $collapsible, [$hideHeading])
+#end
+
+#macro (menuMacros_renderLeftNavMenus $menuIds $webSectionKeys $selection $collapsible $hideHeadings)
+    #if ($collapsible)
+        #requireResource("confluence.web.resources:left-nav-panel-resources")
+    #end
+
+    <div class="aui-item aui-item-navgroup">
+        <nav class="aui-navgroup aui-navgroup-vertical">
+            <div class="aui-navgroup-inner">
+
+            #foreach ($webSectionKey in $webSectionKeys)
+                #set ($index = $velocityCount - 1)
+                #set ($displayedMenu = false)
+
+                #set ($displayableSections = $webInterfaceManager.getDisplayableSections($webSectionKey, $action.webInterfaceContext))
+                #if (!$displayableSections.isEmpty())
+
+                    $generalUtil.profilePush($webSectionKey)
+                    #foreach ($section in $displayableSections)
+                        #set ($sectionKey = "$webSectionKey/$section.key")
+                        #set ($displayableItems = $webInterfaceManager.getDisplayableItems($sectionKey, $action.webInterfaceContext))
+
+                        #if (!$displayableItems.isEmpty())
+                            #if (!$displayedMenu)
+                            <div id="$menuIds.get($index)" class="#if ($collapsible == "true")collapsible-menu#end">
+                            #set ($displayedMenu = true)
+                            #end
+
+                            <div id="section-$section.key">
+                                #if (!$hideHeadings.get($index))
+                                    <h2 id="section-menuheading-$section.key" class="aui-nav-heading">$section.label.getDisplayableLabel($req, $action.webInterfaceContext)</h2>
+                                #end
+                                <ul class="aui-nav">
+                                    #set ($displayableItemsMap = {})
+                                    #set ($displayableItemsLabelsList = [])
+                                    #foreach ($item in $displayableItems)
+                                        #set ($itemLabel = $item.label.getDisplayableLabel($req, $action.webInterfaceContext))
+                                        #set ($dummy = $displayableItemsMap.put($itemLabel, $item))
+                                        #set ($dummy = $displayableItemsLabelsList.add($itemLabel))
+                                    #end
+
+                                    #foreach ($itemLabel in $generalUtil.sortList($displayableItemsLabelsList))
+                                        #set ($item = $displayableItemsMap.get($itemLabel))
+                                        #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $action.webInterfaceContext))
+                                        <li #if($item.key == $selection) class="aui-nav-selected" aria-current="true"#end>
+                                            <a #if ($item.link.id) id="$item.link.id"#end href="$itemRenderedUrl" title="$itemLabel">$itemLabel</a>
+                                        </li>
+                                    #end
+                                </ul>
+                            </div>
+                        #end
+                    #end
+                    $generalUtil.profilePop($webSectionKey)
+
+                        #if ($displayedMenu)
+                            </div>
+                        #end
+                #end
+            #end
+            </div>
+        </nav>
+    </div>
+#end
+
+#macro (renderItem $item $webInterfaceContext $needs-menu-role-attr)
+    #set ($isCurrent = ($context == $item.key))
+    <li
+        #if($needs-menu-role-attr == "true")
+            role="presentation"
+        #end
+    >#renderItemLink($item $isCurrent $webInterfaceContext false $needs-menu-role-attr)</li>
+#end
+
+#macro (renderItemLink $item $isCurrent $webInterfaceContext $buttonClass $needs-menu-role-attr)
+#* @vtlvariable name="item" type="com.atlassian.confluence.plugin.descriptor.web.descriptors.ConfluenceWebItemModuleDescriptor" *#
+#* @vtlvariable name="webInterfaceContext" type="com.atlassian.confluence.plugin.descriptor.web.DefaultWebInterfaceContext" *#
+    #if (!$webInterfaceContext)
+        #set ($webInterfaceContext = $action.webInterfaceContext)
+    #end
+
+    #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $webInterfaceContext))
+    #if ($itemRenderedUrl == "")
+        #set ($itemRenderedUrl = "#")
+    #end
+
+    #set ($itemUrlRel = "nofollow")
+    #set ($iconClass = "")
+    #set ($hasCustomAttributes = "")
+    #set ($editWithPlaceholder = "")
+    #set ($ariaLabel = "")
+
+    #if($item.webParams)
+        #if ($item.webParams.get("rel") != "")
+            #set ($itemUrlRel = $item.webParams.get("rel"))
+        #end
+        #if ($item.webParams.get("iconClass") != "")
+            #set ($iconClass = $item.webParams.get("iconClass"))
+        #end
+        #if ($item.webParams.get("ariaLabel") != "")
+            #set ($ariaLabel = $item.webParams.get("ariaLabel"))
+        #end
+        #if ($item.webParams.get("has-custom-attributes"))
+            #set ($hasCustomAttributes = $item.webParams.get("has-custom-attributes"))
+        #end
+        #if ($item.webParams.get("edit-with-placeholder"))
+            #set ($editWithPlaceholder = $item.webParams.get("edit-with-placeholder"))
+        #end
+    #end
+
+    #set ($itemLabel = $item.label.getDisplayableLabel($req, $webInterfaceContext))
+    #set ($itemTooltip = $htmlUtil.htmlEncode($item.tooltip.getDisplayableLabel($req, $webInterfaceContext)))
+    #set ($itemClass = '')
+    #set ($itemClass = $item.styleClass)
+
+    #if ($isCurrent)
+        #addClassName($itemClass "current")
+    #end
+
+    #if ($editWithPlaceholder != "")
+        <span $editWithPlaceholder class="#if($itemClass)$itemClass#end" #if ($hasCustomAttributes) #renderCustomAttributes($item.webParams $webInterfaceContext)#end data-template-name="companionEditLink">
+        </span>
+    #else
+        <a #if ($item.link.id) id="$item.link.id"#end
+                href="$itemRenderedUrl"
+                rel="$itemUrlRel"
+                class="#if($buttonClass)$buttonClass #end#if($itemClass)$itemClass#end"
+                #if ($item.link.hasAccessKey()) accessKey="$item.link.getAccessKey($helper)"#end
+                #if ($itemTooltip) title="$itemTooltip"#end
+                #if ($ariaLabel != "") aria-label="$i18n.getText($ariaLabel)"#end
+                #if ($hasCustomAttributes == "true") #renderCustomAttributes($item.webParams $webInterfaceContext)#end
+                #if ($needs-menu-role-attr == "true") role="menuitem"#end
+                >
+
+            #if ($item.icon)
+                #set ($icon = $item.icon)
+                <img alt="$itemLabel" src="$icon.url.getDisplayableUrl($req, $webInterfaceContext)" height="$icon.height" width="$icon.width" title="$itemLabel">
+            #end
+            <span>
+                #if ($iconClass != "")
+                    <span class="aui-icon aui-icon-small aui-iconfont-$iconClass"></span>
+                #end
+                $itemLabel
+            </span>## span for IE
+        </a>
+    #end
+#end
+
+#*
+ Render HTML attributes for itemLink if provided
+   Method Parameters:
+   * webParams              - parameters of the itemLink
+   * webInterfaceContext    - context
+*#
+#macro (renderCustomAttributes $webParams $webInterfaceContext)
+    #set ($map = $webInterfaceContext.toMap())
+    #foreach($paramKey in $webParams.params.keySet())
+        #if($paramKey.startsWith("attribute."))
+            $paramKey.substring(10)="$generalUtil.htmlEncode($webParams.getRenderedParam($paramKey, $map))"
+        #end
+    #end
+#end
+
+#macro (menuMacros_renderAuiAdminMenu)
+    ## "system.admin.site" is the location used by the user-provisioning-plugin in OnDemand
+    #menuMacros_renderAuiMenu("admin-menu-link", $action.getText("system.admin.menu"), "aui-icon aui-icon-small aui-iconfont-configure", ["system.admin.global", "system.admin.site"])
+#end
+
+#macro (menuMacros_renderAuiHelpMenu)
+    #menuMacros_renderAuiMenu("help-menu-link", $action.getText("system.help.menu"), "aui-icon aui-icon-small aui-iconfont-question-filled", ["system.help", "system.help/feedback", "system.browse"])
+#end
+
+#* Renders a drop down menu e.g. content add, action menus.
+
+   Method Parameters:
+   * menuId        - the id of the menu
+   * menuTitle     - the menu title, which is displayed as the drop down menu link text
+   * menuClass     - the class of the menu drop down link
+   * webSectionKeys - determines the web items to display in the menu
+*#
+#macro(menuMacros_renderAuiMenu $menuId $menuTitle $menuClass $webSectionKeys)
+    #set($webMenu = $webMenuManager.getMenu($menuId, $webSectionKeys, $action.webInterfaceContext))
+
+## don't display the menu if there are no menu sections
+    #if(!$webMenu.isEmpty())
+    <a id="$webMenu.id" role="button" class="aui-nav-link aui-dropdown2-trigger aui-dropdown2-trigger-arrowless" href="#" aria-haspopup="true" aria-owns="${webMenu.id}-content" title="$!menuTitle">
+        <span class="$!menuClass">$!menuTitle</span>
+    </a>
+    <nav id="${webMenu.id}-content" class="aui-dropdown2 aui-style-default" #if($webMenu.sections.size() > 1) role="menu" aria-label="$!menuTitle"#end>
+        #foreach ($section in $webMenu.sections)
+            <div class="aui-dropdown2-section">
+                #if ($section.label)
+                    <strong>$i18n.getText($section.label)</strong>
+                #end
+                <ul role="menu"
+                    #if($webMenu.sections.size() > 1) role="group" #else role="menu"#end
+                    #if($section.ariaLabel)aria-label="$i18n.getText($section.ariaLabel)"#end
+                    #if($section.id)id="$section.id"#end
+                    class="aui-list-truncate #if($section.className)$section.className#end">
+                    #foreach ($item in $section.items)
+                        #renderAuiItem($item)
+                    #end
+                </ul>
+            </div>
+        #end
+    </nav>
+    #end
+#end
+
+#* Renders a drop down menu e.g. content add, action menus.
+
+   Method Parameters:
+   * menuId        - the id of the menu
+   * menuTitle     - the menu title, which is displayed as the drop down menu link text
+   * menuClass     - the class of the menu drop down link
+   * languages     - a list of Language objects
+*#
+#macro(menuMacros_renderLanguageMenu $menuId $menuTitle $menuClass $languages)
+<a id="$menuId" class="aui-nav-link aui-dropdown2-trigger aui-dropdown2-trigger-arrow $!menuClass" href="#" aria-haspopup="true" aria-owns="${menuId}-content">$!menuTitle</a>
+<nav id="${menuId}-content" class="aui-dropdown2 aui-style-default" aria-hidden="true">
+    <div class="aui-dropdown2-section">
+        <ul class="aui-list-truncate">
+            #foreach ($lang in $languages)
+                <li><a href="login.action?language=$lang.name">$lang.capitalDisplayName</a></li>
+            #end
+        </ul>
+    </div>
+</nav>
+#end
+
+#macro (menuMacros_renderAuiUserMenu)
+    #if ($bootstrap.isSetupComplete())
+        #if ($user)
+            #if ($user.fullName)
+                #set ($menuName = $user.fullName)
+            #else
+                #set ($menuName = $user.name)
+
+            #end
+            #set($webMenu = $webMenuManager.getMenu("user-menu-link", ["system.user"], $action.webInterfaceContext))
+
+        <a id="$webMenu.id" role="button" class="aui-dropdown2-trigger aui-dropdown2-trigger-arrowless $!menuClass" aria-haspopup="true" aria-owns="${webMenu.id}-content" data-username="$htmlUtil.htmlEncodeAndReplaceSpaces($user.name)" href="#" title="$!htmlUtil.htmlEncodeAndReplaceSpaces($menuName)">
+        ## Oh AUI, two divs and three classes ???
+            <div class="aui-avatar aui-avatar-small">
+                <div class="aui-avatar-inner">
+                    ## The real avatar URl will be substituted during JS init.
+                    ## The AUI CSS provides the correct display dimensions of this element, so we need to provide an
+                    ## img tag here to prevent a content jump that would occur if we dynamically inserted the img
+                    ## tag at runtime. meh.
+                    <img alt="$i18n.getText('user.avatar.name', $htmlUtil.htmlEncode($user.name))" />
+                </div>
+            </div>
+            <span class="aui-icon-dropdown"></span>
+        </a>
+        <nav id="${webMenu.id}-content" class="aui-dropdown2 aui-style-default" #if($webMenu.sections.size() > 1) role="menu" aria-label="$!htmlUtil.htmlEncodeAndReplaceSpaces($menuName)"#end>
+            #foreach ($section in $webMenu.sections)
+                <div class="aui-dropdown2-section">
+                    <ul #if($section.id) id="$section.id"#end
+                        class="aui-list-truncate #if($section.className)$section.className#end"
+                        #if($webMenu.sections.size() > 1) role="group" #else role="menu"#end
+                        #if($section.ariaLabel)aria-label="$i18n.getText($section.ariaLabel)"#end>
+                        #foreach ($item in $section.items)
+                            #renderAuiItem($item)
+                        #end
+                    </ul>
+                </div>
+            #end
+        </nav>
+        ##menuMacros_renderAuiMenu("user-menu-link", $htmlUtil.htmlEncode($menuName), "user", "system.user")
+        #else
+            #foreach ($item in $action.webInterfaceManager.getDisplayableItems("system.user/anonymous", $action.webInterfaceContext))
+            <li>#renderAuiItemLink($item false)</li>
+            #end
+        #end
+    #end
+#end
+
+#macro (renderAuiItem $item $webInterfaceContext)
+    #set ($isCurrent = ($context == $item.key))
+<li role="presentation">#renderAuiItemLink($item $isCurrent $webInterfaceContext)</li>
+#end
+
+#macro (renderAuiItemLink $item $isCurrent $webInterfaceContext)
+
+    #if (!$webInterfaceContext)
+        #set ($webInterfaceContext = $action.webInterfaceContext)
+    #end
+
+    #if ($item.link)
+        #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $webInterfaceContext))
+    #end
+    #if (!$itemRenderedUrl || $itemRenderedUrl == "")
+        #set ($itemRenderedUrl = "#")
+    #end
+    #set ($itemLabel = $item.label.getDisplayableLabel($req, $webInterfaceContext))
+    #set ($itemTooltip = $htmlUtil.htmlEncode($item.tooltip.getDisplayableLabel($req, $webInterfaceContext)))
+    #set ($itemClass = '')
+    #set ($itemClass = $item.styleClass)
+
+<a role="menuitem" #if ($item.link.id) id="$item.link.id"#end href="$itemRenderedUrl" class="#if ($item.icon) aui-icon-container #end #if ($itemClass)  $itemClass#end " #if ($item.link.hasAccessKey()) accessKey="$item.link.getAccessKey($helper)"#end #if ($itemTooltip)
+    title="$itemTooltip"#end #if($item.params.target) target="$item.params.target"
+#end>
+    #if ($item.icon)
+        #set ($icon = $item.icon)<img alt="$itemLabel" src="$icon.url.getDisplayableUrl($req, $webInterfaceContext)" height="$icon.height" width="$icon.width" title="$itemLabel">
+    #end
+    $itemLabel
+</a>
+#end
+
+#macro (auiQuickSearch $isSpaceSearch $spaceKey)
+    #set ($accessKey = $action.getTextStrict("quick.search.accesskey"))
+
+<form id="quick-search" class="aui-quicksearch dont-default-focus header-quicksearch" action="$req.contextPath/dosearchsite.action" method="get">
+    <fieldset>
+        #if($isSpaceSearch && $spaceKey)
+            <input type='hidden' name='where' value='$htmlUtil.htmlEncode($spaceKey)'/>
+        #end
+        #if($isSpaceSearch)
+            <input type="hidden" name="spaceSearch" value="$isSpaceSearch"/>
+        #end
+        <label for="quick-search-query" class="assistive">$action.getText("quick.search.legend")</label>
+        <input id="quick-search-query" class="text app-search search quick-search-query" type="text"
+               accessKey="$accessKey" autocomplete="off" name="queryString" title="$action.getText("quick.search.legend")" #if ($isSpaceSearch && $spaceKey) placeholder="$action.getText("space.quick.search.placeholder")" #else placeholder="$action.getText("quick.search.placeholder")" #end/>
+        <input id="quick-search-submit" class="quick-search-submit" type="submit" value="$action.getText("quick.search.submit")"/>
+
+        <div class="aui-dd-parent quick-nav-drop-down"></div>
+    </fieldset>
+    <div class="hidden parameters">
+        #putMetadata('quick-nav-enabled', $settingsManager.globalSettings.enableQuickNav)
+        #if (!$settingsManager) <!-- Quick nav disabled. SettingsManager could not be found --> #end
+    </div>
+</form>
+#end

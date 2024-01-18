@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>$action.getActionName($action.getClass().getName())</title>
+
+       #rssautodiscovery($action.rssDescriptor)
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-pages")
+        #decoratorParam("mode" "list-recently-updated")
+        #decoratorParam("collector-key" "spacebar-pages")
+    
+    	<body>
+            <div class="pagecontent">
+                $action.helper.renderConfluenceMacro("{recently-updated:spaces=%s|type=page|theme=concise}", ${spaceKey})
+            </div>
+        </body>
+    #end
+</html>

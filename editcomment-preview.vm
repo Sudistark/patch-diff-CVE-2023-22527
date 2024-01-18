@@ -1,0 +1,40 @@
+## TODO These hideous pages need to be removed and replaced with ajaxy comment validation
+<html>
+    <head>
+        <title>$action.getPage().getTitle()</title>
+    </head>
+
+    <body>
+
+        #parse ( "/template/includes/actionerrors.vm" )
+        #requireResourcesForContext("comment-editor")
+        #set ($useWatch = $remoteUser && !$action.userWatchingPage)
+
+        #if (!$fieldErrors.isEmpty())
+            #fielderror('content')
+        #end
+
+        <form method="POST" name="inlinecommentform"
+              action="doeditcomment.action?pageId=$page.id&amp;commentId=$comment.id">
+            #form_xsrfToken()
+            <div class="tabletitle"><h2>$action.getText("edit.comment")</h2></div>
+
+            #scomponent("name='Content'" "theme='aui'" "template='editor.vm'"
+                        "formname=inlinecommentform"
+                        "spaceKey=$htmlUtil.urlEncode($spaceKey)"
+                        "tabindex=4"
+                        "edit=true"
+                        "heartbeat=true"
+                        "contentId=$comment.id"
+                        "contentType=comment"
+                        "minEditorHeight=150"
+                        "useWatch=$useWatch"
+                        "dynamicLoading=false"
+                        "autoStart=true")
+            #end
+
+        </form>
+        #parse ("/pages/page-breadcrumbs.vm")
+
+    </body>
+</html>

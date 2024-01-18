@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title>$action.getText("title.remove.space")</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+        <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "removespace")
+                #decoratorParam ("title" "$action.getText('title.remove.space')")
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem", "removespace")
+                #decoratorParam("helper" $action.helper)
+
+                #applyDecorator ("confirm")
+
+                    <p>$action.getText("remove.space.desc")</p>
+					#if( $action.showLargeQueueWarning)
+						#applyDecorator("message" "$action.getText('info.word')")
+    						#decoratorParam("type" "info")
+							$action.getText("com.atlassian.confluence.spaces.actions.RemoveSpaceAction.warn.large.indexqueue", [$action.indexQueueSize])
+						#end
+					#end
+                    #applyDecorator ("message" "$action.getText('warning.word')")
+                        #decoratorParam("type" "warning")
+                        $action.getText('removespace.operation.cannot.be.undone')
+                    #end
+
+                    #decoratorParam ("formAction" "doremovespace.action?key=$htmlUtil.urlEncode($space.key)")
+                    #decoratorParam ("formName" "removespaceform")
+
+                    $action.getText("alert.remove.space", [$htmlUtil.htmlEncodeAndReplaceSpaces($space.key), $htmlUtil.htmlEncode($space.name)])
+                #end
+            #end
+
+        </body>
+
+    #end
+</html>

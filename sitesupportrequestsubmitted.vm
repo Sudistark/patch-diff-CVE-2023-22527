@@ -1,0 +1,13 @@
+<html>
+	<head>
+		<title>$action.getText("title.administrators")</title>
+	</head>
+	<body>
+    #parse ( "/template/includes/actionerrors.vm" )
+    #if ($actionErrors.size() == 0)
+        <p>$action.getText('administrators.contact.success.heading')</p>
+        <p><a href="$req.contextPath/homepage.action">$action.getText('administrators.contact.submitted.return')</a>.</p>
+    #end
+    #parse("/breadcrumbs.vm")
+	</body>
+</html>

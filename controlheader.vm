@@ -1,0 +1,38 @@
+#parse( "/template/xhtml/controlheader-errors.vm" )
+#set( $labelValue = $i18n.getText($parameters.label) )
+#if( !$labelValue )
+#set( $labelValue = $parameters.label )
+#end
+
+#if ($parameters.labelwidth)
+    #set ($labelwidth = $parameters.labelwidth)
+#end
+#set ($labelalign = "right")
+
+#if ($parameters.labelalign)
+    #set ($labelalign = $parameters.labelalign)
+#end
+
+#if ($parameters.bgcolor)
+    #set ($bgcolor = $parameters.bgcolor)
+#end
+
+#if ($parameters.tdcolor)
+    #set ($tdcolor = $parameters.tdcolor)
+#end
+
+#if ($parameters.labelvalign)
+    #set ($labelvalign = $parameters.labelvalign)
+#else
+    #set ($labelvalign = 'top')
+#end
+
+#if (!$parameters.notable)
+<tr #if($bgcolor)bgcolor="#${bgcolor}"#end>
+    <td nowrap align="$labelalign" #if($labelwidth)width="$labelwidth"#end valign="$labelvalign" #if($error)class="error"#end #if($tdcolor)bgcolor="#${tdcolor}"#end>
+#end
+    <label class="label" for="${parameters.name}">$!{labelValue}:</label>
+#if (!$parameters.notable)
+    </td>
+    <td#if($error) class="error"#end>
+#end

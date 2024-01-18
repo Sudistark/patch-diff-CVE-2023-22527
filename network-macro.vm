@@ -1,0 +1,64 @@
+#requireResource("confluence.web.resources:ajs")
+#requireResource("confluence.macros.profile:network-resources")
+
+<div class="network-macro follow-$mode follow-$theme">
+
+    #if($theme != "tiny")
+        <h2>$action.getText("community.macro.follow.$mode")</h2>
+    #end
+
+    #if ($theme != "dashboard" || $people.size() == 0)
+    <div class="description">
+        #if($viewingMyProfile)
+            #if ($people.size() == 0)
+                $action.getText("community.macro.${mode}.my.none")
+            #else
+                $action.getText("community.macro.${mode}.my")
+            #end
+        #else
+            #if ($people.size() == 0)
+                $action.getText("community.macro.${mode}.none", ["$user.fullName"])
+            #else
+                $action.getText("community.macro.${mode}", ["$user.fullName"])
+            #end
+        #end
+    </div>
+    #end
+
+    <ul class="avatars">
+    #foreach($personHtml in $people)
+        <li>#logoBlock("~$personHtml")</li>
+    #end
+    </ul>
+    #if ($morePeople)
+    <span class="description">
+    (<a href="$req.contextPath/users/view${mode}.action?username=$htmlUtil.urlEncode($username)" class="show-all">$action.getText("community.macro.follow.show.all")</a>)
+    </span>
+    #end
+
+    #if ($showAddUser)
+            <form class="follow-user noprint aui" name="follow-user" action="$req.contextPath/followuser.action" method="post">
+                #form_xsrfToken()
+                <label>
+                <span class="container">
+                    <input  class="text autocomplete-user follow-user-box text"
+                            type="text"
+                            name="username"
+                            role="combobox"
+                            aria-haspopup="listbox"
+                            tabindex="0"
+                            value=""
+                            data-max="10"
+                            data-template="{literal}{title}{/literal}"/>
+                </span>
+                </label>
+
+                <input type="submit" class="aui-button" name="follow" value="$action.getText("person.follow")"/>
+                <div class="hidden parameters">
+                    <input type="hidden" class="followUserBoxPlaceholder" id="followUserBoxPlaceholder" value="$action.getText("follow.user.box.placeholder")" />
+                </div>
+                <div class="follow-user-result">&nbsp;</div>
+            </form>
+    #end
+
+</div>

@@ -1,0 +1,9 @@
+#* @vtlvariable name="task" type="com.atlassian.core.task.longrunning.LongRunningTask" *#
+<task>
+   <name>$task.name</name>
+   <currentStatus>$htmlUtil.htmlEncode($task.currentStatus)</currentStatus>
+   <elapsed>$task.prettyElapsedTime</elapsed>
+   <remaining>$task.prettyTimeRemaining</remaining>
+   <percentComplete>${task.percentageComplete}</percentComplete>
+   <isSuccessful>$task.successful</isSuccessful>
+</task>

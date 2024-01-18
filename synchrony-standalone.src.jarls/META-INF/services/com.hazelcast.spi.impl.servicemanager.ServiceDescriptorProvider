@@ -1,2 +1,0 @@
-com.hazelcast.cp.internal.RaftServiceDescriptorProvider
-com.hazelcast.cp.internal.datastructures.RaftDataServiceDescriptorProvider

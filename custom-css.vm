@@ -1,0 +1,7 @@
+#disableAntiXss()
+
+## Custom styles for Confluence (included for all themes by default)
+$style
+## End custom styles for Confluence
+
+

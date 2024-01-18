@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>$action.getActionName($action.getClass().getName())</title>
+</head>
+<body>
+<p>$action.getText("encoding.test.description")</p>
+
+#if ($action.defaultEncoding.toUpperCase() != "UTF-8")
+    <p class="error">$action.getText("encoding.test.needs.utf8", ["$action.defaultEncoding"])</p>
+#else
+
+<table class="grid">
+<tr><td valign="top"><img src="$staticResourceUrlPrefix/images/encodingtest.jpg" width="182" height="21" align="left"></td>
+<td>$action.getText("encoding.test.should.look.like.this.image", [$action.getText("url.support"),'<a href="systeminfo.action">',"</a>"])</td></tr></table>
+
+<p><b style="font-size: 15px">$action.rawTestString</strong></p>
+
+<p>$action.getText("encoding.test.to.run")</p>
+
+
+<form method="POST" action="encodingtestrun.action">
+<textarea name="submittedTestString" rows="3" cols="40"></textarea><br/>
+<input type="submit" value="$action.getText('submit.query.name')">
+</form>
+
+#end
+</body>
+</html>

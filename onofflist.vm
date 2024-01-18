@@ -1,0 +1,17 @@
+#set( $legendValue = $parameters.legend )
+
+#set( $labelValue = $i18n.getText($parameters.label) )
+#if( !$labelValue )
+    #set( $labelValue = $parameters.label )
+#end
+
+<div class="group">
+    #if ($legendValue)
+        <legend>
+            <span>
+                $legendValue
+            </span>
+        </legend>
+    #end
+    #parse("/template/aui/onofflist-include.vm")
+</div>

@@ -1,0 +1,23 @@
+#if ($templateApplied && $contentType == 'page')
+    #set ($formaction = "docreatepagefromtemplate.action")
+#elseif (!$textUtil.stringSet($formaction))
+    #set ($formaction = "docreate${contentType}.action")
+#end
+#if ($contentType == "page")
+    #set ($useLocationEditor = true)
+#elseif ($contentType == "blogpost")
+    #set ($useDatePicker = true)
+#end
+#set ($defaultContentTitle = "untitled.${contentType}.title")
+#scomponent("template='content-editor.vm'" "theme='custom'"
+            "formName=createpageform"
+            "formAction=$formaction"
+            "contentType=$contentType"
+            "useContentPermissions=$action.hasSetPagePermissionsPermission()"
+            "useDatePicker=$useDatePicker"
+            "postingDate=$dateFormatter.getDateForBlogPost($action.getPostingDate())"
+            "postingTime=$dateFormatter.getTimeForBlogPost($action.getPostingDate())"
+            "mode=create"
+            "defaultContentTitle=$action.getText($defaultContentTitle)"
+            "labelsString=$action.getLabelsString()")
+#end

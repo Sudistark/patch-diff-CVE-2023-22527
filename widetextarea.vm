@@ -1,0 +1,3 @@
+  <div#if($error) class="error"#end>
+    <textarea name="$htmlUtil.htmlEncode(${parameters.name})" #if( ${parameters.rows} )rows="${parameters.rows}"#end #if( ${parameters.cols} )cols="${parameters.cols}"#end style="width:100%;">$!htmlUtil.htmlEncode($!{parameters.nameValue})</textarea>
+  </div>

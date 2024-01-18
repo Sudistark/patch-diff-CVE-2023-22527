@@ -1,0 +1,19 @@
+<p>
+    <strong>$action.getText('captcha.name')</strong><br />
+    $action.getText('captcha.description',[$action.getText('url.captcha.description')])
+</p>
+<p>
+    $action.getText('captcha.description.2')
+</p>
+<p>
+    $action.getText('enable.captcha.if')
+    <ul>
+        <li>$action.getText('confluence.open.to.public.access')
+        <li>$action.getText('problems.with.malicious.edit.or.spam')
+    </ul>
+</p>
+<p>
+    $action.getText('confluence.private.turn.off')
+</p>
+
+</br>

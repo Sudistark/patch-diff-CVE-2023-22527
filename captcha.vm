@@ -1,0 +1,18 @@
+<div id="captcha-container" class="field-group">
+    #requireResource("confluence.web.resources:reload-captcha")
+
+    #set($captchaId = $captchaManager.generateCaptchaId())
+    ## assign reload a tabindex greater than 0 to remove it from the default tab order
+    <a class="reload" href="#" tabindex="1" title="$generalUtil.escapeXml($i18n.getText('login.elevatedsecuritycheck.captcha.reload.title'))">
+        <img src="${req.contextPath}/images/icons/refresh_grey_16.png" alt="$generalUtil.escapeXml($i18n.getText('login.elevatedsecuritycheck.captcha.reload.alt'))" />
+    </a>
+    $soyTemplateRendererHelper.getRenderedTemplateHtml("confluence.web.resources:shared-templates", "Confluence.Templates.Captcha.image.soy", {"captchaId": $captchaId})
+</div>
+<div class="field-group">
+    <label id="captcha-response-label" for="captcha-response">
+        $i18n.getText("login.elevatedsecuritycheck.captcha.input.label")
+    </label>
+    <input id="captcha-response" class="text" type="text" name="captchaResponse" value="" placeholder="$i18n.getText('captcha.challenge')" aria-describedby="captcha-error">
+    #fielderrorAUI('captcha')
+    <div>$i18n.getText("login.elevatedsecuritycheck.assistive")</div>
+</div>

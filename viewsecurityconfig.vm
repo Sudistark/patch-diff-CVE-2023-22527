@@ -1,0 +1,115 @@
+<html>
+<head>
+    <title>$action.getText("title.security.config")</title>
+    <meta name="help-path" content="/admin/help/securityconfig.vm"/>
+    <content tag="selectedWebItem">securityconfiguration</content>
+</head>
+<body>
+    #parse ( "/template/includes/actionerrors.vm" )
+    #if ($actionErrors.size() == 0)
+        #set ($editText = $action.getText("edit.name"))
+    <form action="editgeneralconfig.action" name="editgeneralconfig">
+
+        <div class="steptitle topPadding">
+            <div style="float:right; font-weight: normal;">
+                <input type="submit" value="$editText"
+                       onClick="location.href='editsecurityconfig.action'; return false;">
+            </div>
+            $action.getText("sub.title.security")
+        </div>
+        <div class="smalltext">$action.getText("sub.title.security.description")</div>
+        <table class="grid" width="100%">
+            <tr>
+                <td nowrap align="right"><strong>$action.getText("ext.user.management"):</strong></td>
+                <td>#onoff ($action.externalUserManagement)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right"><b>$action.getText("users.addwildcards"):</b></td>
+                <td>#onoff ($action.addWildcardsToUserAndGroupSearches)</td>
+            </tr>
+            <tr bgcolor="#f9f9f9">
+                <td nowrap align="right" width="50%"><strong>$action.getText("allow.public.signup"):</strong></td>
+                <td>#onoff ($action.allowPublicSignup)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("nofollow.external.links"):</strong></td>
+                <td>#onoff ($action.nofollowExternalLinks)</td>
+            </tr>
+            <tr bgcolor="#f9f9f9">
+                <td nowrap align="right"><strong>$action.getText("email.address.visibility"):</strong></td>
+                <td>$!action.getText($emailAddressVisibility)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("allow.remoteapi.anonymous"):</strong></td>
+                <td>#onoff ($action.allowRemoteApiAnonymous)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("enable.space.styles"):</strong></td>
+                <td>#onoff ($action.enableSpaceStyles)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("rss.max.items"):</strong></td>
+                <td>$action.maxRssItems</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("sys.info.500"):</strong></td>
+                <td>#onoff ($action.showSystemInfoIn500Page)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("login.elevatedsecurity.use.captcha")
+                    :</strong></td>
+                <td>#onoff ($action.enableElevatedSecurityCheck)
+                    #if ($action.enableElevatedSecurityCheck && $action.loginAttemptsThreshold >= 0)
+
+                        #if($action.loginAttemptsThreshold == 0)
+                            ($action.getText('login.elevatedsecurity.loginAttemptsThreshold.label.always'))
+                        #elseif($action.loginAttemptsThreshold == 1)
+                            ($action.getText('login.elevatedsecurity.loginAttemptsThreshold.label.singular'))
+                        #else
+                            ($action.getText('login.elevatedsecurity.loginAttemptsThreshold.label.plural', [$action.loginAttemptsThreshold])
+                            )
+                        #end
+                    #end</td>
+            </tr>
+        </table>
+
+        <div class="steptitle topPadding">
+            <div style="float:right; font-weight: normal;">
+                <input type="submit" value="$editText"
+                       onClick="location.href='editsecurityconfig.action#xsrf'; return false;">
+            </div>
+            $action.getText("sub.title.xsrf")
+        </div>
+        <div class="smalltext">$action.getText("sub.title.xsrf.description")</div>
+        <table class="grid" width="100%">
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("xsrf.addComments"):</strong></td>
+                <td>#onoff ($action.xsrfAddComments)</td>
+            </tr>
+        </table>
+
+        <div class="steptitle topPadding">
+            <div style="float:right; font-weight: normal;">
+                <input type="submit" value="$editText"
+                       onClick="location.href='editsecurityconfig.action#xsrf'; return false;">
+            </div>
+            $action.getText("sub.title.websudo")
+        </div>
+        <div class="smalltext">$action.getText("sub.title.websudo.description")</div>
+        <table class="grid" width="100%">
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("xsrf.webSudoEnabled"):</strong></td>
+                <td>#onoff ($action.xsrfAddComments)</td>
+            </tr>
+            <tr>
+                <td nowrap align="right" width="50%"><strong>$action.getText("xsrf.webSudoTimeout"):</strong></td>
+                <td>$action.webSudoTimeout $action.getText('xsrf.webSudoTimeout.units')</td>
+            </tr>
+        </table>
+
+    </form>
+    #end
+
+    #parse("/breadcrumbs.vm")
+</body>
+</html>

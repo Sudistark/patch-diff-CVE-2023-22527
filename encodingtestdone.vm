@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>$action.getText("encoding.test.results")</title>
+</head>
+<body>
+
+<p>$action.getText("encoding.test.interpretation.instruction")</p>
+
+<table class="grid">
+<tr><td valign="top"><img src="$staticResourceUrlPrefix/images/encodingtest.jpg" width="182" height="21" align="left"></td>
+<td>$action.getText("encoding.test.should.look.like.this.image", [$action.getText("url.support"),'<a href="systeminfo.action">',"</a>"])</td></tr></table>
+
+
+<h4>$action.getText("encoding.test1")</h4>
+<p>$action.getText("encoding.test1.description")</p>
+<p><b style="font-size: 15px">$action.rawTestString</strong></p>
+
+<h4>$action.getText("encoding.test2")</h4>
+<p>$action.getText("encoding.test2.description")</p>
+<p><b style="font-size: 15px">$action.submittedTestString</strong></p>
+
+<h4>$action.getText("encoding.test3")</h4>
+<p>$action.getText("encoding.test3.description")</p>
+<p><b style="font-size: 15px">$action.databasedTestString</strong></p>
+
+<p>$action.getText("encoding.test3.expectedresult")</p>
+<p><b style="font-size: 15px">$action.rawTestString.toLowerCase()</strong></p>
+
+<h4>$action.getText("encoding.test4")</h4>
+<p>$action.getText("encoding.test4.description")</p>
+<p><b style="font-size: 15px">$action.databasedLowercaseTestString</strong></p>
+
+<p>$action.getText("encoding.test4.expectedresult")</p>
+<p><b style="font-size: 15px">$action.rawTestString.toUpperCase()</strong></p>
+
+<h4>$action.getText("encoding.test5")</h4>
+<p>$action.getText("encoding.test5.description")</p>
+#if ($action.fileCreatedSuccessfully)
+    #set ($iconPath = "$staticResourceUrlPrefix/images/icons/emoticons/check.png")
+#else
+    #set ($iconPath = "$staticResourceUrlPrefix/images/icons/emoticons/error.png")
+#end
+<p><img style="vertical-align: bottom;" src="$iconPath" /><b style="font-size: 15px"> $action.getText("encoding.test5.fileCreatedSuccessfully.${action.fileCreatedSuccessfully}")</strong></p>
+
+#if ($action.fileCreatedSuccessfully)
+<h4>$action.getText("encoding.test6")</h4>
+<p>$action.getText("encoding.test6.description")</p>
+#set ($text = "encoding.test6.fileNameMangled.${action.fileNameMangled}")
+
+#if ($action.fileNameMangled)
+    #set ($iconPath = "$staticResourceUrlPrefix/images/icons/emoticons/warning.png")
+#else
+    #set ($iconPath = "$staticResourceUrlPrefix/images/icons/emoticons/check.png")
+#end
+    <p><img style="vertical-align: bottom;" src="$iconPath" /><b style="font-size: 15px"> $action.getText($text)</strong></p>
+#else
+<p class="error">$action.fileCreationException</p>
+#end
+
+</body>
+</html>

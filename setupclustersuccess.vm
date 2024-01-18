@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>$action.getText("title.finish.setup")</title>
+    $webResourceManager.requireResourcesForContext("setup.setup-cluster-success")
+</head>
+
+<body>
+
+<span id="setup-cluster-success-icon" class="aui-icon aui-icon-large aui-iconfont-approve">Success</span>
+
+<div class="setup-hint">
+    $action.getText("setup.cluster.success.hint")
+</div>
+
+<div class="aui-panel setup-success">
+    <div class="setup-success-button">
+        <a class="finishAction aui-button aui-button-primary setup-button"
+           href="$req.contextPath/plugins/servlet/cluster-monitoring?origin=setup">
+            $action.getText('setup.cluster.success.button')
+        </a>
+    </div>
+</div>
+</body>
+</html>

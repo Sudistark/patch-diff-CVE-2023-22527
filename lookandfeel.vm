@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+        #* help tips side bar disabled until we resolve the layout issues in CONF-15829
+        #decoratorParam("help-path" "/spaces/help/lookandfeel.vm")
+        *#
+
+       <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "colorscheme")
+                #decoratorParam ("title" $action.getText("action.name"))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "colorscheme")
+                #decoratorParam("helper" $action.helper)
+
+                #parse ("/includes/common-lookandfeel.vm")
+            #end
+	    </body>
+    #end
+</html>

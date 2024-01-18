@@ -1,0 +1,113 @@
+#* @vtlvariable name="queryString" type="java.lang.String" *#
+#* @vtlvariable name="searchResults" type="java.util.List<java.lang.String>" *#
+#* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.PeopleDirectoryAction" *#
+#* @vtlvariable name="showOnlyPersonal" type="boolean" *#
+#* @vtlvariable name="showDeactivatedUsers" type="boolean" *#
+#* @vtlvariable name="showExternallyDeletedUsers" type="boolean" *#
+<html>
+<head>
+    <title>$action.getActionName($action.getClass().getName())</title>
+    #requireResourcesForContext("people")
+</head>
+<body>
+    <content tag="bodyClass">people</content>
+    <script type="text/javascript" language="JavaScript">
+        var contextPath = '$req.contextPath';
+    </script>
+    <div class="pagecontent people-directory">
+        #applyDecorator("root")
+            #decoratorParam("context" "global")
+            #decoratorParam("mode"  "userdir")
+            #decoratorParam("helper" $action.helper)
+
+            #if ($showOnlyPersonal)
+                #set($title = $action.getText("people.show.personal"))
+                #set($personalActive = "active-tab")
+                #set($allActive = "")
+            #else
+                #set($title = $action.getText("people.show.all"))
+                #set($personalActive = "")
+                #set($allActive = "active-tab")
+            #end
+                <div class="aui-page-panel">
+                    <div class="aui-page-panel-inner">
+                        <div class="aui-page-panel-nav" role="complementary" aria-label=$i18n.getText('nav.main.sidebar')>
+                            <nav class="aui-navgroup aui-navgroup-vertical">
+                                <div class="aui-navgroup-inner">
+                                    <ul class="aui-nav">
+                                        <li #if (!$showOnlyPersonal) class="active-tab" aria-current="true" #end>
+                                            <a href="$req.contextPath/dopeopledirectorysearch.action?queryString=$htmlUtil.htmlEncode($queryString)&showOnlyPersonal=false" class="show-all-people">$action.getText("people.show.all")</a>
+                                        </li>
+                                        <li #if ($showOnlyPersonal) class="active-tab" aria-current="true" #end>
+                                            <a href="$req.contextPath/dopeopledirectorysearch.action?queryString=$htmlUtil.htmlEncode($queryString)&showOnlyPersonal=true" class="show-people-spaces">$action.getText("people.show.personal")</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div><!-- .aui-page-panel-nav -->
+
+                        <section class="aui-page-panel-content">
+                            <div class="greybox">
+                                <div class="greyboxfilled" id="people-search-title-bar">
+                                    <h2>$title</h2>
+                                    #parse ("/users/peopledirectory-searchform.vm")
+                                    <div id="people-search-result-status-container">
+                                        #if($searchResults.size() > 0)
+                                            #set ($endPageNumber = $paginationSupport.total / $paginationSupport.pageSize)
+                                            #if( $paginationSupport.total % $paginationSupport.pageSize != 0)
+                                                #set ($endPageNumber = $endPageNumber + 1)
+                                            #end
+
+                                            #set ($currentPageNumber = $paginationSupport.startIndex / $paginationSupport.pageSize + 1)
+                                            #set ($paginationMessage  = '')
+                                            #if( $endPageNumber > 1)
+                                                 #set ($paginationMessage = $i18n.getText("search.result.paginated",
+                                                    $i18n.getText("search.result.paginated.pages", $currentPageNumber, $endPageNumber),
+                                                    $i18n.getText("search.result.paginated.results", $searchResults.size())
+                                                ))
+                                            #else
+                                                #set($paginationMessage = $i18n.getText("search.result.paginated.results", $searchResults.size()))
+                                            #end
+
+                                            <h2 id="people-search-result-status" role="status" tabindex="0">
+                                                $paginationMessage
+                                            </h2>
+                                        #end
+                                    </div>
+                                </div>
+                                <div id="peoplelist">
+                                    #if ($searchResults.size() > 0)
+                                        #foreach ($person in $searchResults)
+                                            $helper.renderConfluenceMacro("{profile:user=%s|mode=people-directory}", $person)
+                                        #end
+                                        <br style="clear: left;">
+                                        #set ($formAction = "dopeopledirectorysearch.action?queryString=$queryString&ShowOnlyPersonal=$showOnlyPersonal&")
+                                        #if ($showDeactivatedUsers)
+                                            #set ($formAction = "${formAction}showDeactivatedUsers=$showDeactivatedUsers&")
+                                        #end
+                                        #if ($showExternallyDeletedUsers)
+                                            #set ($formAction = "${formAction}showExternallyDeletedUsers=$showExternallyDeletedUsers&")
+                                        #end
+                                        #pagination ($action.paginationSupport $formAction)
+                                    #else
+                                        <div id="search-no-results-messages-container" role="status" tabindex="0">
+                                            #if ($action.fieldErrors.size() == 0)
+                                                $soyTemplateRendererHelper.getRenderedTemplateHtml("com.atlassian.auiplugin:aui-experimental-soy-templates", "aui.message.info.soy", {"content" : $i18n.getText("people.search.results.notfound").toString()})
+                                            #else
+                                                #fielderror("queryString")
+                                            #end
+                                        </div>
+                                    #end
+                                </div>
+
+                                #if ($showBlankExperience)
+                                    #blankExperience("people", $hasUserCreationPermission, "blank.experience.people", "blank.experience.people.no.invite.permission", "user.invite", "/admin/users/inviteuser.action?from=db-button", $docBean.getLink("help.invite.user"), "$req.contextPath/contactadministrators.action")
+                                #end
+                            </div>
+                        </section>
+                    </div>
+                </div>
+        #end
+    </div>
+</body>
+</html>

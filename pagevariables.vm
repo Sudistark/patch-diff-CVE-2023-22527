@@ -1,0 +1,2 @@
+$action.getText('page.variables.instruction')<p>
+$action.getText('page.variables.description')

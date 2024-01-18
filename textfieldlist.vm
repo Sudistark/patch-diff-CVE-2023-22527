@@ -1,0 +1,24 @@
+#parse( "/template/xhtml/controlheader-errors.vm" )
+
+#set( $items = $parameters.list )
+#if( $items )
+#foreach( $item in $items )
+    #if( $parameters.listKey )
+      #set( $itemKey = $ognl.findValue($parameters.listKey, $item) )
+    #else
+      #set( $itemKey = $item.toString() )
+    #end
+    #if( $parameters.listValue )
+      #set( $itemValue = $ognl.findValue($parameters.listValue, $item) )
+    #else
+      #set( $itemValue = $item.toString() )
+    #end
+
+    <tr>
+      <td align="right" valign="top" #if($error)class="error"#end><label class="label">$!{itemKey}:</label></td>
+      <td#if($error) class="error"#end>
+        <input type="text" name="${parameters.name}.${itemKey}" value="$!{itemValue}" #if( $parameters.size > 0 )size="${parameters.size}"#end/>
+      </td>
+    </tr>
+#end
+#end

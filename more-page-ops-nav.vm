@@ -1,0 +1,22 @@
+<content tag="selectedTab">info</content> <!-- so that the "More ..." tab is highlighted -->
+
+<div class="greyLinks">
+
+#set ($urlForThisPage = $req.getServletPath())
+
+#if ($urlForThisPage.indexOf("viewinfo.action") != -1)
+    <span style="padding: 5px; background-color:f0f0f0"><strong>Page Information</strong></span> &middot;
+#else
+    <a href="$req.contextPath/pages/viewinfo.action?pageId=$page.id">Page Information</a> &middot;
+#end
+
+#if ($urlForThisPage.indexOf("removepage.action") != -1)
+    <span style="padding: 5px; background-color:f0f0f0;"><strong>Remove</strong></span>
+#else
+    #if ($permissionHelper.canRemove($action.authenticatedUser, $page))
+    <a href="$req.contextPath/pages/removepage.action?pageId=$page.id">Remove</a>
+    #end
+#end
+
+</div>
+<br/>

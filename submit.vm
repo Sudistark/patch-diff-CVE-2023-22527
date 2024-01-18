@@ -1,0 +1,14 @@
+#set( $submitValue = $action.getText($parameters.nameValue) )
+#if( !$submitValue )
+    #set( $submitValue = $parameters.nameValue )
+#end
+<input#*
+  *##if ($parameters.id) id="${parameters.id}"#end#*
+  *##if ($parameters.tabindex) tabindex="$!htmlUtil.htmlEncode($parameters.tabindex)" #end#*
+  *##if ($parameters.accessKey) accessKey="$!htmlUtil.htmlEncode($parameters.accessKey)" #end#*
+  *##if ($parameters.onClick) onClick="$!htmlUtil.htmlEncode($parameters.onClick)" #end#*
+  *##if ($parameters.style) style="$parameters.style" #end#*
+  *##if ($parameters.cssClass) class="$!htmlUtil.htmlEncode($parameters.cssClass)" #end#*
+  *##parse("/template/custom/scripting-events.vm")#*
+  *##if ($parameters.type && $parameters.type=="image") type="image" #else type="submit" #end#*
+  *##if( ${parameters.name} ) name="${parameters.name}"#end value="$!{submitValue}">

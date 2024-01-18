@@ -1,0 +1,118 @@
+#set($diffAddedBackgroundColor = '#ddfade')
+#set($diffAddedBorderColor = '#93c49f')
+#set($diffRemovedBackgroundColor = '#ffe7e7')
+#set($diffRemovedBorderColor = '#df9898')
+#set($diffChangedBackgroundColor = '#d6f0ff')
+#set($diffChangedBorderColor = '#9eb6d4')
+
+#set($diffMacroPanelBackgroundColor = '#f0f0f0')
+#set($diffMacroPanelLightBackgroundColor = '#fafafa')
+#set($diffMacroPanelScreeningBackgroundColor = 'rgba(255,255,255,0.5)')
+#set($diffMacroPanelBorderColor = '#ddd')
+
+#set($diffImageOverlayColor = '#535353')
+
+/* @group Diff colours */
+
+.diff-tag-added {
+    background-color: $diffAddedBorderColor;
+}
+
+.diff-tag-removed {
+    background-color: $diffRemovedBorderColor;
+}
+
+.diff-html-added {
+    background-color: $diffAddedBackgroundColor;
+    border-color: $diffAddedBorderColor;
+}
+
+.diff-html-removed {
+    background-color: $diffRemovedBackgroundColor;
+    border-color: $diffRemovedBorderColor;
+}
+
+.diff-html-changed {
+    background-color: $diffChangedBackgroundColor;
+    border-color: $diffChangedBorderColor;
+}
+
+.diff-html-added img {
+    border-color: $diffAddedBorderColor;
+}
+
+.diff-html-removed img {
+    border-color: $diffRemovedBorderColor;
+}
+
+.diff-html-changed img {
+    border-color: $diffChangedBorderColor;
+}
+
+.diff-image-overlay,
+.wiki-content .diff-image-overlay {
+    color: $diffImageOverlayColor;
+}
+
+.diff-image-overlay.diff-removed-image {
+    background-color: $diffRemovedBackgroundColor;
+}
+
+.diff-image-overlay.diff-added-image {
+    background-color: $diffAddedBackgroundColor;
+}
+
+.diff-image-overlay.diff-changed-image {
+    background-color: $diffChangedBackgroundColor;
+}
+
+.diff-macro {
+    border-color: $diffMacroPanelBorderColor;
+    background-color: $diffMacroPanelBackgroundColor;
+}
+
+.diff-macro .diff-macro-title {
+    background-color: transparent;
+}
+
+.diff-macro .diff-macro-properties {
+    border-color: $diffMacroPanelBorderColor;
+}
+
+.diff-macro .diff-macro-properties,
+.diff-macro .diff-macro-properties th,
+.diff-macro .diff-macro-properties td {
+    background-color: $diffMacroPanelLightBackgroundColor;
+    background: $diffMacroPanelScreeningBackgroundColor;
+}
+
+.diff-macro .diff-macro-body {
+    background-color: #fff;
+    border: 1px solid $diffMacroPanelBorderColor;
+}
+
+.diff-macro.diff-html-added,
+.diff-macro.diff-html-added .diff-macro-body {
+    background-color: $diffAddedBackgroundColor;
+    border-color: $diffAddedBorderColor;
+}
+
+.diff-macro.diff-html-removed,
+.diff-macro.diff-html-removed .diff-macro-body {
+    background-color: $diffRemovedBackgroundColor;
+    border-color: $diffRemovedBorderColor;
+}
+
+.diff-macro.diff-html-changed,
+.diff-macro.diff-html-changed .diff-macro-body {
+    background-color: $diffChangedBackgroundColor;
+    border-color: $diffChangedBorderColor;
+}
+
+.diff-macro.diff-html-added .diff-macro-body,
+.diff-macro.diff-html-removed .diff-macro-body,
+.diff-macro.diff-html-changed .diff-macro-body {
+    background-color: #fff;
+}
+
+/* @end Diff colours */

@@ -1,0 +1,14 @@
+#set($labelBackgroundColor = '#F2F2F2')
+
+/* @group labels */
+
+.aui-label {
+    background-color: $labelBackgroundColor;
+}
+
+.tag-cloud .aui-label a:link,
+.tag-cloud .aui-label a:visited {
+    color: $colorScheme.linkColor;
+}
+
+/* @end */

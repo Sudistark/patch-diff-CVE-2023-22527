@@ -1,0 +1,44 @@
+## Creates a personal sidebar within the context of the page or blogpost
+#set ($targetUsername = $webInterfaceContext.targetUser.name)
+
+<div class="noprint" id="personal-info-sidebar">
+    #if($user && $user.name.equals($targetUsername))
+        #set($viewProfileActionName = $action.getText("edit.name"))
+        #set($viewProfileAction = "$req.contextPath/users/editmyprofile.action")
+    #else
+        #set($viewProfileActionName = $action.getText("more.word.capitalised"))
+        #set($viewProfileAction = "$req.contextPath/users/viewuserprofile.action?username=$htmlUtil.urlEncode($targetUsername)")
+    #end
+
+    <a href="#" class="sidebar-collapse"></a>
+    <div class="sidebar-content">
+        #if($context != "blogpost")
+            #if ($infoPanelRequired)
+                #infoPanel()
+            #end
+        #end
+        <div class="sidebar-section">
+            <a href="$viewProfileAction" class="more-edit">$viewProfileActionName</a>
+            <h3 class="sidebar-heading">$action.getText("profile.name")</h3>
+            $helper.renderConfluenceMacro("{profile:user=%s}", $targetUsername)
+        </div>
+
+        #if($context == "blogpost" && $calendarWidth && $helper.action.calendarForThisMonth)
+            <div class="sidebar-section">
+                #blogPostsByMonth($helper.action)
+            </div>
+        #end
+
+        <div class="sidebar-section">
+            <h3 class="sidebar-heading">$action.getText("activity.name")</h3>
+            $helper.renderConfluenceMacro("{recently-updated:author=%s|max=5|theme=sidebar|spaces=*}", $targetUsername)
+        </div>
+
+        <div class="sidebar-section">
+            <a href="$req.contextPath/users/viewfollow.action?username=$htmlUtil.urlEncode($targetUsername)" class="more-edit">$action.getText("more.word.capitalised")</a>
+            <h3 class="sidebar-heading">$action.getText("network.name")</h3>
+            $helper.renderConfluenceMacro("{network:following|username=%s|max=10|theme=tiny}", $targetUsername)
+            $helper.renderConfluenceMacro("{network:followers|username=%s|max=10|theme=tiny}", $targetUsername)
+        </div>
+    </div>
+</div>

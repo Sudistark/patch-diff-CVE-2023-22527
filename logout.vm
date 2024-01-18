@@ -1,0 +1,10 @@
+<html>
+	<head>
+        #requireResource("confluence.web.resources:master-styles")
+		<title>$action.getText("title.logout")</title>
+	</head>
+	<body>
+        ## This template should only be used on a failed logout.       
+		#parse ( "/template/includes/actionerrors.vm" )
+	</body>
+</html>

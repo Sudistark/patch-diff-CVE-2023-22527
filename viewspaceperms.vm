@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+
+        #applyDecorator ("root")
+            #decoratorParam ("context" "spaceadminpanel")
+            #decoratorParam ("selection" "spacepermissions")
+            #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+            #decoratorParam ("selectedTab" "admin")
+            #decoratorParam ("helper" $action.helper)
+            #decoratorParam ("selectedSpaceToolsWebItem" "spacepermissions")
+
+                #if ($action.isAnyUserViewSpacePermissionEnabled())
+                    #anyUserCanViewSpaceInfoBanner($action.isUnlicensedGlobalPermissionEnabled() $key)
+                #end
+
+                <h2 class="steptitle">$i18n.getText('space.permissions.licensed.users')</h2>
+
+                <h4>$i18n.getText('perms.groups')</h4>
+                <div class="stepdesc">
+                    $i18n.getText("space.group.perms")
+                </div>
+
+                #showPermissions( ["g"] $action "false")
+
+                <form name="editspacepermissions" action="editspacepermissions.action">
+                    <input type="hidden" name="key" value="$key">
+                    #ssubmit("theme='aui'"
+                             "editMode=false"
+                             "editValue=$action.getText('globalperms.editpermissions')"
+                             "editName=edit")
+                </form>
+
+                <h4>$i18n.getText('perms.individuals')</h4>
+                <div class="stepdesc">
+                    $i18n.getText("space.user.perms")
+                </div>
+
+                #showPermissions( ["u"] $action "false")
+
+                <form name="editspacepermissions" action="editspacepermissions.action">
+                    <input type="hidden" name="key" value="$key">
+                    #ssubmit("theme='aui'"
+                             "editMode=false"
+                             "editValue=$action.getText('globalperms.editpermissions')"
+                             "editName=edit")
+                </form>
+
+                <h2 class="steptitle">$action.getText('perms.anonymous')</h2>
+
+                #if ($action.anonymousSpacePermissionWithoutGlobalPermission)
+                    #parse ("/spaces/includes/anonymous_access_warning.vm")
+                #end
+
+                <div class="stepdesc">
+                    $action.getText("space.anonymous.perms")
+                </div>
+
+                #showPermissions( ["a"] $action "false")
+
+                <form name="editspacepermissions" action="editspacepermissions.action">
+                    <input type="hidden" name="key" value="$key">
+                    #ssubmit("theme='aui'"
+                             "editMode=false"
+                             "editValue=$action.getText('globalperms.editpermissions')"
+                             "editName=edit")
+                </form>
+        #end
+	#end
+</html>

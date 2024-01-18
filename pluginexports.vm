@@ -1,0 +1,23 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.admin.actions.debug.PluginOsgiExportsAction" *#
+<html>
+<head>
+<title>$action.getActionName($action.getClass().getName())</title>
+</head>
+<body>
+<h3>$action.getText("administration.plugin.exports.list")</h3>
+
+<ul>
+#foreach ($name in $action.registrar.names)
+<li #if(!$action.registrar.hasInterfaces($name)) class="error" #end >$name
+    <ul>
+    #foreach ($interface in $action.registrar.getInterfaces($name))
+        <li #if($action.registrar.isDuplicated($interface)) class="error" #end >$interface.name</li>
+    #end
+    </ul>
+</li>
+#end
+</ul>
+
+</body>
+</html>
+#parse ("/breadcrumbs.vm")

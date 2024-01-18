@@ -1,0 +1,360 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.impl.admin.actions.ConfigureMonitoringAction" *#
+<html>
+    <head>
+        <title>$action.getText('monitoring.linktitle')</title>
+        <style>
+            #monitoring-page {
+                max-width: 1200px;
+            }
+            .toggle-container {
+                padding-left: 0 !important;
+                flex-direction: row;
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+            .aui-toggle-small {
+                transform: scale(0.7, 0.8);
+            }
+            .table-scroll {
+                margin-top: 10px;
+                max-height: 320px;
+                overflow-y: auto;
+            }
+        </style>
+
+        #requireResource("com.atlassian.auiplugin:aui-toggle")
+        #requireResource("com.atlassian.auiplugin:aui-label")
+        #requireResource("com.atlassain.auiplugin:aui-dialog2")
+
+        <content tag="selectedWebItem">monitoring</content>
+    </head>
+    <body>
+        <div id="monitoring-page">
+            #parse ( "/template/includes/actionerrors.vm" )
+            <p id="monitoringHeaderDescription">
+                $action.getText('monitoring.description', [$docBean.getLink('help.monitoring.description')])
+            </p>
+            <br />
+
+            <div>
+                <h2>$action.getText('monitoring.jmx.title')</h2>
+                <p>$action.getText('monitoring.jmx.description', [$docBean.getLink('help.monitoring.jmx')])</p>
+                <form class="aui" action="toggleJmxEnabled.action" method="post">
+                    #form_xsrfToken()
+                    <div class="toggle-container">
+                        <aui-toggle id="jmxMonitoringToggle"
+                                    name="isChecked"
+                                    class="aui-toggle-small"
+                                    label="$action.getText('monitoring.jmx.toggle.label')"
+                            #if ($action.isJmxEnabled()) checked #end>
+                        </aui-toggle>
+                        <aui-label for="jmxMonitoringToggle">
+                            $action.getText('monitoring.jmx.toggle.label')
+                        </aui-label>
+                    </div>
+                </form>
+
+                #if ($action.systemPropertySetOnNodes)
+                    <div class="aui-message">
+                        <p>$action.getText("monitoring.jmx.sysprops.info")</p>
+                        <p>
+                            <a href="$docBean.getLink("help.systemproperties")">
+                                $action.getText("monitoring.jmx.sysprops.learnmore")
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="table-scroll" id="monitoring-nodes">
+                        <table class="aui">
+                            <thead>
+                            <tr>
+                                <th scope="col" id="id">$action.getText('monitoring.jmx.node.id')</th>
+                                <th scope="col" id="name">$action.getText('monitoring.jmx.node.name')</th>
+                                <th scope="col" id="sysprop">$action.getText('monitoring.jmx.node.sysprops')</th>
+                                <th scope="col" id="jmx">$action.getText('monitoring.jmx.node.jmx')</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            #foreach ($nc in $action.nodesConfigs)
+                                <tr $action.isCurrentNode($nc.node)>
+                                    #if ($nc.node)
+                                        <td headers="id">$nc.node.anonymizedNodeIdentifier</td>
+                                        <td headers="name">$nc.node.humanReadableNodeName().orElse($action.getText("monitoring.jmx.node.name.notconfigured"))</td>
+                                    #else
+                                        ## node == null in non-clustered mode
+                                        <td colspan="2" headers="id name">$action.getText('monitoring.jmx.node.noclustering')</td>
+                                    #end
+
+                                    #if ($nc.config.right)
+                                        #set($settings = $nc.config.right().get())
+                                        <td headers="sysprop">
+                                            #if ($settings.systemPropertySet)
+                                                $action.getText('monitoring.jmx.node.sysprops.set')
+                                            #else
+                                                $action.getText('monitoring.jmx.node.sysprops.notset')
+                                            #end
+                                        </td>
+                                        <td headers="jmx">
+                                            #if ($settings.enabled)
+                                                <span class="aui-lozenge aui-lozenge-success">$action.getText("enabled")</span>
+                                            #else
+                                                <span class="aui-lozenge aui-lozenge-error">$action.getText("disabled")</span>
+                                            #end
+                                        </td>
+                                    #else
+                                        <td headers="sysprop">&mdash;</td>
+                                        <td headers="jmx" id="rte-savebar">
+                                            <span class="aui-lozenge aui-lozenge-subtle aui-tooltip"
+                                                  title="$action.getText('monitoring.jmx.node.unknown.tooltip')">
+                                                $action.getText('monitoring.jmx.node.unknown')
+                                            </span>
+                                        </td>
+                                    #end
+                                </tr>
+                            #end
+                            </tbody>
+                        </table>
+                    </div>
+                #end
+            </div>
+            <br />
+
+            <div>
+                <h3>$action.getText('monitoring.app.monitoring.title')</h3>
+                <p>$action.getText('monitoring.app.monitoring.description', [$docBean.getLink('help.monitoring.app.monitoring')])</p>
+                <form class="aui" action="toggleAppMonitoringEnabled.action" method="post">
+                    #form_xsrfToken()
+                    <div
+                            id="jmx-app-warning-container"
+                            aria-live="polite"
+                            #if ($action.isJmxEnabled() || !$action.isAppMonitoringEnabled())
+                            hidden
+                            #end>
+                        <div class="aui-message aui-message-warning">
+                            <p>$action.getText('monitoring.app.monitoring.warning')</p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="toggle-container">
+                        <aui-toggle id="appMonitoringToggle"
+                                    name="isChecked"
+                                    class="aui-toggle-small"
+                                    label="$action.getText('monitoring.app.monitoring.toggle.label')"
+                                    #if ($action.isAppMonitoringEnabled()) checked #end>
+                        </aui-toggle>
+                        <aui-label for="appMonitoringToggle">
+                            $action.getText('monitoring.app.monitoring.toggle.label')
+                        </aui-label>
+                    </div>
+                </form>
+            </div>
+            <br />
+
+            <div>
+                <h3>$action.getText('monitoring.ipd.monitoring.title')</h3>
+                <p>$action.getText('monitoring.ipd.monitoring.description', [$docBean.getLink('help.monitoring.ipd.monitoring')])</p>
+                <form class="aui" action="toggleIpdMonitoringEnabled.action" method="post">
+                    #form_xsrfToken()
+                    <div
+                            id="jmx-ipd-warning-container"
+                            aria-live="polite"
+                        #if ($action.isJmxEnabled() || !$action.isIpdMonitoringEnabled())
+                            hidden
+                        #end>
+                        <div class="aui-message aui-message-warning">
+                            <p>$action.getText('monitoring.ipd.monitoring.warning')</p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="toggle-container">
+                        <aui-toggle id="ipdMonitoringToggle"
+                                    name="isChecked"
+                                    class="aui-toggle-small"
+                                    label="$action.getText('monitoring.ipd.monitoring.toggle.label')"
+                            #if ($action.isIpdMonitoringEnabled()) checked #end>
+                        </aui-toggle>
+                        <aui-label for="ipdMonitoringToggle">
+                            $action.getText('monitoring.ipd.monitoring.toggle.label')
+                        </aui-label>
+                    </div>
+                </form>
+            </div>
+
+            #foreach ($webPanel in $webInterfaceManager.getDisplayableWebPanels("atl.admin.monitoring", $action.context))
+                <div class="cell">
+                    $!webPanel.getHtml($action.context)
+                </div>
+            #end
+            #parse("/breadcrumbs.vm")
+        </div>
+        <section
+                id="disable-jmx-dialog"
+                class="aui-dialog2 aui-dialog2-medium"
+                role="dialog"
+                tabindex="-1"
+                aria-labelledby="jmx-disable-dialog-heading"
+                hidden
+        >
+            <header class="aui-dialog2-header">
+                <h1 class="aui-dialog2-header-main" id="jmx-disable-dialog-heading">$action.getText('monitoring.jmx.disable.dialog.header')</h1>
+                <button class="aui-close-button" type="button" aria-label="close"></button>
+            </header>
+            <div class="aui-dialog2-content jmx-disable-dialog-content">
+                $action.getText('monitoring.jmx.disable.dialog.text')
+                <div id="jmx-disable-dialog-content-app-list"> </div>
+                <ul>
+                    <div id="disable-jmx-warning-app"><li>$action.getText('monitoring.app.monitoring.title')</li></div>
+                    <div id="disable-jmx-warning-ipd"><li>$action.getText('monitoring.ipd.monitoring.title')</li></div>
+                </ul>
+            </div>
+            <footer class="aui-dialog2-footer">
+                <div class="aui-dialog2-footer-actions">
+                    <button id="jmx-disable-dialog-disable-button" class="aui-button aui-button-primary">$action.getText('disable.name')</button>
+                    <button id="jmx-disable-dialog-cancel-button" class="aui-button aui-button-link">$action.getText('cancel.name')</button>
+                </div>
+            </footer>
+        </section>
+        <section
+        id="enable-jmx-dialog-for-ipd"
+        class="aui-dialog2 aui-dialog2-medium"
+        role="dialog"
+        tabindex="-1"
+        aria-labelledby="jmx-disable-dialog-heading"
+        hidden
+        >
+        <header class="aui-dialog2-header">
+            <h1 class="aui-dialog2-header-main" id="jmx-enable-dialog-for-ipd-heading">$action.getText('monitoring.jmx.enable.dialog.header')</h1>
+            <button class="aui-close-button" type="button" aria-label="close"></button>
+        </header>
+        <div class="aui-dialog2-content jmx-disable-dialog-content">
+            $action.getText('monitoring.ipd.jmx.enable.dialog.text')
+        </div>
+        <footer class="aui-dialog2-footer">
+            <div class="aui-dialog2-footer-actions">
+                <button id="jmx-enable-dialog-enable-button-for-ipd" class="aui-button aui-button-primary">$action.getText('enable.name')</button>
+                <button id="jmx-enable-dialog-cancel-button-for-ipd" class="aui-button aui-button-link">$action.getText('cancel.name')</button>
+            </div>
+        </footer>
+        </section>
+        <section
+                id="enable-jmx-dialog-for-app"
+                class="aui-dialog2 aui-dialog2-medium"
+                role="dialog"
+                tabindex="-1"
+                aria-labelledby="jmx-disable-dialog-heading"
+                hidden
+        >
+            <header class="aui-dialog2-header">
+                <h1 class="aui-dialog2-header-main" id="jmx-enable-dialog-for-app-heading">$action.getText('monitoring.jmx.enable.dialog.header')</h1>
+                <button class="aui-close-button" type="button" aria-label="close"></button>
+            </header>
+            <div class="aui-dialog2-content jmx-disable-dialog-content">
+                $action.getText('monitoring.app.jmx.enable.dialog.text')
+            </div>
+            <footer class="aui-dialog2-footer">
+                <div class="aui-dialog2-footer-actions">
+                    <button id="jmx-enable-dialog-enable-button-for-app" class="aui-button aui-button-primary">$action.getText('enable.name')</button>
+                    <button id="jmx-enable-dialog-cancel-button-for-app" class="aui-button aui-button-link">$action.getText('cancel.name')</button>
+                </div>
+            </footer>
+        </section>
+        <script>
+            function initMonitoringToggleAction (monitoringToggle, jmxToggle, monitoringType) {
+                const dialogEnableButton = document.getElementById('jmx-enable-dialog-enable-button-for-' + monitoringType);
+                const dialogCancelButton = document.getElementById('jmx-enable-dialog-cancel-button-for-' + monitoringType);
+                const monitoringDialog = AJS.dialog2("#enable-jmx-dialog-for-" + monitoringType);
+
+                monitoringToggle.on("change", function() {
+                    if (monitoringToggle[0].checked && !jmxToggle[0].checked) {
+                        monitoringToggle[0].busy = !monitoringToggle[0].busy;
+                        monitoringDialog.show();
+                    } else {
+                        $(this).parents("form").submit();
+                    }
+                });
+
+                monitoringDialog.on("hide", function() {
+                   if (monitoringToggle[0].busy === true) {
+                       monitoringToggle[0].busy = false;
+                       monitoringToggle[0].checked = !monitoringToggle[0].checked;
+                   }
+                });
+
+                dialogEnableButton.addEventListener("click", function() {
+                    monitoringToggle.parents("form").submit();
+                    monitoringToggle[0].checked = !monitoringToggle[0].checked;
+                    monitoringDialog.hide();
+                });
+
+                dialogCancelButton.addEventListener("click", function() {
+                    monitoringToggle[0].busy = !monitoringToggle[0].busy;
+                    monitoringToggle[0].checked = !monitoringToggle[0].checked;
+                    monitoringDialog.hide();
+                });
+            }
+
+            function initJmxToggleDialog(jmxToggle, ipdToggle, appToggle) {
+                const jmxDialog = AJS.dialog2("#disable-jmx-dialog");
+
+                jmxToggle.on("change", function() {
+                    if (!jmxToggle[0].checked && (ipdToggle[0].checked || appToggle[0].checked)) {
+                        jmxToggle[0].busy = !jmxToggle[0].busy;
+                        jmxDialog.show();
+                    } else {
+                        $(this).parents("form").submit();
+                    }
+                });
+
+                jmxDialog.on("hide", function () {
+                    if (jmxToggle[0].busy === true) {
+                        jmxToggle[0].busy = false;
+                        jmxToggle[0].checked = !jmxToggle[0].checked;
+                    }
+                });
+
+                jmxDialog.on("show", function () {
+                    const ipdWarning = document.getElementById("disable-jmx-warning-ipd");
+                    const appWarning = document.getElementById("disable-jmx-warning-app");
+
+                    appWarning.hidden = !appToggle[0].checked;
+                    ipdWarning.hidden = !ipdToggle[0].checked;
+                });
+
+                const dialogDisableButton = document.getElementById('jmx-disable-dialog-disable-button');
+                const dialogCancelButton = document.getElementById('jmx-disable-dialog-cancel-button');
+
+                dialogDisableButton.addEventListener("click", function() {
+                    jmxToggle.parents("form").submit();
+                    jmxToggle[0].checked = !jmxToggle[0].checked;
+                    jmxDialog.hide();
+                });
+
+                dialogCancelButton.addEventListener("click", function() {
+                    jmxToggle[0].busy = !jmxToggle[0].busy;
+                    jmxToggle[0].checked = !jmxToggle[0].checked;
+                    jmxDialog.hide();
+                })
+            }
+
+            function init() {
+                const appToggle = $("aui-toggle#appMonitoringToggle");
+                const ipdToggle = $("aui-toggle#ipdMonitoringToggle");
+                const jmxToggle = $("aui-toggle#jmxMonitoringToggle");
+
+                initJmxToggleDialog(jmxToggle, ipdToggle, appToggle);
+                initMonitoringToggleAction(ipdToggle, jmxToggle, "ipd");
+                initMonitoringToggleAction(appToggle, jmxToggle, "app");
+            }
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                init();
+            } else {
+                // eslint-disable-next-line @atlassian/onready-checks/no-domcontentloaded-handlers
+                document.addEventListener('DOMContentLoaded', init);
+            }
+
+            $("#monitoring-page .aui-tooltip").tooltip();
+        </script>
+    </body>
+</html>

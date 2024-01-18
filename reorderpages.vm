@@ -1,0 +1,38 @@
+#set ($origin = "reorder")
+#if (!$permissionHelper.canCreatePage($action.authenticatedUser, $space))
+    #set ($origin = "browse")
+#end
+
+<html>
+    <head>
+		<title>$action.getText("title.${origin}.pages")</title>
+
+        #requireResource("confluence.web.resources:ajs")
+        #requireResource("confluence.web.resources:page-ordering-tree")
+        #requireResource("confluence.web.resources:pages-dirview")
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+
+        #applyDecorator ("root")
+            #decoratorParam ("context" "spacecontentpanel")
+            #decoratorParam ("title" $action.getText("title.${origin}.pages"))
+            #decoratorParam ("selection" $origin)
+            #decoratorParam ("selectedTab" "content")
+            #decoratorParam ("selectedSpaceToolsWebItem" $origin)
+            #decoratorParam("helper" $action.helper)
+
+            <body>
+            <div class="pagecontent">
+                #parse ("/pages/templates/common-listpages-dirview.vm")
+            </div>
+            </body>
+         #end
+
+    #end
+
+</html>

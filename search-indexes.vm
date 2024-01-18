@@ -1,0 +1,10 @@
+<p>
+     </br>
+ $action.getText('index.summary.page.description')
+</br>
+</br>
+$action.getText('queue.tab.description')
+</p>
+<br/>
+<br/>
+#doc("help.content.index.administration" "$action.getText('more.about.content.index')")

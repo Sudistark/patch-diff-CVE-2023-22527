@@ -1,0 +1,192 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.admin.actions.ViewSystemInfoAction" *#
+#requireResource('confluence.web.components:info-dense-form')
+<form class="aui long-label info-dense">
+    <fieldset id="summary-info">
+        <h3>$action.getText('confluence.info')</h3>
+        #set ($propsMap = $action.summaryInfo)
+        #foreach ($key in $propsMap.keySet())
+            <div class="field-group">
+                <label for="$key">$action.getText($key)</label>
+                <span id="$key" class="field-value">$!propsMap.get($key)</span>
+            </div>
+        #end
+        <div class="field-group">
+            <label for="daily.backup">$action.getText('daily.backup')</label>
+            <span id="daily.backup" class="field-value">#if ($action.dailyBackupEnabled) $action.getText('enabled') #else $action.getText('disabled') #end</span>
+        </div>
+        <div class="field-group">
+            <label for="clustered">$action.getText('raise.support.request.clustered.field')</label>
+            <span id="clustered" class="field-value">$action.clustered</span>
+        </div>
+    </fieldset>
+    <p>
+    <fieldset id="environment-variables">
+        <h3>$action.getText('systeminfo.environment.variables')</h3>
+        #set ($propsMap = $action.environmentVariables)
+        #foreach ($key in $propsMap.keySet())
+            <div class="field-group">
+                <label for="$key">$action.getText($key)</label>
+                <span id="$key" class="field-value">$!propsMap.get($key)</span>
+            </div>
+        #end
+    </fieldset>
+    <p>
+    <fieldset id="runtime-environment">
+        <h3>$action.getText('java.environment')</h3>
+        #set ($propsMap = $action.runtimeEnvironment)
+        #foreach ($key in $propsMap.keySet())
+            <div class="field-group">
+                <label for="$key">$action.getText($key)</label>
+                <span id="$key" class="field-value">$!propsMap.get($key)</span>
+            </div>
+        #end
+    </fieldset>
+    <p>
+    <fieldset id="memory-statistics">
+        <h3>$action.getText('jvm.info')</h3>
+        #set ($memoryStats = $action.getMemoryStatistics())
+        <div class="field-group">
+            <label for="memory.graph.heap">$action.getText('memory.graph.heap')</label>
+            #scomponent("theme='custom'" "template='memoryusagebar.vm'"
+                        "used=$memoryStats.usedHeap.megabytes()"
+                        "allocated=$memoryStats.allocatedHeap.megabytes()"
+                        "total=$memoryStats.maxHeap.megabytes()"
+                        "cssClass=field-value"
+                        "id=memory.graph.heap")
+            #end
+        </div>
+        <div class="field-group">
+            <label for="memory.xmx">$action.getText('memory.xmx.label')</label>
+            <span id="memory.xmx" class="field-value">$memoryStats.xmx.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.xms">$action.getText('memory.xms.label')</label>
+            <span id="memory.xms" class="field-value">$memoryStats.xms.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.maxheap">$action.getText('memory.maxheap.label')</label>
+            <span id="memory.maxheap" class="field-value">$memoryStats.maxHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.allocated">$action.getText('memory.allocated.label')</label>
+            <span id="memory.allocated" class="field-value">$memoryStats.allocatedHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.used">$action.getText('memory.used.label')</label>
+            <span id="memory.used" class="field-value">$memoryStats.usedHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.free">$action.getText('memory.free.label')</label>
+            <span id="memory.free" class="field-value">$memoryStats.freeAllocatedHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.available">$action.getText('memory.available.label')</label>
+            <span id="memory.available" class="field-value">$memoryStats.availableHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.maxnonheap">$action.getText('memory.maxnonheap.label')</label>
+            <span id="memory.maxnonheap" class="field-value">$memoryStats.maxNonHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.usednonheap">$action.getText('memory.usednonheap.label')</label>
+            <span id="memory.usednonheap" class="field-value">$memoryStats.usedNonHeap.megabytes() MB</span>
+        </div>
+        <div class="field-group">
+            <label for="memory.availablenonheap">$action.getText('memory.availablenonheap.label')</label>
+            <span id="memory.availablenonheap" class="field-value">$memoryStats.availableNonHeap.megabytes() MB</span>
+        </div>
+    </fieldset>
+    <p>
+    <fieldset id="database.info">
+        <h3>$action.getText('database.info')</h3>
+        #set ($propsMap = $action.databaseInfo)
+        #foreach ($key in $propsMap.keySet())
+            <div class="field-group">
+                <label for="$key">$action.getText($key)</label>
+                <span id="$key" class="field-value">$!propsMap.get($key)</span>
+            </div>
+        #end
+    </fieldset>
+    <p>
+    <fieldset id="usage.info">
+        <h3>$action.getText('usage.info')</h3>
+        #set ($propsMap = $action.usageInfo)
+        #foreach ($key in $propsMap.keySet())
+            <div class="field-group">
+                <label for="$key">$action.getText($key)</label>
+                <span id="$key" class="field-value">$!propsMap.get($key)</span>
+            </div>
+        #end
+    </fieldset>
+    <p>
+    <fieldset id="modz">
+        <h3>$action.getText("modz.title")</h3>
+        #set ($modz = $action.modifications)
+        <div class="field-group">
+            <label for="modz.modified">$action.getText('modz.modified')</label>
+            <span id="modz.modified" class="field-value">#if (!$modz.get('modified')) $action.getText("none.word") #else $modz.get('modified') #end</span>
+        </div>
+        <div class="field-group">
+            <label for="modz.removed">$action.getText('modz.removed')</label>
+            <span id="modz.removed" class="field-value">#if (!$modz.get('removed')) $action.getText("none.word") #else $modz.get('removed') #end</span>
+        </div>
+    </fieldset>
+    <p>
+    <fieldset id="systemprops">
+        <h3>$action.getText('raise.support.request.systemprops.field')</h3>
+        #set ($sysProps = $action.systemPropertiesHtml)
+        #foreach ($key in $sysProps.keySet())
+            <div class="field-group">
+                <label for="$key">$key</label>
+                <span id="$key" class="field-value">$!sysProps.get($key)</span>
+            </div>
+        #end
+    </fieldset>
+    <p>
+    <fieldset id="plugins">
+        <h3>$action.getText('raise.support.request.plugins.field')</h3>
+        <table class="aui aui-table-list">
+            <thead>
+                <tr>
+                    <th id="plugin.name">$action.getText('raise.support.request.plugin.name')</th>
+                    <th id="plugin.version">$action.getText('raise.support.request.plugin.version')</th>
+                    <th id="plugin.vendor">$action.getText('raise.support.request.plugin.vendor')</th>
+                    <th id="plugin.state">$action.getText('raise.support.request.plugin.state')</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach ($plugin in $action.plugins)
+                    #set ($pluginInfo = $plugin.pluginInformation)
+                    <tr>
+                        <td headers="plugin.name">$plugin.name</td>
+                        <td headers="plugin.version">$pluginInfo.version</td>
+                        <td headers="plugin.vendor">$pluginInfo.vendorName</td>
+                        <td headers="plugin.state">$action.getPluginEnabledAsI18nLabel($plugin.key)</td>
+                    </tr>
+                #end
+            </tbody>
+        </table>
+    </fieldset>
+    <p>
+    <fieldset id="installed-languages">
+        <h3>$action.getText("raise.support.request.languages.field")</h3>
+        <table class="aui aui-table-list">
+            <thead>
+                <tr>
+                    <th id="language">$action.getText('raise.support.request.language.label')</th>
+                    <th id="country">$action.getText('raise.support.request.country.label')</th>
+                    <th id="locale">$action.getText('raise.support.request.locale.label')</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach ($language in $action.installedLanguages)
+                    <tr>
+                        <td headers="language">$language.displayLanguage</td>
+                        <td headers="country">$language.locale.getDisplayCountry($language.locale)</td>
+                        <td headers="locale">$language.name</td>
+                    </tr>
+                #end
+            </tbody>
+        </table>
+    </fieldset>
+</form>

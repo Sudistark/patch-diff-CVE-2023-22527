@@ -1,0 +1,30 @@
+<html>
+    <head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "view-space-administration")
+        #decoratorParam("help-path" "/admin/lookandfeel/help/stylesheet.vm")
+
+       <body>
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "stylesheet")
+                #decoratorParam ("title" $action.getText("action.name"))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "stylesheet")
+                #decoratorParam("helper" $action.helper)
+
+                <p>$action.getText("stylesheet.space.description")</p>
+            <div class="edit-stylesheet">
+            #parse ("/includes/common-editstylesheet.vm")
+            </div>
+
+            #end
+	    </body>
+
+    #end
+</html>

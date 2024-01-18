@@ -1,0 +1,64 @@
+#if ($action.viewAll)
+    #pagination($action.paginationSupport "browseusers.action?viewAll=true&$filter&")
+#elseif ($filter)
+    #pagination($action.paginationSupport "browseusers.action?$filter&")
+#else
+    #pagination($action.paginationSupport "browseusers.action?")
+#end
+
+<table cellspacing="0" class="grid" width="100%">
+<tr>
+    <th width="25%">$action.getText("user.name")</th>
+    <th width="40%">$action.getText("fullname.name")</th>
+<!--                <th>$action.getText("groups.name")</th>-->
+    <th>$action.getText("repository")</th>
+</tr>
+
+    #if( $users.isEmpty())
+<td colspan="4">
+            $action.getText("there.are.no.users")
+</td>
+    #else
+        #set( $currentUsers =$action.paginationSupport.page  )
+
+        #foreach( $user in $currentUsers.iterator())
+
+           #if ("$!user" == "")
+           #else
+            <tr # if ($ velocityCount%2== 0) bgcolor="#f0f0f0"# end>
+
+                            #if ($action.viewAll && $userAccessor.isDeactivated($user))
+                <td valign="top">*
+                    <strike>
+                        <a href="viewuser.action?username=$!generalUtil.doubleUrlEncode($!user.name)">$!user.name</a>
+                    </strike>
+                </td>
+                            #else
+                <td valign="top">
+                    <a href="viewuser.action?username=$!generalUtil.doubleUrlEncode($user.name)">$!user.name</a>
+                </td>
+                            #end
+
+                <td valign="top">
+                            $htmlUtil.htmlEncode($!user.fullName)
+                    <br/>
+                    <span class="smalltext">$!htmlUtil.htmlEncode($!user.email)</a>
+                </td>
+                <td>
+                            $userAccessor.getRepository($user).getName()
+                </td>
+            </tr>
+
+             #set ($user = "")
+            #end
+        #end
+    #end
+</table>
+
+#if ($action.viewAll)
+#pagination($action.paginationSupport "browseusers.action?viewAll=true&$filter&")
+#elseif ($filter)
+#pagination($action.paginationSupport "browseusers.action?$filter&")
+#else
+#pagination($action.paginationSupport "browseusers.action?")
+#end

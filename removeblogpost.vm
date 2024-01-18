@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>$action.getText("title.remove.blog")#if($page.title) - $page.title#end</title>
+		<meta name="help-path" content="/pages/help/removepage.vm"/>
+        <content tag="selectedTab">removeblog</content>
+	</head>
+
+    <content tag="title-text-span">$action.getActionName($action.getClass().getName())</content>
+
+	<body>
+		#parse ( "/template/includes/actionerrors.vm" )
+
+
+		#applyDecorator ("confirm")
+            #decoratorParam ("formName" "removepageform")
+            #decoratorParam ("formAction" "doremoveblogpost.action?pageId=$page.id")
+
+            <div style="color: #666666" align="left">
+            <ul type="square">
+                <li>$action.getText("blog.incoming.links", [$incomingLinks.size()])
+
+            </ul>
+            </div>
+
+            <p>$action.getText("alert.remove.blog")</p>
+        #end
+
+		#parse ( "/pages/page-breadcrumbs.vm" )
+	</body>
+</html>

@@ -1,0 +1,29 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.admin.actions.ConfigureMobileAppsAction" *#
+<html>
+<head>
+    <title>$action.getText("mobile.apps.title")</title>
+    <content tag="selectedWebItem">configuremobileapps</content>
+    <content tag="subtitleDescription">$action.getText("mobile.apps.desc", [$docBean.getLink("help.mobile.document")])</content>
+</head>
+<body>
+   #set($upmLink = "$req.contextPath/plugins/servlet/upm")
+   #set($helpLink = "https://confluence.atlassian.com/x/L_hbO")
+
+   <h3>$action.getText("mobile.apps.using.app.title")</h3>
+   #if($action.isMobilePluginEnabled())
+      <p>
+          <strong>$action.getText("mobile.apps.plugin.name")</strong>
+          <span class="mobile-plugin-status aui-lozenge aui-lozenge-success">$action.getText("mobile.apps.plugin.enabled.text")</span>
+      </p>
+      <p class="mobile-plugin-desc">$action.getText("mobile.apps.plugin.enabled.desc", [$upmLink, $helpLink])</p>
+      #webPanelForLocation("atl.mobile.configuration" $context)
+   #else
+      <p>
+          <strong>$action.getText("mobile.apps.plugin.name")</strong>
+          <span class="mobile-plugin-status aui-lozenge aui-lozenge-error">$action.getText("mobile.apps.plugin.disabled.text")</span>
+      </p>
+      <p class="mobile-plugin-desc">$action.getText("mobile.apps.plugin.disabled.desc", [$upmLink, $helpLink])</p>
+   #end
+   #parse("/breadcrumbs.vm")
+</body>
+</html>

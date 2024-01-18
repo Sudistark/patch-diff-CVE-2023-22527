@@ -1,0 +1,17 @@
+#parse ( "/breadcrumbs.vm" )
+
+#if ($helper.spaceKey)
+    <content tag="spacename">$htmlUtil.htmlEncode($helper.spaceName)</content>
+    <content tag="spacekey">#unencoded($helper.spaceKey)</content>
+#end
+
+#if ($helper.page.id)
+    <content tag="pageId">$helper.page.id</content>
+    <content tag="pageTitle"><a href="$req.contextPath$helper.page.urlPath">$helper.page.title</a></content>
+    <content tag="numberOfAttachments">$helper.numberOfAttachments</content>
+#end
+
+#if (($page.type == "blogpost") && $postingDay)
+    <content tag="postingDay">$postingDay</content>
+#end
+

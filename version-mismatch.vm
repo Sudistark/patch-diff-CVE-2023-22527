@@ -1,0 +1,35 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.AbstractEditPageAction" *#
+## link to content and show version, even for current version
+#macro (versionedContentLink $content)
+    #contentHref($content) <span class="smalltext">v. $content.version</span>
+#end
+
+#if ($versionMismatch)
+
+    <div class="row">
+        #if ($action.diff)
+            <div id="conflict-diffs">
+                <div id="conflict-wrapper">
+                    <div class="aui-message aui-message-warning">
+                        <p class="title">$i18n.getText("editing.an.outdated.page.version.title")</p>
+                        <p>$i18n.getText("editing.an.outdated.page.version", "#userLink($action.lastConflictingUser)")</p>
+                        <p>
+                            <span class="diff-html-added">$action.getText("content.will.be.added")</span>
+                            <span class="diff-html-removed">$action.getText("content.will.be.removed")</span>
+                            <span class="diff-html-changed">$action.getText("content.formatting.will.be.changed")</span>
+                        </p>
+                    </div>
+
+                    ## page-diffs renders $diffHtml. We want to use $action.diff here to force getDiff() (which has the html safe annotation) and get actual markup (rather than escaped markup) to be inserted here
+                    #set ($diffHtml = $action.diff)
+                    #parse ("/template/includes/page-diffs.vm")
+                </div>
+            </div>
+        #else
+            <ol>
+                <li>$i18n.getText('conflict.error.original.version.link', "#versionedContentLink($action.getOriginalPage())")</li>
+                <li>$i18n.getText('conflict.error.current.version.link', "#versionedContentLink($action.getPage())")</li>
+            </ol>
+        #end
+    </div>
+#end

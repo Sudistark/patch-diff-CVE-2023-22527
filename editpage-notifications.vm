@@ -1,0 +1,46 @@
+#*
+    DO NOT USE (since 5.7) - please use the templates in notifications.soy instead.
+*#
+#if ($showDraftMessage)
+
+  ## We don't like display:none either
+  ## We should eventually remove this from the velocity template.
+  ## Rendering draft related markup should be the responsability of the tinymce pluging confluence-drafts
+  ## so this will probably become a soy template in the future.
+<div id="draft-messages" style="display:none" class="aui-message aui-message-info info closeable">
+    #if ($existingDraft.newPage)
+        #set ($draftDate=$dateFormatter.formatDateTime($existingDraft.lastModificationDate))
+        #if ($existingDraft.title && $existingDraft.title.length() > 0)
+            $action.getText("draft.warning.create.page", [$draftDate, $htmlUtil.htmlEncode(${existingDraft.title})])
+        #else
+            $action.getText("draft.warning.create.page.without.title", [$draftDate])
+        #end
+
+        $action.getText("draft.warning.resume.or.discard.new", ["<a href='#' class='use-draft'> ", "</a>", "<a href='#' class='discard-draft'> ", "</a>"])
+    #else
+        $action.getText("draft.warning.edit.page", ["$dateFormatter.formatDateTime($draft.lastModificationDate)"])
+        #if ($mergeRequired)
+            $action.getText("draft.warning.merge.required")
+        #end
+        #if ($conflictFound)
+            $action.getText("draft.warning.conflict.found", ["<a href='?pageId=${pageId}&viewConflict=true&spaceKey=${action.spaceKey}' >", "</a>",
+            "<a href='#' class='discard-draft'>", "</a>", "<a href='$req.contextPath/users/viewmydrafts.action'>", "</a>"])
+        #else
+            #if ($mergeRequired)
+                $action.getText("draft.warning.merge.or.discard",  ["<a id='view-diff-link-notification' href='#' class='view-diff-link'>", "</a>",
+                "<a href='#' class='use-draft'> ", "</a>", "<a href='#' class='discard-draft'>", "</a>"])
+            #else
+                $action.getText("draft.warning.resume.or.discard", ["<a id='view-diff-link-notification' href='#' class='view-diff-link'>", "</a>",
+                "<a href='#' class='use-draft'> ", "</a>", "<a href='#' class='discard-draft'> ", "</a>"])
+            #end
+        #end
+    #end
+</div>
+#end
+
+<div id='heartbeat-div' class="hidden">
+    <div class="aui-message aui-message-info info closeable">
+        $action.getText("heartbeat.page.edited.info", ["<span id='other-users-span'></span>"])
+    </div>
+</div>
+

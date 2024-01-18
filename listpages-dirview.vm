@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>$action.getText("title.list.pages.tree.view")</title>
+
+        #requireResource("confluence.web.resources:ajs")
+        #requireResource("confluence.web.resources:page-ordering-tree")
+        #requireResource("confluence.web.resources:pages-dirview")
+    </head>
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-pages")
+        #decoratorParam("mode" "list-content-tree")
+        #decoratorParam("collector-key" "spacebar-pages")
+        <body>
+            <div class="pagecontent">
+                #parse ("/pages/templates/common-listpages-dirview.vm")
+            </div>
+        </body>
+    #end
+</html>
+

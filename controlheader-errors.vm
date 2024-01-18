@@ -1,0 +1,16 @@
+#if ($fieldErrors)
+  #if ($fieldErrors.get($parameters.name))
+      #foreach ($error in $fieldErrors.get($parameters.name))
+      <tr>
+        <td colspan="2" class="error"><span class="errorMessage">
+        #set( $message = $i18n.getText(${error}) )
+        #if( $message && $message != "" )
+          $message
+        #else
+          $error
+        #end
+        </span></td>
+      </tr>
+      #end
+  #end
+#end

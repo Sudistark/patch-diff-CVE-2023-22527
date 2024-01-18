@@ -1,0 +1,168 @@
+#* @vtlvariable name="licenseService" type="com.atlassian.confluence.license.LicenseService" *#
+## macros-deprecated.vm: The place where macros can go to die.
+
+## Deprecated since 4.0
+#macro (renderIfEdit $markup)
+#trim()
+    #if ($editMode == true)
+        $!htmlUtil.htmlEncode($markup)
+    #else
+        $!statusTextRenderer.render($markup)
+    #end
+#end
+#end
+
+## Deprecated since 3.5 - no longer used in Confluence.
+#macro(helpicon)
+    <a href="$action.getText('url.confluence.atlassian')$action.getText('urlsuffix.doc.space')" title="$action.getText('get.help.from.confluence.website')" class="help icon">$action.getText('get.help.from.confluence.website')</a>
+#end
+
+#macro(pagetitle $class)
+    #if ($bootstrap.isSetupComplete() && $sitemeshPage.getProperty("page.spacename"))
+        <div class="$class">#if ($sitemeshPage.getProperty("page.spacekey"))<a href="$req.contextPath/display/$sitemeshPage.getProperty("page.spacekey")">#end<img src="#logo($sitemeshPage.getProperty("page.spacekey"))" style="vertical-align: middle;">#if ($sitemeshPage.getProperty("page.spacekey"))</a>#end $sitemeshPage.getProperty("page.spacename")</div>
+    #else
+        <div class="$class"><a href="$req.contextPath/"><img src="$staticResourceUrlPrefix/images/logo/confluence_header.png" border="0"></a></div>
+    #end
+#end
+
+
+#*
+    Old Label macros
+    ----------------
+*#
+
+#macro (labelsWithNone $labels $showNone)
+    #if ($labels && !$labels.isEmpty()) #foreach($label in $labels)#if($velocityCount > 1), #end #labelLink($label)#end
+    #elseif ($showNone) (None) #end
+#end
+
+#*
+    Renders a comma separated list of labels limited by a max amount.
+    If there are more than max labels it shows: ... x $message.
+*#
+#macro (labelsMax $labels $max $message)
+    #if ($labels.size() > 0)
+    #set($remaining = $labels.size() - $max)
+        #foreach($label in $labels)#if($velocityCount <= $max)#if($velocityCount > 1), #end #labelLink($label)#end#end
+        #if($remaining > 0)
+        ... $remaining $message
+        #end
+    #end
+#end
+
+#macro (labels $labels)
+    #labelsWithNone ($labels true)
+#end
+
+#macro (labelLink $label)<a class="label" rel="nofollow" href="#labelLinkUrl($label)">$htmlUtil.htmlEncode($label.realTitle)</a>#end
+
+## Displays the label link without the namespace
+#macro (labelLinkBasic $label)<a rel="nofollow" href="#labelLinkUrl($label)">$label.name</a>#end
+
+#macro (labelString $labelable)#if ($labelable.labels.size() > 0) #foreach($label in $labelable.labels)#if($velocityCount > 1), #end$label.name#end#end#end
+
+#*
+    Old footer macros
+    -----------------
+*#
+
+## deprecated - used only in old footer.vmd
+#macro(bottomshadow)
+        #if ($generalUtil.isSetupComplete())
+            #set ($license = $licenseService.retrieve() )
+            #if (!$license)
+                <p class="license license-none">
+                    $action.getText('licensing.error', [$action.getText('mailto.confluence.support')])
+                </p>
+            #elseif($license.isEvaluation())
+                <p class="license license-eval">
+                    <strong>#if ($generalUtil.isLicenseExpired()) LICENSE EXPIRED #else EVALUATION LICENSE #end</strong> &#8212; $action.getText('consider.purchasing',[$action.getText('url.atlassian'),$action.getText('hitcounter.consider.purchasing')])
+                </p>
+            #elseif ($license.licenseType.name() == "NON_PROFIT")
+                <p class="license license-nonprofit">
+                $action.getText('licensefooter.nonprofit',[$action.getText('url.atlassian'),$action.getText('hitcounter.nonprofit'), $htmlUtil.htmlEncode($license.organisation.name)])
+                </p>
+            #elseif ($license.licenseType.name() == "PERSONAL")
+                <p class="license license-personal">
+                  $action.getText('licensefooter.personal',[$action.getText('url.atlassian'),$action.getText('hitcounter.personal')])<br>
+                </p>
+            #elseif ($license.licenseType.name() == "COMMUNITY")
+                <p class="license license-community">
+                  $action.getText('licensefooter.community',[$action.getText('url.atlassian'), $action.getText('hitcounter.community'), $htmlUtil.htmlEncode($license.organisation.name)])<br>
+                </p>
+            #elseif ($license.licenseType.name() == "OPEN_SOURCE")
+                <p class="license license-opensource">
+                  $action.getText('licensefooter.opensource',[$action.getText('url.atlassian'), $action.getText('hitcounter.opensource'), $htmlUtil.htmlEncode($license.organisation.name)])<br>
+                </p>
+            #elseif ($license.licenseType.name() == "DEVELOPER")
+                <p class="license license-developer">
+                  $action.getText('licensefooter.developer')<br>
+                </p>
+            #elseif ($license.licenseType.name() == "DEMONSTRATION")
+                <p class="license license-demonstration">
+                  $action.getText('licensefooter.demonstration', [$action.getText('url.atlassian'), $action.getText('hitcounter.demonstration')])<br>
+                </p>
+            #end
+        #end
+#end
+
+## deprecated - used only in old footer.vmd
+#macro(poweredby)
+    <ul id="poweredby">
+        <li>$action.getText('powered.by.atlassian.confluence.footer',
+            [$action.getText('url.atlassian.software.confluence.footer'),
+            "$generalUtil.versionNumber"])</li>
+        <li><a href="$action.getText('url.bug.feature.request')" class="smalltext" rel="nofollow">$action.getText('bug.feature.request')</a> &#8211;</li>
+        <li><a href="$action.getText('url.footer.atlassian.news')" class="smalltext" rel="nofollow">$action.getText('footer.atlassian.news')</a> &#8211;</li>
+        <li><a href="$req.contextPath/administrators.action" rel="nofollow">$action.getText('contact.administrators')</a></li>
+    </ul>
+#end
+
+## deprecated since 5.2
+#macro (nameList $names)
+    #set($user = "")
+    #foreach ($user in $names)
+        #if ($velocityCount == $names.size())
+            #usernameLink ($user)
+        #else
+            #usernameLink($user),
+        #end
+        #set($user = "")
+    #end
+#end
+
+#*
+Link to a user, given their username. If the username doesn't exist, "Anonymous" is printed
+deprecated since 5.2
+*#
+#macro (usernameLink $username)
+    #trim()
+    #if ("$!username" != "")
+        #if ($action.getUserFullName($username))
+        <a href="#userLinkUrl($!req.contextPath, $username)"
+            #if($permissionHelper.canView($action.authenticatedUser, $action.getUserByName($username)))
+           class="url fn confluence-userlink" data-username="$htmlUtil.htmlEncode($username)"
+            #else
+           class="url fn"
+            #end
+                >$htmlUtil.htmlEncode($action.getUserFullName($username))</a>
+        #else
+        <a href="#userLinkUrl($!req.contextPath, $username)">$username</a>
+        #end
+    #else
+        $action.getText('anonymous.name')
+    #end
+#end
+#end
+
+#macro (usernameLinkWithCustomBaseUrl $username $baseurl)
+    #if ("$!username" != "")
+        #if ($action.getUserFullName($username))
+        <a href="#userLinkUrl($baseurl, $username)">$htmlUtil.htmlEncode($action.getUserFullName($username))</a>
+        #else
+        <a href="#userLinkUrl($baseurl, $username)">$username</a>
+        #end
+    #else
+        $action.getText('anonymous.name')
+    #end
+#end

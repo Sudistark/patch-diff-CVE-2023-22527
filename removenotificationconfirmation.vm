@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>$htmlUtil.htmlEncode($pageTitle)</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("context" "profile")
+        #decoratorParam("helper" $helper)
+
+        <body>
+            #set ($actionUndoLink = $action.undoLink)
+            #applyDecorator("success")
+            #decoratorParam("id" "watch-warning")
+                #set($contentLink = "#contentLink2($actionUndoLink.content false false)")
+                <span>$i18n.getText('stop.watching.confirmation', $contentLink)</span>
+                <a href="${req.contextPath}$actionUndoLink.url&#url_xsrfToken()">($i18n.getText('undo.word'))</a>
+            #end
+
+            <div class="page-instructions">$i18n.getText("notifications.preferences.desc")</div>
+        </body>
+    #end
+</html>
+
+

@@ -1,0 +1,26 @@
+#httpStatsElapse('viewPageTemplateStart')
+<html>
+    <head>
+        <title>$!page.title</title>
+        <meta name="ajs-site-title" content="#siteTitle()" />
+        #if ($action.editingUser)
+            <meta name="ajs-editing-user" content="$action.editingUser" />
+        #end
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("mode" "view")
+        #decoratorParam("context" "page")
+
+    #httpStatsElapse('viewPageTemplateBodyStart')
+    <body>
+        $action.pageXHtmlContent
+
+        #webPanelForLocation('atl.confluence.grant.access' $action.context)
+    </body>
+        #httpStatsElapse('viewPageTemplateBodyFinished')
+    #end
+
+</html>
+#httpStatsElapse('viewPageTemplateFinished')

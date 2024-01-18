@@ -1,0 +1,10 @@
+<div class="page-metadata">
+    <ul>
+        #foreach ($item in $webInterfaceManager.getDisplayableItems("system.content.metadata", $action.webInterfaceContext))
+            <li class="page-metadata-item noprint">#renderItemLink($item false $action.webInterfaceContext)</li>
+        #end
+        <li class="page-metadata-modification-info">
+            #pageByline($page $action.dateFormatter false)
+        </li>
+    </ul>
+</div>

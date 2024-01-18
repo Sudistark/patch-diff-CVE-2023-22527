@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<title>$action.getActionName($action.getClass().getName())</title>
+		<meta name="help-path" content="/admin/trust/help/trustedapp-help.vm"/>
+	</head>
+	<body>
+        <content tag="selectedWebItem">trustedapplications</content>
+        #parse ( "/template/includes/actionerrors.vm" )
+        <div class="steptitle">$action.getText("trusted.applications.title")</div>
+        #if ($trustedApplications.isEmpty())
+            $action.getText("trusted.applications.not.configured")
+        #else
+            <table id="trustedapps" class="grid" width="99%" border="0">
+                <tr>
+                    <th>
+                        <strong>$action.getText("column.name")</strong>
+                    </th>
+                    <th>
+                        <strong>$action.getText("column.operations")</strong>
+                    </th>
+                </tr>
+                #foreach ($app in $trustedApplications)
+                    <tr>
+                        <td>
+                            <strong>$app.name</strong>
+                        </td>
+                        <td class="colHeaderLink" nowrap width="1%">
+                            <a href="trustedapp-edit.action?id=$app.id">$action.getText("operations.edit")</a> &middot;
+                            <a href="trustedapp-remove.action?id=$app.id&#url_xsrfToken()" onclick="return confirm('$action.getText("remove.trusted.application.confirm")')">$action.getText("operations.del")</a>
+                        </td>
+                    </tr>
+                #end
+            </table>
+        #end
+        <br/><br/>
+        <div class="steptitle">Request New Trusted Application Details</div>
+        <div class="smalltext">$action.getText("trusted.application.add.instructions")</div>
+        <form name="add-trusted-app" action="trustedapp-add.action" method="POST">
+            #form_xsrfToken()
+            <label class="label" for="applicationName">Base URL: </label><input id="applicationName" name="applicationName" type="text">
+            <input name="Send Request" value="Send Request"  type="submit">
+        </form>
+    </body>
+#parse ("/breadcrumbs.vm")
+</html>

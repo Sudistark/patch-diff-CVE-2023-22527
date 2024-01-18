@@ -1,0 +1,17 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.SearchUsersAction" *#
+## Used in browseusers.vm
+
+#if ($action.licensedToAddMoreUsers)
+    <div class="user-forms-container">
+        <div id="invite-user-errors"></div>
+        #foreach ($webPanel in $webInterfaceManager.getDisplayableWebPanels("atl.admin.users.invite", $action.context))
+            <div class="cell">
+                $!webPanel.getHtml($action.context)
+            </div>
+        #end
+    </div>
+#else
+    <div id="license-error" class="errorBox">
+        $action.licenseErrorHtml
+    </div>
+#end

@@ -1,0 +1,9 @@
+ <div class="profile-macro">
+     <div class="vcard">
+         <a href="$req.contextPath/login.action"><img class="userLogo logo anonymous" src="$staticResourceUrlPrefix/images/icons/profilepics/anonymous.svg" alt="" title="$action.getText("user.icon.anonymous.title")"></a>
+         <div class="notloggedin">
+           <h4>$action.getText("userprofile.notloggedin.title")</h4>
+           <p class="details">$action.getText("userprofile.notloggedin.description")</p>
+         </div>
+     </div>
+ </div>

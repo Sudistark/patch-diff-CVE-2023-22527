@@ -1,0 +1,55 @@
+#* @vtlvariable name="profileGroups" type="java.util.List<java.lang.String>" *#
+#* @vtlvariable name="statusTextRenderer" type="com.atlassian.confluence.userstatus.StatusTextRenderer" *#
+#* @vtlvariable name="userDetailsManager" type="com.atlassian.confluence.user.UserDetailsManager" *#
+#* @vtlvariable name="user" type="com.atlassian.user.User" *#
+#* @vtlvariable name="emailvisible" type="boolean" *#
+#* @vtlvariable name="viewingMyProfile" type="boolean" *#
+#* @vtlvariable name="email" type="java.lang.String" *#
+#* @vtlvariable name="mode" type="java.lang.String" *#
+#* @vtlvariable name="position" type="java.lang.String" *#
+#if ($userNotFound)
+    #if ($mode != "people-directory")
+        <div class="profile-macro no-user">
+            $action.getText("confluence.user.profile.notfound", [$htmlUtil.htmlEncode($username)])
+        </div>
+    #end
+#else
+<div class="profile-macro">
+    <div class="vcard">
+        <span class="aui-avatar aui-avatar-large">
+            <span class="aui-avatar-inner">
+                #userLogoBlock($user)
+            </span>
+        </span>
+
+        <div class="values">
+        <h4>#userLink($user)</h4>
+        #if ($emailvisible)
+            #if ($email == $user.email)<a href="mailto:$email" title="$action.getText("person.email", [ $htmlUtil.htmlEncode($user.fullName) ])" class="email">$email</a>
+            #else $email #end
+        #end
+        </div>
+    </div>
+#if ($profileGroups || $mode != "hover" && $mode != "people-directory")
+    <table class="profile-info profile-full">
+    #if (!$profileGroups)
+        #set($profileGroups = $userDetailsManager.profileGroups)
+    #end
+    #foreach($group in $profileGroups)
+        <tbody>
+        #foreach ($key in $userDetailsManager.getProfileKeys($group))
+            #set ($info = '')
+            #set ($info = $userDetailsManager.getStringProperty($user, $key))
+            #if ($info != '')
+                <tr>
+                    <th>$action.getText("confluence.user.profile.$key"):</th>
+                    <td>$statusTextRenderer.render($info)</td>
+                </tr>
+            #end
+        #end
+        </tbody>
+    #end
+    </table>
+#end
+</div>
+#end

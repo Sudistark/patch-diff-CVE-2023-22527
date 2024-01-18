@@ -1,0 +1,54 @@
+<html>
+	<head>
+		<title>$action.getText("title.export.space")</title>
+		<meta name="help-path" content="/importexport/help/exportspace.vm"/>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+        <body>
+            #applyDecorator ("root")
+                #decoratorParam("context" "spacecontentpanel")
+                #decoratorParam("selection" $mode)
+                #decoratorParam("title" $action.getText("action.name"))
+                #decoratorParam("selectedTab" "content")
+                #decoratorParam ("selectedSpaceToolsWebItem", "export")
+                #decoratorParam("helper" $action.helper)
+
+                <div class="export-space-choose-format">
+                    <form name="export-space-choose-format" method="get" action="#" class="aui top-label">
+                        <h2>$action.getText("text.description.export.space.format.title")</h2>
+                        <p>$action.getText("text.description.export.space")</p>
+
+                        #requireResource("confluence.web.resources:ajs")
+                        #requireResource("confluence.sections.space.export.view:spaceexport")
+
+                        <fieldset class="group">
+                            #foreach ($item in $webInterfaceManager.getDisplayableItems("system.space.export/formats", $action.webInterfaceContext))
+                                #set ($itemRenderedUrl = $item.link.getDisplayableUrl($req, $action.webInterfaceContext))
+                                #set ($itemLabel = $item.label.getDisplayableLabel($req, $action.webInterfaceContext))
+                                <div class="radio">
+                                    <input class="radio" type="radio" id="format-$item.key" name="format" value="$item.key"
+                                            data-href="$itemRenderedUrl">
+                                    <label for="format-$item.key">
+                                        $itemLabel
+                                        <div class="description">$action.getText($item.descriptionKey)</div>
+                                    </label>
+                                </div>
+                            #end
+                        </fieldset>
+
+                        <div class="buttons-container">
+                            <div class="buttons">
+                                #ssubmit("name='confirm'" "value='next.name'" "theme='notable'" "cssClass='button submit'")
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            #end
+        </body>
+    #end
+</html>

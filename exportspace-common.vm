@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>$action.getText("title.export.space")</title>
+		<meta name="help-path" content="/importexport/help/exportspace.vm"/>
+    </head>
+
+    #if ($exportType == "TYPE_HTML")
+        #set($mode = "exporthtml")
+    #elseif ($exportType == "TYPE_XML")
+        #set($mode = "exportxml")
+    #end
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-operations")
+        #decoratorParam("mode"  "view-space-operations")
+
+        <body>
+            #applyDecorator ("root")
+                #decoratorParam("context" "spacecontentpanel")
+                #decoratorParam("selection" $mode)
+                #decoratorParam("title" $action.getText("action.name"))
+                #decoratorParam("selectedTab" "content")
+                #decoratorParam("helper" $action.helper)
+
+                #set ($formAction = "doexportspace.action?key=${key}" )
+                #if ($actionErrors.size() == 0)
+                    #set ($displayTree = "true")
+                #end
+
+                ## Decide on what sub-part to include based on the action mapping that brought us here
+                #if ($exportType == "TYPE_HTML")
+                    #parse ( "/importexport/includes/export-html.vm" )
+                    #decoratorParam ("selectedSpaceToolsWebItem", "export")
+                #elseif ($exportType == "TYPE_XML")
+                    #parse ( "/importexport/includes/export-xml.vm" )
+                    #decoratorParam ("selectedSpaceToolsWebItem", "export")
+                #end
+            #end
+        </body>
+    #end
+</html>

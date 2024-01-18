@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="$generalUtil.characterEncoding" ?>
+<rss version="0.92">
+
+<channel>
+	<title>$action.getText('comments.for.space'): $generalUtil.escapeXml($space.name) ($space.key)</title>
+	<description>$generalUtil.escapeXml($generalUtil.summarise($space.description.bodyContent.body))</description>
+    <link>$domainName/display/$space.key</link>
+    <language>en</language>
+
+    #foreach ($comment in $comments)
+        <item>
+            <title>$action.getText('comment.added', ["$!space.key:$!page.title"])</title>
+            <link>$domainName$generalUtil.escapeXml($generalUtil.customGetPageUrl($comment.container))showComments=true#comment-$comment.id</link>
+            <description><![CDATA[
+                $commentXHtmlContent
+            ]]></description>
+        </item>
+    #end
+</channel>
+</rss>

@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<title>$action.getText("title.setup.datasource.database.failed")</title>
+	</head>
+
+	<body>
+        #parse ("/setup/analytics-data.vm")
+        #parse ("/setup/setup-button.vm")
+        #parse ( "/template/includes/actionerrors.vm" )
+	
+		<p>$action.getText("setup.datasource.database.failed.message")</p>
+
+        <form id="setup-db-fail-form" class="aui">
+            <div class="buttons-container">
+                <div class="buttons">
+                    <a href="$req.contextPath/setup/setupdatasourcedb-start.action?database=$database" class="setup-db-fail-button">#setupButton("", "", $action.getText("setup.datasource.database.again"), "", false)</a>
+                    <a href="$req.contextPath/setup/setupdbchoice-start.action?database=$database" class="setup-db-fail-button aui-button aui-button-link">$action.getText("restart.database.setup")</a>
+                </div>
+            </div>
+        </form>
+	</body>
+</html>

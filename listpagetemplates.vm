@@ -1,0 +1,3 @@
+$action.getText('listpagetemplates.help.text')
+
+#doc("help.global.templates" "$action.getText('more.about.global.templates')")

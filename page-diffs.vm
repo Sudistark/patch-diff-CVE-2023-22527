@@ -1,0 +1,6 @@
+#requireResourcesForContext("pagediffs")
+<div id="page-diffs" class="wiki-content">
+    ## Due to these diffs appearing in emails we use <table> rather than a CSS-styled list, and inline styles for the
+    ## change backgrounds.
+    $diffHtml
+</div>

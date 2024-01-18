@@ -1,0 +1,17 @@
+#set ($spaceName        = $action.getText("space-name"))
+#set ($spaceKeyText     = $action.getText("space-key"))
+#set ($spaceHomePage    = $action.getText("space-homepage"))
+#set ($spaceCreator     = $action.getText("space-creator"))
+#set ($spaceTeamLabelsText = $action.getText("addlabels.teamlabels"))
+#set ($spaceDescription = $action.getText("space-desc"))
+#set ($editSpaceName    = $action.getText("edit.space.name"))
+#set ($spaceTabAdmin    = $action.getText("space.tab.admin"))
+#set ($spaceAdmins      = $action.getText("space.admins"))
+#set ($teamLabelsOnThisSpace = $action.getTeamLabelsOnThisSpace())
+#set ($adminsList = $action.spaceAdmins )
+#set ($thereAreMoreAdmins = $action.thereAreMoreAdmins())
+#set ($allAdminsUrl = $req.contextPath+"/spaces/viewspacesummary.action?key="+$htmlUtil.htmlEncode($space.key)+"&showAllAdmins=true")
+
+
+
+#parse("spaces/viewspacedetails.vm")

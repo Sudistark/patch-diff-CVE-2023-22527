@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>$i18n.getText('title.backup')</title>
+    </head>
+
+    <body>
+        <content tag="selectedWebItem">backup</content>
+        #parse ( '/template/includes/actionerrors.vm' )
+
+        #if ($actionErrors.size() == 0)
+            <h2>$i18n.getText('backup.done.heading')</h2>
+            <p>$i18n.getText('backup.done', $tempPath)</p>
+            #if ($downloadPath)<p>$i18n.getText('backup.done.download', $downloadPath)</p>#end
+            #if ($archivePath)<p>$i18n.getText('backup.done.archive', $archivePath)</p>#end
+        #end
+
+	    #parse ( '/breadcrumbs.vm' )
+    </body>
+</html>

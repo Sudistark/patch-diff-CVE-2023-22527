@@ -1,0 +1,11 @@
+#macro( setupNextButton $isDisable )
+    #setupSubmitButton("setup-next-button", "setup-next-button", "$action.getText('setup.next')", "setup-next-button", $isDisable)
+#end
+
+#macro( setupSubmitButton $id $name $value $cssClasses $isDisable )
+    <input id="$id" #if($isDisable) disabled="disabled" #end class="aui-button aui-button-primary setup-button $cssClasses" type="submit" name="$name" value="$value"/>
+#end
+
+#macro( setupButton $id $name $value $cssClasses $isDisable )
+    <input id="$id" #if($isDisable) disabled="disabled" #end class="aui-button aui-button-primary setup-button $cssClasses" type="button" name="$name" value="$value"/>
+#end

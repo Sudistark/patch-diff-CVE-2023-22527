@@ -1,0 +1,98 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.AbstractDiffPagesAction" *#
+<html>
+    <head>
+        <title>$action.getText("title.diff.page") - $!page.title #if ($originalPage && $revisedPage)(v.$!originalPage.version vs v.$!revisedPage.version)#else(Page versions not found)#end</title>
+    </head>
+
+    <content tag="title-text-span">$action.getText("title.view.previous.versions")</content>
+
+    #set ($confPage = $action.page)
+    #set ($pageType = $confPage.getType())
+    #set ($helper = $action.helper)
+
+    #if ($originalPage.version && $revisedPage)
+        #set ($previousVersionNumber = $originalPage.version - 1)
+        #set ($nextVersionId = $action.getPageIdOfVersionAfter($revisedPage))
+        #set ($nextVersionNumber = $revisedPage.version + 1)
+        #set ($isCurrentVersion = $nextVersionId <= 0)
+        #set ($previousVersionId = $action.getPageIdOfVersionBefore($originalPage))
+        #macro (pageVersionBlock $page $status)
+            #set ($renderingCurrentVersionBlock = $isCurrentVersion && $status == "new")
+            <div class="$status page-version article">
+                <h3 class="version-title">
+                    <a class="page version-navigation#if(!$renderingCurrentVersionBlock) view-historical-version-trigger#end" href="viewpage.action?pageId=${page.id}">
+                        <span class="assistive">$action.getText("${status}.version")</span>
+                        <span class="version">#if ($renderingCurrentVersionBlock) $action.getText("version.current") #else ${page.version} #end</span>
+                    </a>
+                </h3>
+                <p class="metadata author"><span class="assistive">$action.getText("changes.mady.by.user") </span>#userLink($page.lastModifier)</p>
+                <p class="metadata modified"><span class="assistive">$action.getText("saved.on") </span><time datetime="${page.lastModificationDate}">$action.formatFriendlyDate($page.lastModificationDate)</time></p>
+            </div>
+        #end
+    #end
+
+    #macro (diffLegend)
+        <div class="legend">
+            <h2 class="legend-title">$action.getText("heading.key")</h2>
+            <ul>
+                <li><span class="diff-html-added">$action.getText("these.lines.were.added")</span></li>
+                <li><span class="diff-html-removed">$action.getText("these.lines.were.removed")</span></li>
+                <li><span class="diff-html-changed">$action.getText("this.content.was.modified")</span></li>
+            </ul>
+        </div>
+    #end
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("mode" "view-information")
+        #decoratorParam("context" "$pageType")
+
+    <body>
+        #if ($originalPage.version && $revisedPage)
+            <div class="diff-menu">
+                <h2 class="diff-title">$action.getText("heading.versions.compared")</h2>
+
+                <div class="page-navigation section">
+                    #pageVersionBlock($originalPage "old")
+
+                    <span class="assistive">$action.getText("compared.with")</span>
+
+                    #pageVersionBlock($revisedPage "new")
+
+                    <div class="diff-navigation nav">
+                        <ul>
+                        #if ($previousVersionId > 0)
+                            <li><a class="previous version-navigation" href="diffpages.action?originalId=$previousVersionId&amp;pageId=${originalPage.id}">
+                                <span>$action.getText("previous.change"): $action.getText("difference.between.versions.x.and.y", [$previousVersionNumber, $originalPage.version])</span>
+                            </a></li>
+                        #end
+                        #if ($nextVersionId > 0)
+                            <li><a class="next version-navigation" href="diffpages.action?originalId=${revisedPage.id}&amp;pageId=$nextVersionId">
+                                <span>$action.getText("next.change"): $action.getText("difference.between.versions.x.and.y", [$revisedPage.version, $nextVersionNumber])</span>
+                            </a></li>
+                        #end
+                           <li><a class="all version-navigation" href="${req.contextPath}/pages/viewpreviousversions.action?pageId=${action.getLatestVersion().id}">
+                                <span>$action.getText("view.page.history")</span>
+                           </a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                #diffLegend()
+
+    ##            <p>$action.getText("there.are.num.changes", ["$action.diff.numChanges"])</p>
+                #versionCommentByPage($revisedPage)
+            </div>
+        #end
+        #if ($action.diff)
+            ## page-diffs renders $diffHtml. We want to use $action.diff here to force getDiff() (which has the html safe annotation) and get actual markup (rather than escaped markup) to be inserted here
+            #set ($diffHtml = $action.diff)
+        #elseif ($actionErrors.size() == 0)
+            #set ($diffHtml = "<p>$i18n.getText('diff.pages.error.diffing')</p>")
+        #else #set ($diffHtml = "")
+        #end
+        #parse ("/template/includes/page-diffs.vm")
+    </body>
+
+    #end
+</html>

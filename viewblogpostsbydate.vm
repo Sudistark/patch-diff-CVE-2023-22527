@@ -1,0 +1,16 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.pages.actions.ViewBlogPostsByDateAction" *#
+<html>
+    <head>
+        <title>$action.getText('blog.by.date', [$action.getFormattedDateRangeDescription()])</title>
+    </head>
+
+    <content tag="title-text-span">$action.getText('blog.by.date', [$action.getFormattedDateRangeDescription()])</content>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-blogposts")
+        #decoratorParam("mode" "view-blogposts")
+        #decoratorParam("collector-key" "spacebar-blogs")
+
+    #end
+</html>

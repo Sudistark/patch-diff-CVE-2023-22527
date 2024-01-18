@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>$action.getText("title.remove.comment")</title>
+		<content tag="no-page-header">true</content>
+		<!--<meta name="help-path" content="/pages/help/removepage.vm"/>-->
+	</head>
+
+	<body>
+		#parse ( "/template/includes/actionerrors.vm" )
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("mode" "edit")
+        #decoratorParam("context" "page")
+
+        #applyDecorator ("confirm")
+            #decoratorParam ("formName" "removecommentform")
+            #decoratorParam ("formAction" "removecomment.action?pageId=$page.id&commentId=$commentId")
+
+            <p>$action.getText("alert.remove.comment")</p>
+
+        #end
+
+		#parse ( "/pages/page-breadcrumbs.vm" )
+    #end
+
+	</body>
+</html>

@@ -1,0 +1,11 @@
+<html>
+<head>
+    <title>$action.getText("title.search.entities")</title>
+</head>
+<body>
+
+    #parse ( "/template/includes/actionerrors.vm" )
+    #parse ("/spaces/permissions/userpicker-form.vm")
+
+</body>
+</html>

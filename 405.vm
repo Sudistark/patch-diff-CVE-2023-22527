@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>$i18n.getText("405.title")</title>
+    <meta name="decorator" content="setup">
+</head>
+<body>
+<div class="container">
+    <p>$i18n.getText("405.reason")</p>
+
+    <h2>$i18n.getText("405.possible-actions")</h2>
+    <ol>
+        <li>$i18n.getText("405.message.check-url")</li>
+        <li>$i18n.getText("405.message.go-back")</li>
+        <li>$i18n.getText("405.message.request-support")</li>
+    </ol>
+</div>
+</body>
+</html>

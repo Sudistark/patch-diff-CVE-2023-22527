@@ -1,0 +1,12 @@
+#*
+    DO NOT USE (since 5.7) - please use the templates in notifications.soy or alertAnonymous velocity macro instead.
+*#
+#if( !$action.authenticatedUser )
+    <div id="anonymous-warning" class="aui-message aui-message-warning closeable">
+        $action.getText("not.logged.in")
+
+        #if ($action.isExternalUserManagementEnabled() == false)
+            $action.getText("may.want.to.log.in", ["$seraph.getLinkLoginURL($req)"])
+        #end
+    </div>
+#end

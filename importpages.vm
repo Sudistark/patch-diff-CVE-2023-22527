@@ -1,0 +1,8 @@
+<p>
+<strong>$action.getText('importpages.options')</strong><br/>
+$action.getText('importpages.trim.extensions.description')
+</p>
+
+<p>
+$action.getText('importpages.duplicates')
+</p>

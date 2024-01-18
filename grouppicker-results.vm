@@ -1,0 +1,50 @@
+#if ($groups) ## on the initial load of this template where no search has been performed, we don't want to show the results box
+<div class="lightGreyBox" style="padding: 8px;">
+    #set ($groupsExist = $groups && !$groups.isEmpty())
+    <form name="selectorform" class="aui">
+        #if ($groupsExist)
+	        <table id="entitySearchResults" class="aui">
+	            <col class="firstColumn">
+	            <col class="secondColumn">
+	            <thead>
+	                <tr>
+	                    <th >$action.getText("check.all")</th>
+	                    <th>
+	                        <input type="checkbox" name="all" value="0" #if (!$groupsExist) disabled="disabled" #end>
+	                    </th>
+	                    <th>$action.getText("groupname.word")</th>
+	                </tr>
+	            </thead>
+
+	            #set( $groups = $action.getGroups() )
+
+	            <tbody>
+	                    #foreach ($group in $groups)
+	                    <tr>
+	                        <td>&nbsp;</td>
+	                        <td>
+	                            <input type="checkbox" name="group" value="$htmlUtil.htmlEncode($group.name)"/>
+	                        </td>
+	                        <td>
+	                            $htmlUtil.htmlEncode($group.name)
+	                        </td>
+	                    </tr>
+	                    #end
+	            </tbody>
+	        </table>
+        #else
+            $soyTemplateRendererHelper.getRenderedTemplateHtml("com.atlassian.auiplugin:aui-experimental-soy-templates", "aui.message.info.soy", {"content" : $action.getText('no.groups.found').toString()})
+        #end
+
+        <input type="hidden" name="actionName" value="$htmlUtil.htmlEncode($actionName)"/>
+        <input type="hidden" name="startIndex" value="$htmlUtil.htmlEncode($startIndex)"/>
+        #if ($groupsExist)
+            #entityPagination($action.paginationSupport "$!htmlUtil.urlEncode($actionName)?groupnameTerm=$!htmlUtil.urlEncode($groupnameTerm)&key=$!htmlUtil.urlEncode($key)&actionName=$!htmlUtil.urlEncode($actionName)&onPopupSubmit=$!htmlUtil.urlEncode($onPopupSubmit)&")
+            <div align="right" class="buttons-container">
+                <input type="button" value="$action.getText('groups.select')" class="button" data-callback="$!htmlUtil.htmlEncode(${onPopupSubmit})" id="select-entities">
+            </div>
+        #end
+    </form>
+</div>
+#end
+

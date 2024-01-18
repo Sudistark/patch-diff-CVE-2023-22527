@@ -1,0 +1,10 @@
+#applyDecorator ("message")
+    #decoratorParam("type" "warning")
+    $action.getText("space.anonymous.perms.noglobalpermwarning")
+    <br/>
+    #if ($permissionHelper.isConfluenceAdministrator($action.authenticatedUser))
+        $action.getText("space.anonymous.perms.grantusepermission", [ "$req.contextPath/admin/permissions/globalpermissions.action" ])
+    #else
+        $action.getText("space.anonymous.perms.askanadmin")
+    #end    
+#end

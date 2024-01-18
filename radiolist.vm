@@ -1,0 +1,20 @@
+#set( $items = $parameters.list )
+#if( $items )
+    #foreach( $item in $items )
+        $stack.push($item)
+        #if( $parameters.listKey )
+            #set( $itemKey = $stack.findValue($parameters.listKey) )
+        #else
+            #set( $itemKey = $item )
+        #end
+        #if( $parameters.listValue )
+            #set( $itemValue = $stack.findValue($parameters.listValue) )
+        #else
+            #set( $itemValue = $item )
+        #end
+        <input type="radio" name="${parameters.name}" value="$!{itemValue}" id="${parameters.name}.$!{itemValue}" #if( $parameters.nameValue && $itemValue && $parameters.nameValue == $itemValue )checked="checked"#end> <label for="${parameters.name}.$!{itemValue}">$!{itemKey}</label><br>
+        #set ($trash = $stack.pop())
+    #end
+#else
+    &nbsp;
+#end

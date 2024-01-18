@@ -1,0 +1,172 @@
+<html>
+	<head>
+		<title>$htmlUtil.htmlEncode($pageTitle)</title>
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("context" "profile")
+        #decoratorParam("mode"  "edit-notifications-profile")
+        #decoratorParam("helper" $helper)
+        $action.resetPagination()     ## to reset the pagination on non-ajax calls to the page
+
+        <body>
+#if(!$darkFeatures.isDarkFeatureEnabled('react.ui'))
+        <div class="watches">
+
+             #set ($pageNotifications = $action.paginationSupport.page)
+             #set ($spaceNotifications = $helper.action.spaceNotificationsForUser)
+
+             #if ($pageNotifications.size() == 0 && $spaceNotifications.size() == 0)
+                <p><em>$action.getText('not.watching.anything')</em></p>
+                <br>
+             #end
+
+            <table id="space-watches" class="aui tableview condensed">
+                <thead>
+                <tr>
+                    <th colspan="2">$action.getText('space.watches')</th>
+                    ##<span style="font-weight: bold;">$action.getText('space.watches')</span>
+                </tr>
+                </thead>
+
+            #if ($spaceNotifications.size() > 0)
+                #foreach ($notification in $spaceNotifications)
+                    <tr>
+                        <td class="tableview-action-text">
+                        <img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAA3NCSVQICAjb4U/gAAAAdVBMVEX///+7u7u4uLi2trapqamTk5ONjY2IiIiHh4f////5+fny8vLv7+/q6url5eXh4eHe3t7b29vW1tbQ0NDPz8/MzMzJycmvr6+kpKSfn5+dnZ2ZmZmVlZWTk5ORkZGNjY2Hh4eBgYF6enp4eHh1dXVycnJwcHD33NPNAAAAJ3RSTlMAIiIime7u7u7///////////////////////////////////////8CC6LcAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFHRFWHRDcmVhdGlvbiBUaW1lADIvMS8xM6M4B8YAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAAmElEQVQYlV2P2xLCIAxEY0uRtKVWq/WC9RIN//+JBoLjjPvATA67kyyAyDQsagyoakfnyfv95eXqNFe09JjlH1QJcM+YAjQgdjcn+feuld82JjKwATurPx4TWSxw8Uc8yXtgiMUfRYS9guJHxo6BM8h+ARKxmwSyX0CwYK66RSbkrawFN/3AfZ1Pn7+AaKXlwpjAGLTcX/0P/9QQj8j3CZEAAAAASUVORK5CYII=" />
+                            <a href="$req.contextPath/spaces/browsespace.action?key=$notification.space.key">$htmlUtil.htmlEncode($notification.space.name)</a>
+                            #if ($notification.type)
+                                <span class="smalltext">($i18n.getText('space.watching.blogs.only'))</span>
+                            #end
+
+
+                        </td>
+
+                        <td class="tableview-action-icon">
+                            <div class="entity-watching" data-entity-id="$notification.space.key" data-entity-type="space">
+                               <a href="#" class="link-stop-watching" title="$action.getText('stop.watching.space')">$action.getText('notification.stop')</a>
+                               <a href="#" class="link-start-watching hidden" title="$action.getText('start.watching.space')">$action.getText('notification.start')</a>
+                               <span class="icon icon-wait hidden">$i18NBean.getText('loading.name')</span>
+                           </div>
+                        </td>
+                    </tr>
+                #end
+            </table>
+            #else
+            </table>
+            <div class="aui-message aui-message-info info">
+                $action.getText('space.watch.instruction')
+            </div>
+            #end
+            <br>
+
+            <table id="page-watches" class="aui tableview condensed">
+                <thead>
+                <tr>
+                    <th colspan="2">$action.getText('page.watches')</th>
+                </tr>
+                </thead>
+
+            #if ($pageNotifications.size() > 0)
+                #foreach ($notification in $pageNotifications)
+                <tr>
+                    <td class="tableview-action-text">
+                        #contentLink($notification.content)
+                    </td>
+                    <td class="tableview-action-icon">
+                        <div class="entity-watching" data-entity-id="$notification.content.id" data-entity-type="page">
+                           <a href="#" class="link-stop-watching" title="$action.getText('stop.watching.page')">$action.getText('notification.stop')</a>
+                           <a href="#" class="link-start-watching hidden" title="$action.getText('start.watching.page')">$action.getText('notification.start')</a>
+                           <span class="icon icon-wait hidden">$i18NBean.getText('loading.name')</span>
+                       </div>
+                    </td>
+                </tr>
+
+                #end
+
+            </table>
+                #pagination($action.paginationSupport "${req.contextPath}/users/viewnotifications.action?")
+            #else
+            </table>
+            <div class="aui-message aui-message-info info">
+                $i18n.getText('page.watch.instruction')
+            </div>
+            #end
+
+            <br>
+            <div class="page-instructions">$i18n.getText("notifications.preferences.desc")</div>
+        </div>## watches
+#else
+## TODO: Remove this container once the parent container is converted to React.
+## NOTE: This container should not be targetted with CSS or test rules.
+        <div id="confluence-ui"></div>
+## TODO: Convert to a Java/REST API.
+#set ($pageNotifications = $action.paginationSupport.page)
+#set ($spaceNotifications = $helper.action.spaceNotificationsForUser)
+        <script>
+            #set ($previousIndexes = $action.paginationSupport.previousStartIndexes)
+            #set ($nextIndexes = $action.paginationSupport.nextStartIndexes)
+            #if( $previousIndexes )
+                #set ($currentPage = $generalUtil.arraySize($previousIndexes) + 1)
+            #else
+                #set ($currentPage = 1)
+            #end
+            var __INITIAL_STATE__ = typeof __INITIAL_STATE__ !== 'undefined' ? __INITIAL_STATE__ : {};
+            __INITIAL_STATE__ = _.extend(__INITIAL_STATE__, {
+                totals: {
+                    watches: $action.paginationSupport.total
+                },
+                pagination: {
+                    pageSize: $action.paginationSupport.pageSize
+                },
+                features: {
+                    userProfile: {
+                        watches: {
+                            currentWatchedPagesPage: $currentPage
+                        }
+                    }
+                },
+                watches: {
+#if ($spaceNotifications.size() > 0)
+#set ($i = 0)
+#foreach ($notification in $spaceNotifications)
+#set ($i = $i + 1)
+                    '$notification.space.key': {
+                        order: $i,
+                        id: '$notification.space.key',
+                        name: '$notification.space.name',
+                        entityType: 'space',
+#if ($notification.type)
+                        type: '$notification.type'
+#end
+                    },
+#end
+#end
+#if ($pageNotifications.size() > 0)
+#set ($i = 0)
+#foreach ($notification in $pageNotifications)
+#set ($i = $i + 1)
+                    $notification.page.id: {
+                        order: $i,
+                        id: $notification.page.id,
+#if ($notification.type == "page")
+                        isHomePage: $notification.page.isHomePage(),
+#end
+                        urlPath: '$notification.page.urlPath',
+                        displayTitle: '$htmlUtil.htmlEncode($notification.page.displayTitle)',
+                        spaceName: '$htmlUtil.htmlEncode($notification.page.space.name)',
+                        type: '$notification.type',
+                    },
+#end
+#end
+                }
+            });
+        </script>
+        <script src="$action.getFrontendServiceURL()/download/vendor.js"></script>
+        <script src="$action.getFrontendServiceURL()/download/watches.js"></script>
+#end
+        </body>
+    #end
+</html>
+
+

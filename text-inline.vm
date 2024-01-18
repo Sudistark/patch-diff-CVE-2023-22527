@@ -1,0 +1,19 @@
+#set( $labelValue = $stack.findValue("getText('$parameters.label')") )
+#if( !$labelValue )
+    #set( $labelValue = $parameters.label )
+#end
+
+#if (!$parameters.id)
+    #set( $parameters.id = $parameters.name)
+#end
+
+<label id="${parameters.id}-label" for="$parameters.id">
+$!labelValue
+#if($parameters.required)
+    <span class="aui-icon icon-required"></span>
+    <span class="content">$parameters.required</span>
+#end
+</label>
+
+#parse("/template/aui/text-include.vm")
+

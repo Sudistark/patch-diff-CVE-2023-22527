@@ -1,0 +1,25 @@
+#parse( "/template/xhtml/controlheader.vm" )
+<select name="$!{parameters.name}" #if( $parameters.size > 0 )size="$parameters.size" #end #if( $parameters.multiple ) multiple#end
+onChange="javascript:form.submit();">
+
+#set( $items = $parameters.list )
+#if( $items )
+#foreach( $item in $items )
+  #if( $parameters.listKey )
+      #set( $itemKey = $ognl.findValue($parameters.listKey, $item) )
+  #else
+      #set( $itemKey = $item.getKey() )
+  #end
+  #if( $parameters.listValue )
+      #set( $itemValue = $ognl.findValue($parameters.listValue, $item) )
+  #else
+      #set( $itemValue = $item.getValue() )
+  #end
+  <option value="$!{itemValue}"#if( $parameters.contains($parameters.nameValue, $itemValue) ) selected#end>$!{itemKey}</option>
+#end
+
+#else
+  &nbsp;
+#end
+</select>
+#parse( "/template/xhtml/controlfooter.vm" )

@@ -1,0 +1,32 @@
+#if ($editMode == false)
+    #if ($parameters.renderWiki)
+    <span #if($parameters.id)id="$!htmlUtil.htmlEncode($parameters.id)"#end class="field-value">$parameters.renderWiki.render($parameters.nameValue)</span>
+    #else
+    <span  #if($parameters.id)id="$!htmlUtil.htmlEncode($parameters.id)"#end class="field-value">$!htmlUtil.htmlEncode($parameters.nameValue)</span>
+    #end
+#else
+    #if ($parameters.longField) #set($longFieldClass="long-field") #end
+    #if ($parameters.shortField) #set($shortFieldClass="short-field") #end
+    <input type="#if($parameters.type)$parameters.type#{else}text#end" name="$!htmlUtil.htmlEncode($parameters.name)" id="$!htmlUtil.htmlEncode($parameters.id)" ##
+    #if ($parameters.size)size="$!htmlUtil.htmlEncode($parameters.size)"#end ##
+    #if ($parameters.maxlength)maxlength="$!htmlUtil.htmlEncode($parameters.maxlength)"#end ##
+    #if ($parameters.nameValue)value="$!htmlUtil.htmlEncode($parameters.nameValue)"#end ##
+    #if ($parameters.disabled && $parameters.disabled == true) disabled="disabled"#end ##
+    #if ($parameters.readonly)readonly="readonly"#end ##
+    #if ($parameters.tabindex)tabindex="$!htmlUtil.htmlEncode($parameters.tabindex)"#end ##
+    class="text $!longFieldClass $!shortFieldClass $!htmlUtil.htmlEncode($parameters.cssClass)" ##
+    #if ($parameters.cssStyle)style="$!htmlUtil.htmlEncode($parameters.cssStyle)"#end
+    #if ($parameters.autocomplete)autocomplete="$!htmlUtil.htmlEncode($parameters.autocomplete)"#end ##
+    #if ($parameters.placeholder) placeholder="$!htmlUtil.htmlEncode($parameters.placeholder)"#end ##
+    #if ($parameters.focus)data-focus="$parameters.focus"#end ##
+    #if ($parameters.autofocus) autofocus="autofocus"#end ##
+    />
+    #if ($parameters.inlineText)
+        <span class="inline-text">$parameters.inlineText</span>
+    #end
+    #fielderrorAUI($parameters.name)
+#end
+#set($descHtml = $parameters.description)
+#if ($descHtml)
+    <div class="description">$descHtml</div>
+#end

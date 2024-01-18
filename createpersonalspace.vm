@@ -1,0 +1,24 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.spaces.actions.CreatePersonalSpaceAction" *#
+
+## This template exists for right click to work - for the new space dialog, see the Create Content Plugin
+<html>
+	<head>
+		<title>$action.getText("create.personal.space.title")</title>
+        #requireResource("confluence.web.resources:create-personal-space")
+
+        <content tag="bodyClass">dialog-page</content>
+	</head>
+
+    <body>
+        #parse ( "/template/includes/actionerrors.vm" )
+        #alertAnonymous()
+
+        #set ($templateParameters = {
+            "atlToken": ${xsrfTokenGenerator.generateToken($req)},
+            "buttons": true,
+            "spacePermission": $action.spacePermission })
+        $soyTemplateRendererHelper.getRenderedTemplateHtml("confluence.web.resources:create-space", "Confluence.Templates.CreateSpace.createPersonalSpaceForm.soy", $templateParameters)
+
+        #parse ( "/breadcrumbs.vm" )
+    </body>
+</html>

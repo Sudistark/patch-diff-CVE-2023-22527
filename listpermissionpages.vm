@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<title>$action.getText("title.permission.pages")</title>
+
+    </head>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-administration")
+        #decoratorParam("mode"  "list-permission-pages")
+        #decoratorParam("help-path" "/pages/help/listpermissionpages.vm")
+    <body>
+
+        #if ($key)
+            #applyDecorator ("root")
+                #decoratorParam ("context" "spaceadminpanel")
+                #decoratorParam ("selection" "permissionedpages")
+                #decoratorParam ("title" $action.getActionName($action.getClass().getName()))
+                #decoratorParam ("selectedTab" "admin")
+                #decoratorParam ("selectedSpaceToolsWebItem" "permissionedpages")
+                #decoratorParam("helper" $action.helper)
+
+                #parse ("/pages/templates/common-listpermissionpages.vm")
+            #end
+        #else
+            #parse ("/pages/templates/common-listpermissionpages.vm")
+            #parse ("/breadcrumbs.vm")
+            #parse ("/general-operations.vm")
+        #end
+	</body>
+	#end
+</html>

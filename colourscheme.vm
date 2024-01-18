@@ -1,0 +1,5 @@
+$action.getText('colour.scheme.page.description')
+<p>$action.getText('colour.scheme.description')</p>
+<p>$action.getText('colour.scheme.description.2')</p>
+
+#doc("help.customise.look.feel" "$action.getText('more.about.customising.look.and.feel')")

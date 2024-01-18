@@ -1,0 +1,41 @@
+#**
+ * Renders the export site page for XML. Relies on export-spacetree-checkboxes.vm to render the checkboxes
+ * and tree.
+ *
+ * Required context variables:
+ * $action              - the Struts Action presenting this view
+ * $formAction          - the value for the export form's action attribute
+ * $includeComments     - a variable indicating whether the include comments checkbox should be ticked by default.
+ *#
+<div class="export-space-body">
+    <h2>$action.getText("text.heading.export.space.xml")</h2>
+    <p>
+        #if ($action.getSpaceExportBackwardsCompatibility() == $action.getBuildInformation().getVersionNumber())
+            #set ($advisoryText = "text.description.export.space.xml.same.version")
+        #else
+            #set ($advisoryText = "text.description.export.space.xml")
+        #end
+        #set ($advisoryLinkName = $i18n.getText('text.description.export.space.restore.page.name.btf'))
+        #set ($advisoryLink = "$req.contextPath/admin/backup.action")
+        $i18n.getText($advisoryText, ["$action.getSpaceExportBackwardsCompatibility()", "$action.getBuildInformation().getVersionNumber()",
+            $advisoryLink, $advisoryLinkName])
+    </p>
+    <form name="exportspaceform" method="post" action="$formAction" class="aui top-label">
+        #form_xsrfToken()
+        <input type="hidden" name="synchronous" value="false"/>
+        <input type="hidden" name="exportType" value="TYPE_XML" />
+
+        #if( $action.spaceHasPages() )
+            #set ($includeCommentsOption = true)
+            #set ($visibilityOption = $action.isSpaceAdminOrConfAdmin())
+            #set ($contentTreeSource = "/spaces/exportspacetree.action")
+            #parse ("/importexport/includes/export-spacetree-checkboxes.vm")
+
+            <div class="buttons-container">
+                <div class="buttons">
+                    #ssubmit("name='confirm'" "value='export.name'" "theme='notable'" "cssClass='button submit'")
+                </div>
+            </div>
+        #end
+    </form>
+</div>

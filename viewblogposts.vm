@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>$action.getText('breadcrumbs.collector.blog')</title>
+
+        #rssautodiscovery($action.rssDescriptor)
+    </head>
+
+    <content tag="bodyClass">view-blog-posts</content>
+    <content tag="title-text-span">$action.getText('breadcrumbs.collector.blog')</content>
+
+    #applyDecorator("root")
+        #decoratorParam("helper" $action.helper)
+        #decoratorParam("context" "space-blogposts")
+        #decoratorParam("mode" "view-blogposts")
+        #decoratorParam("collector-key" "spacebar-blogs")
+
+    #end
+</html>

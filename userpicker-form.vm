@@ -1,0 +1,22 @@
+#* @vtlvariable name="action" type="com.atlassian.confluence.user.actions.UserPickerAction" *#
+
+#requireResource("confluence.web.resources:ajs")
+#requireResource("confluence.web.resources:aui-forms")
+#requireResource("confluence.admin.user:userpicker")
+#requireResource("com.atlassian.confluence.plugins.confluence-scriptsfinished-plugin:scriptsfinished")
+
+## Need to wrap soy template in a <div> because if .aui-tabs is a direct descendant of #content, a border is
+## automatically added to the tabs that is unwanted (#content > .aui-tabs is a rule in AUI page layouts)
+<div>
+$soyTemplateRendererHelper.getRenderedTemplateHtml(
+    "confluence.admin.user:userpicker",
+    "Confluence.Templates.Spaces.Permissions.userPicker.soy",
+    {
+        "isUserSearch": $userSearch,
+        "onPopupSubmit": $onPopupSubmit,
+        "isSupportsSimpleSearch": $action.isSupportsSimpleSearch(),
+        "emailVisible": $action.emailVisible,
+        "showUnlicensedUsers": $action.showUnlicensedUsers
+    }
+)
+</div>
